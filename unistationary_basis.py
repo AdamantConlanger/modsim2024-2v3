@@ -199,6 +199,16 @@ offsets = [1 for i in range(0, 10)]
 iter_total = None
 # iter_total = 4
 
+# gereduceerd:
+# p' = q' = 0
+# x' = x**2 * y - x + kappa1 - kappa2 * x
+# y' = -x**2 * y + x
+# r' = s' = x
+# kappa1 = sqrt(k1**2 * k3 * p_old**2 / (k2**3 * q_old**3))
+# kappa2 = k4 / (k2 * q_old)
+# so kappa1 = sqrt(0.19**2 * 0.85 * 0.59**2 / (1.07**3 * 0.56**3)) = 0.2228216410456516
+# and kappa2 = 0.22 / (1.07 * 0.56) = 0.36715620827770357
+
 result = execute_simulation(f, u0=u0, coeffs=coeffs, time_bound=time_bound, offsets=offsets, iter_total=iter_total)
 success, u0_base, coeffs_base, time_bound_base, iter_total_base, u0_list, coeffs_list, sol_list = result
 
