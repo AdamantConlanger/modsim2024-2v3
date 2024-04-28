@@ -1,5 +1,8 @@
 Just create a venv with
 > py -3.12 -m venv .venv
+> .venv\Scripts\Activate.ps1
+or, if you're using command prompt:
+> .venv\Scripts\activate.bat
 
 then install the packages with
 > py -m pip install -U pip
