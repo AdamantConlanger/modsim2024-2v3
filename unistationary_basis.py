@@ -104,8 +104,8 @@ def execute_simulation(f,
 
 def visualize_simulation(u0_base, coeffs_base, time_bound_base, iter_total_base, u0_list, coeffs_list, sol_list):
     fig, axs = plt.subplots(3, 2, layout='constrained')
-    for n in range(len(sol_list)):
-        try:
+    try:
+        for n in range(len(sol_list)):
             u0 = u0_list[n]
             coeffs = coeffs_list[n]
             sol = sol_list[n]
@@ -120,29 +120,53 @@ def visualize_simulation(u0_base, coeffs_base, time_bound_base, iter_total_base,
             axs[1, 1].plot(t, y, label=the_label)
             axs[2, 0].plot(t, r, label=the_label)
             axs[2, 1].plot(t, s, label=the_label)
-            axs[0, 0].set(ylabel="p")
-            axs[0, 0].xaxis.set_major_formatter('')
-            axs[0, 0].tick_params(axis='x', length=0)
-            axs[0, 0].grid(True, linestyle='dashed')
-            axs[0, 1].set(ylabel="q")
-            axs[0, 1].xaxis.set_major_formatter('')
-            axs[0, 1].tick_params(axis='x', length=0)
-            axs[0, 1].grid(True, linestyle='dashed')
-            axs[1, 0].set(ylabel="x")
-            axs[1, 0].xaxis.set_major_formatter('')
-            axs[1, 0].tick_params(axis='x', length=0)
-            axs[1, 0].grid(True, linestyle='dashed')
-            axs[1, 1].set(ylabel="y")
-            axs[1, 1].xaxis.set_major_formatter('')
-            axs[1, 1].tick_params(axis='x', length=0)
-            axs[1, 1].grid(True, linestyle='dashed')
-            axs[2, 0].set(ylabel="r", xlabel='t')
-            axs[2, 0].grid(True, linestyle='dashed')
-            axs[2, 1].set(ylabel="s", xlabel='t')
-            axs[2, 1].grid(True, linestyle='dashed')
-        except:
-            print("graph fail")
-        print("graph success")
+        for n in range(len(sol_list)):
+            u0 = u0_list[n]
+            coeffs = coeffs_list[n]
+            sol = sol_list[n]
+            t = sol.t
+            p, q, x, y, r, s = sol.y
+            p0, q0, x0, y0, r0, s0 = u0
+            k1, k2, k3, k4 = coeffs
+            the_label = f"u0=({p0}, {q0}, {x0}, {y0}, {r0}, {s0});\n{k1=}; {k2=}; {k3=}; {k4=}"
+            axs[1, 0].plot(t, y, label=the_label, alpha=0.2)  # for comparison
+            axs[1, 1].plot(t, x, label=the_label, alpha=0.2)  # for comparison
+            # TODO: make the color of these lines appear in the legend too
+        axs[0, 0].set(ylabel="p")
+        axs[0, 0].xaxis.set_major_formatter('')
+        axs[0, 0].tick_params(axis='x', length=0)
+        axs[0, 0].grid(True, linestyle='dashed')
+        axs[0, 1].set(ylabel="q")
+        axs[0, 1].xaxis.set_major_formatter('')
+        axs[0, 1].tick_params(axis='x', length=0)
+        axs[0, 1].grid(True, linestyle='dashed')
+        axs[1, 0].set(ylabel="x")
+        axs[1, 0].xaxis.set_major_formatter('')
+        axs[1, 0].tick_params(axis='x', length=0)
+        axs[1, 0].grid(True, linestyle='dashed')
+        axs[1, 1].set(ylabel="y")
+        axs[1, 1].xaxis.set_major_formatter('')
+        axs[1, 1].tick_params(axis='x', length=0)
+        axs[1, 1].grid(True, linestyle='dashed')
+        axs[2, 0].set(ylabel="r", xlabel='t')
+        axs[2, 0].grid(True, linestyle='dashed')
+        axs[2, 1].set(ylabel="s", xlabel='t')
+        axs[2, 1].grid(True, linestyle='dashed')
+        p_min, p_max = axs[0, 0].get_ylim()
+        q_min, q_max = axs[0, 1].get_ylim()
+        x_min, x_max = axs[1, 0].get_ylim()
+        y_min, y_max = axs[1, 1].get_ylim()
+        r_min, r_max = axs[2, 0].get_ylim()
+        s_min, s_max = axs[2, 1].get_ylim()
+        axs[0, 0].set_ylim(0, 2 * u0_base[0])
+        axs[0, 1].set_ylim(0, 2 * u0_base[1])
+        axs[1, 0].set_ylim(min(x_min, y_min), max(x_max, y_max))
+        axs[1, 1].set_ylim(min(x_min, y_min), max(x_max, y_max))
+        axs[2, 0].set_ylim(r_min, r_max)
+        axs[2, 1].set_ylim(s_min, s_max)
+    except:
+        print("graph fail")
+    print("graph success")
     # for ax in axs.flat:
     #    ax.label_outer()
     handles, labels = axs[2, 0].get_legend_handles_labels()
@@ -169,10 +193,10 @@ def f(t, u, coeffs):
 u0 = [0.59, 0.56, 0.83, 1.25, 0, 0]
 coeffs = [0.19, 1.07, 0.85, 0.22]
 time_bound = 200
-offsets = [1 for i in range(0, 10)]
-# offsets = "random"
-iter_total = None
-# iter_total = 5
+# offsets = [1 for i in range(0, 10)]
+offsets = "random"
+# iter_total = None
+iter_total = 2
 
 result = execute_simulation(f, u0=u0, coeffs=coeffs, time_bound=time_bound, offsets=offsets, iter_total=iter_total)
 success, u0_base, coeffs_base, time_bound_base, iter_total_base, u0_list, coeffs_list, sol_list = result
