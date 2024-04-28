@@ -1,0 +1,19 @@
+2024-04-18:
+idk; check Github commit times. Stopped around 23:20.
+
+2024-04-19:
+start 09:01. (De helft van deze tijd is wachten tot Julia klaar is met dingen installeren.)
+(oh yeah. Stop 10:43).
+start 11:35.
+stop 13:00.
+2024-04-22:
+start 07:46.
+stop 12:56.
+start ~17:30.
+stop coding 19:03.
+start model-reducing 19:03.
+stop 19:48.
+2024-04-28:
+start writing Jupyter code ~12:00.
+stop writing Jupyter code 13:48.
+start looking into scipy ~14:20.
