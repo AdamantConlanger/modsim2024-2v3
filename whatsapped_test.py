@@ -1,4 +1,4 @@
-import scipy.integrate as sc
+import scipy.integrate as scint
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -26,7 +26,7 @@ def fun(t, param):  # differentiaalvergelijkingen
 
 # oplossen vergelijkingen
 x_pts = np.linspace(0, 50, 51)
-result = sc.solve_ivp(fun, (0, 50), [0.5, 0.5, 1, 1, 1, 1], t_eval=x_pts)
+result = scint.solve_ivp(fun, (0, 50), [0.5, 0.5, 1, 1, 1, 1], t_eval=x_pts)
 print(result)
 
 # plotten
