@@ -193,10 +193,10 @@ def f(t, u, coeffs):
 u0 = [0.59, 0.56, 0.83, 1.25, 0, 0]
 coeffs = [0.19, 1.07, 0.85, 0.22]
 time_bound = 200
-# offsets = [1 for i in range(0, 10)]
-offsets = "random"
-# iter_total = None
-iter_total = 2
+offsets = [1 for i in range(0, 10)]
+# offsets = "random"
+iter_total = None
+# iter_total = 4
 
 result = execute_simulation(f, u0=u0, coeffs=coeffs, time_bound=time_bound, offsets=offsets, iter_total=iter_total)
 success, u0_base, coeffs_base, time_bound_base, iter_total_base, u0_list, coeffs_list, sol_list = result
