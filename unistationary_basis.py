@@ -132,6 +132,7 @@ def visualize_simulation(u0_base, coeffs_base, time_bound_base, iter_total_base,
             axs[1, 0].plot(t, y, label=the_label, alpha=0.2)  # for comparison
             axs[1, 1].plot(t, x, label=the_label, alpha=0.2)  # for comparison
             # TODO: make the color of these lines appear in the legend too
+            # TODO: make these lines appear behind the other ones, but with these colors
         axs[0, 0].set(ylabel="p")
         axs[0, 0].xaxis.set_major_formatter('')
         axs[0, 0].tick_params(axis='x', length=0)
