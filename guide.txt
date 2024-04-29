@@ -15,3 +15,7 @@ it's that simple.
 
 All custom stuff (e.g. initial values, specifying a time span, ...)
 is done near the end of that document.
+
+If your computer's able to run Jupyter Notebooks,
+you can also use sims_notebook.ipynb.
+Just be careful to not mix up cells for different models.
