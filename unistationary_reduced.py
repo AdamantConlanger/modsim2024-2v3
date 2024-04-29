@@ -106,7 +106,7 @@ def execute_simulation(f,
     return (True, u0_base, coeffs_base, time_bound_base, time_resolution_base, iter_total_base, u0_list, coeffs_list, sol_list)
 
 
-def visualize_simulation(u0_base, coeffs_base, time_bound_base, time_resolution_base, iter_total_base, u0_list, coeffs_list, sol_list):
+def visualize_simulation_reduced(u0_base, coeffs_base, time_bound_base, time_resolution_base, iter_total_base, u0_list, coeffs_list, sol_list):
     fig, axs = plt.subplots(3, 2, layout='constrained')
     try:
         for n in range(len(sol_list)):
@@ -116,8 +116,8 @@ def visualize_simulation(u0_base, coeffs_base, time_bound_base, time_resolution_
             t = sol.t
             p, q, x, y, r, s = sol.y
             p0, q0, x0, y0, r0, s0 = u0
-            k1, k2, k3, k4 = coeffs
-            the_label = f"u0=({p0}, {q0}, {x0}, {y0}, {r0}, {s0});\n{k1=}; {k2=}; {k3=}; {k4=}"
+            kappa1, kappa2 = coeffs
+            the_label = f"reduced u0=({p0}, {q0}, {x0}, {y0}, {r0}, {s0});\n{kappa1=}; {kappa2=}"
             axs[0, 0].plot(t, p, label=the_label)
             axs[0, 1].plot(t, q, label=the_label)
             axs[1, 0].plot(t, x, label=the_label)
@@ -131,32 +131,32 @@ def visualize_simulation(u0_base, coeffs_base, time_bound_base, time_resolution_
             t = sol.t
             p, q, x, y, r, s = sol.y
             p0, q0, x0, y0, r0, s0 = u0
-            k1, k2, k3, k4 = coeffs
-            the_label = f"u0=({p0}, {q0}, {x0}, {y0}, {r0}, {s0});\n{k1=}; {k2=}; {k3=}; {k4=}"
+            kappa1, kappa2 = coeffs
+            the_label = f"reduced u0=({p0}, {q0}, {x0}, {y0}, {r0}, {s0});\n{kappa1=}; {kappa2=}"
             axs[1, 0].plot(t, y, label=the_label, alpha=0.2)  # for comparison
             axs[1, 1].plot(t, x, label=the_label, alpha=0.2)  # for comparison
             # TODO: make the color of these lines appear in the legend too
             # TODO: make these lines appear behind the other ones, but with these colors
         # TODO: make it so the labels are aligned with one another
-        axs[0, 0].set(ylabel="p")
+        axs[0, 0].set(ylabel="reduced p")
         axs[0, 0].xaxis.set_major_formatter('')
         axs[0, 0].tick_params(axis='x', length=0)
         axs[0, 0].grid(True, linestyle='dashed')
-        axs[0, 1].set(ylabel="q")
+        axs[0, 1].set(ylabel="reduced q")
         axs[0, 1].xaxis.set_major_formatter('')
         axs[0, 1].tick_params(axis='x', length=0)
         axs[0, 1].grid(True, linestyle='dashed')
-        axs[1, 0].set(ylabel="x")
+        axs[1, 0].set(ylabel="reduced x")
         axs[1, 0].xaxis.set_major_formatter('')
         axs[1, 0].tick_params(axis='x', length=0)
         axs[1, 0].grid(True, linestyle='dashed')
-        axs[1, 1].set(ylabel="y")
+        axs[1, 1].set(ylabel="reduced y")
         axs[1, 1].xaxis.set_major_formatter('')
         axs[1, 1].tick_params(axis='x', length=0)
         axs[1, 1].grid(True, linestyle='dashed')
-        axs[2, 0].set(ylabel="r", xlabel='t')
+        axs[2, 0].set(ylabel="reduced r", xlabel='reduced t')
         axs[2, 0].grid(True, linestyle='dashed')
-        axs[2, 1].set(ylabel="s", xlabel='t')
+        axs[2, 1].set(ylabel="reduced s", xlabel='reduced t')
         axs[2, 1].grid(True, linestyle='dashed')
         p_min, p_max = axs[0, 0].get_ylim()
         q_min, q_max = axs[0, 1].get_ylim()
@@ -174,29 +174,41 @@ def visualize_simulation(u0_base, coeffs_base, time_bound_base, time_resolution_
         print("graph fail")
         raise exception
     print("graph success")
-    # for ax in axs.flat:
-    #    ax.label_outer()
     handles, labels = axs[2, 0].get_legend_handles_labels()
     fig.legend(handles, labels, mode='expand', loc='outside lower center')
-    fig.suptitle("A graph of the base model with constant P and Q.")
+    fig.suptitle("A graph of the reduced model with constant P and Q.")
     plt.show()
 
 
 def f(t, u, coeffs):
     p, q, x, y, r, s = u
-    k1, k2, k3, k4 = coeffs
+    # p = p_old; q = q_old;
+    # x = x_old * math.sqrt(k3 / (k2 * q_old)); y = y_old * math.sqrt(k3 / (k2 * q_old));
+    # r = r_old * math.sqrt(k3 / (k2 * q_old)); s = s_old * math.sqrt(k2 * k3 * q_old) / k4;
+    # time = time_old * k2 * q_old
+    kappa1, kappa2 = coeffs
+    # kappa1 = math.sqrt(k1**2 * k3 * p_old**2 / (k2**3 * q_old**3))
+    # kappa2 = k4 / (k2 * q_old)
     return np.array([
         0,
         0,
-        k1 * p - k2 * q * x + k3 * x * x * y - k4 * x,
-        k2 * q * x - k3 * x * x * y,
-        k2 * q * x,
-        k4 * x
+        x * x * y - x - kappa2 * x + kappa1,
+        -x * x * y + x,
+        x,
+        x
     ])
 
+# p = 0.59; q = 0.56;
+# x = 0.83 * math.sqrt(0.85 / (1.07 * 0.56)) = 0.9885568570123123;
+# y = 1.25 * math.sqrt(0.85 / (1.07 * 0.56)) = 1.4887904473076994;
+# r = 0; s = 0;
+# time = time_old * 1.07 * 0.56 = time_old * 0.5992000000000001
+# kappa1 = math.sqrt(0.19**2 * 0.85 * 0.59**2 / (1.07**3 * 0.56**3)) = 0.2228216410456516
+# kappa2 = 0.22 / (1.07 * 0.56) = 0.36715620827770357
 
-u0 = [0.59, 0.56, 0.83, 1.25, 0, 0] # list of starting values of the variables; first part of the parameters.
-coeffs = [0.19, 1.07, 0.85, 0.22] # list of coefficients for reaction speeds; second part of the parameters.
+
+u0 = [0.59, 0.56, 1, 1.5, 0, 0] # list of starting values of the variables; first part of the parameters.
+coeffs = [0.222822, 0.367156]  # list of coefficients for reaction speeds; second part of the parameters.
 time_bound = 200 # cutoff point in time to stop the simulation at, or None for the default value of 50.
 offsets = None # list of factors or single factor to scale parameters by before starting;
                # factors can be a number, "random", or None;
@@ -225,7 +237,7 @@ result = execute_simulation(f=f,
 success, u0_base, coeffs_base, time_bound_base, time_resolution_base, iter_total_base, u0_list, coeffs_list, sol_list = result
 
 if success:
-    visualize_simulation(u0_base, coeffs_base, time_bound_base, time_resolution_base,
+    visualize_simulation_reduced(u0_base, coeffs_base, time_bound_base, time_resolution_base,
                          iter_total_base, u0_list, coeffs_list, sol_list)
 else:
     print("simulation failed. Stopping and printing failed settings.")
