@@ -6,10 +6,6 @@ from typing import Optional, Iterable
 flint = float | int
 interval_t = tuple[flint, flint] | Iterable[flint]
 
-def get_variables_from_u(u):
-    return [[elem[i] for elem in u] for i in range(len(u[0]))]
-
-
 def execute_simulation(f,
                        u0: Iterable[flint],
                        coeffs: Iterable[flint],
@@ -190,8 +186,8 @@ def f(t, u, coeffs):
     return np.array([
         0,
         0,
-        k1 * p - k2 * q * x + k3 * x**2 * y - k4 * x,
-        k2 * q * x - k3 * x**2 * y,
+        k1 * p - k2 * q * x + k3 * x * x * y - k4 * x,
+        k2 * q * x - k3 * x * x * y,
         k2 * q * x,
         k4 * x
     ])
