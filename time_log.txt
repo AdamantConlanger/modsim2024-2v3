@@ -18,3 +18,5 @@ start writing Jupyter code ~12:00.
 stop writing Jupyter code 13:48.
 start looking into scipy ~14:20.
 stop, with periodic solution, 16:54.
+2024-04-29:
+start adding some functionality and working on reduced model 16:32.
