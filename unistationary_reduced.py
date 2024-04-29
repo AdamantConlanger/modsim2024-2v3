@@ -206,9 +206,12 @@ def f(t, u, coeffs):
 # kappa1 = math.sqrt(0.19**2 * 0.85 * 0.59**2 / (1.07**3 * 0.56**3)) = 0.2228216410456516
 # kappa2 = 0.22 / (1.07 * 0.56) = 0.36715620827770357
 
+# u0 = [0.59, 0.56, 1, 1.5, 0, 0]
+# coeffs = [0.222822, 0.367156]
 
-u0 = [0.59, 0.56, 1, 1.5, 0, 0] # list of starting values of the variables; first part of the parameters.
-coeffs = [0.222822, 0.367156]  # list of coefficients for reaction speeds; second part of the parameters.
+
+u0 = [1, 1, 1, 1, 0, 0]  # list of starting values of the variables; first part of the parameters.
+coeffs = [0.2, 0.3]  # list of coefficients for reaction speeds; second part of the parameters.
 time_bound = 200 # cutoff point in time to stop the simulation at, or None for the default value of 50.
 offsets = None # list of factors or single factor to scale parameters by before starting;
                # factors can be a number, "random", or None;
