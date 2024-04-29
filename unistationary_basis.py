@@ -97,7 +97,7 @@ def execute_simulation(f,
                                   t_eval=t_eval_input,
                                   args=args_input)
             sol_list.append(sol)
-        except:
+        except Exception:
             print("fail")
             return (False, u0_base, coeffs_base, time_bound_base, time_resolution_base, iter_total_base, u0_list, coeffs_list, sol_list)
         print("success")
