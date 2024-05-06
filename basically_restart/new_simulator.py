@@ -3,8 +3,6 @@ import scipy.integrate as scint
 def simulate(f, initials_list, coefficients_list, interval_list, evaluations_list = None):
     solution_list = list()
 
-
-
     for iteration in range(len(initials_list)):
         t_eval = None if evaluations_list is None else evaluations_list[iteration]
 
