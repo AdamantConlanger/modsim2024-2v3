@@ -21,3 +21,5 @@ stop, with periodic solution, 16:54.
 2024-04-29:
 start adding some functionality and working on reduced model 16:32.
 stop 18:45.
+2024-05-06:
+start finally working on this again 13:17.
