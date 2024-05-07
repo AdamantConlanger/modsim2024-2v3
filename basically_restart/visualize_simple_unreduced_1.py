@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def visualize_simple_unreduced_1(f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list):
+def visualize_simple_unreduced_1(f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list, *, suppress_legend=False, suppress_ghosts=False):
     fig, axs = plt.subplots(3, 2, layout='constrained')
     for n in range(len(solution_list)):
         initials_out = initials_list[n]
@@ -17,19 +17,20 @@ def visualize_simple_unreduced_1(f, initials_list, coefficients_list, interval_l
         axs[1, 1].plot(t, y, label=the_label)
         axs[2, 0].plot(t, r, label=the_label)
         axs[2, 1].plot(t, s, label=the_label)
-    for n in range(len(solution_list)):
-        initials_out = initials_list[n]
-        coefficients_out = coefficients_list[n]
-        solution_out = solution_list[n]
-        t = solution_out.t
-        p, q, x, y, r, s = solution_out.y
-        p0, q0, x0, y0, r0, s0 = initials_out
-        k1, k2, k3, k4 = coefficients_out
-        the_label = f"u0=({p0}, {q0}, {x0}, {y0}, {r0}, {s0});\n{k1=}; {k2=}; {k3=}; {k4=}"
-        axs[1, 0].plot(t, y, label=the_label, alpha=0.2)  # for comparison
-        axs[1, 1].plot(t, x, label=the_label, alpha=0.2)  # for comparison
-        # TODO: make the color of these lines appear in the legend too
-        # TODO: make these lines appear behind the other ones, but with these colors
+    if not suppress_ghosts:
+        for n in range(len(solution_list)):
+            initials_out = initials_list[n]
+            coefficients_out = coefficients_list[n]
+            solution_out = solution_list[n]
+            t = solution_out.t
+            p, q, x, y, r, s = solution_out.y
+            p0, q0, x0, y0, r0, s0 = initials_out
+            k1, k2, k3, k4 = coefficients_out
+            the_label = f"u0=({p0}, {q0}, {x0}, {y0}, {r0}, {s0});\n{k1=}; {k2=}; {k3=}; {k4=}"
+            axs[1, 0].plot(t, y, label=the_label, alpha=0.2)  # for comparison
+            axs[1, 1].plot(t, x, label=the_label, alpha=0.2)  # for comparison
+            # TODO: make the color of these lines appear in the legend too
+            # TODO: make these lines appear behind the other ones, but with these colors
     # TODO: make it so the labels are aligned with one another
     axs[0, 0].set(ylabel="p")
     axs[0, 0].xaxis.set_major_formatter('')
@@ -65,6 +66,7 @@ def visualize_simple_unreduced_1(f, initials_list, coefficients_list, interval_l
     axs[2, 1].set_ylim(s_min, s_max)
     print("graph success")
     handles, labels = axs[2, 0].get_legend_handles_labels()
-    fig.legend(handles, labels, mode='expand', loc='outside lower center')
+    if not suppress_legend:
+        fig.legend(handles, labels, mode='expand', loc='outside lower center')
     fig.suptitle("A graph of the unreduced base model with constant P and Q.")
     plt.show()
