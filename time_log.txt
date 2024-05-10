@@ -34,3 +34,5 @@ start around 13:30.
 stop around 15:15.
 2024-05-10:
 start 14:19.
+stop ~14:40.
+start 16:44.
