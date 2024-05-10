@@ -1,5 +1,6 @@
 from new_simulator import simulate
 from visualize_simple_unreduced_1 import visualize_simple_unreduced_1
+from visualize_simple_unreduced_2 import visualize_simple_unreduced_2
 from cartesian_product import cartesian_product_for_variations
 import numpy as np
 
@@ -23,10 +24,15 @@ interval = (0, 200)  # cutoff point in time to stop the simulation at, or None f
 granularity = None  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
 
-vary_simultaneously = False # whether to entrywise combine the variations (True) or Cartesian them (False)
-multiplicative = False # whether to apply variations multiplicatively (True) or additively (False)
-variations_initials = [None, np.linspace(0, 0.2, 3), None, np.linspace(0, 0.1, 2), [0], None]
-variations_coefficients = [None, [0, 0.1], None, None]
+# vary_simultaneously = False # whether to entrywise combine the variations (True) or Cartesian them (False)
+# multiplicative = False # whether to apply variations multiplicatively (True) or additively (False)
+# variations_initials = [None, np.linspace(0, 0.2, 3), None, np.linspace(0, 0.1, 2), [0], None]
+# variations_coefficients = [None, [0, 0.1], None, None]
+
+vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
+multiplicative = True  # whether to apply variations multiplicatively (True) or additively (False)
+variations_initials = [None, np.linspace(0.6, 1.4, 6), None, None, None, None]
+variations_coefficients = [None, None, None, None]
 
 tmp = np.array([int(multiplicative)])
 variations_initials = [tmp if item is None else np.array(item) for item in variations_initials]
@@ -65,4 +71,7 @@ else:
 result = simulate(f, initials_list, coefficients_list, interval_list, evaluations_list)
 f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list = result
 
-visualize_simple_unreduced_1(f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list, suppress_legend=True, suppress_ghosts=True)
+# visualize_simple_unreduced_1(f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list, suppress_legend=True, suppress_ghosts=True)
+
+visualize_simple_unreduced_2(f, initials_list, coefficients_list, interval_list,
+                             evaluations_list, solution_list, suppress_legend=True, suppress_ghosts=True)
