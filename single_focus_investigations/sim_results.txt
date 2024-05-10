@@ -1,0 +1,93 @@
+|FILE DATA
+2024-05-10 16:55 CEST. Kevin Csellak.
+
+|MODELS
+
+||FULL SIMPLE UNREDUCED MODEL (FSU):
+model dependents/evaluables/variables: p, q, x, y, r, s
+model behavioral parameters/coefficients: k1, k2, k3, k4
+model initial values: p0, q0, x0, y0, r0, s0
+model time derivative: (
+    0,
+    0,
+    k1 * p - k2 * q * x + k3 * x * x * y - k4 * x,
+    k2 * q * x - k3 * x * x * y,
+    k2 * q * x,
+    k4 * x
+)
+
+||TRUNCATED SIMPLE UNREDUCED MODEL (TSU):
+model dependent variables: x, y
+model behavioral parameters: k1, k2, k3, k4, p, q
+model initial values: x0, y0
+model time derivative: (
+    k1 * p - k2 * q * x + k3 * x * x * y - k4 * x,
+    k2 * q * x - k3 * x * x * y
+)
+
+||SIMPLE REDUCED MODEL (TSR):
+model dependent variables: x, y
+model behavioral parameters: kappa1, kappa2
+model initial values: x0, y0
+model time derivative: (
+    x * x * y - x - kappa2 * x + kappa1,
+    x - x * x * y
+)
+
+|NOTABLE INFORMATION
+
+||NI 1
+The TSU model has at least one periodicizing solution here:
+behavioral parameters: 0.19, 1.07, 0.85, 0.22, 0.59, 0.56
+initial values: 0.83, 1.25
+this will be called the (unreduced) established configuration.
+
+||NI 2
+The TSR model has at least one periodicizing solution here:
+behavioral parameters: 0.2, 0.3
+initial values: 1, 1
+this will be called the (reduced) established configuration.
+
+||NI 3
+All sims were performed with the Radau method unless otherwise specified.
+
+|SIMS
+
+||TSR sim 1
+model: TSR
+investigating: effect on kappa1 in range [0, 2] on the established configuration.
+behavioral parameters: [varies], 0.3
+initial values: 1, 1
+varied item base value: 0
+variation type: additive
+interpolated variation values: 21
+range for variation values: [0, 2]
+time span: (0, 1000)
+sim eval resolution or "granularity": 500 saved points
+simulation run with tsr_range_investigations.py.
+simulation run at 17:54.
+saved as Figure_2_tsr_kappa1_investigations.png in the project2 folder.
+Results:
+A kappa1 of >= 0.3 results in smooth nearly monotonic convergence to an equilibrium state.
+The convergence seems truly monotonic for at least kappa1 >= 0.8.
+The equilibrium value for x increases with kappa1 according to the formula x_equi = kappa1 / 0.3.
+The equilibrium value for y decreases with kappa1 in a sort-of-inversely proportional way.
+The equation for the derivative of y shows that y_equi = 1 / x_equi = 0.3 / kappa_1.
+Yes, this means that (1, 1) is indeed an equilibrium solution in the case kappa1 = kappa2 = 0.3.
+In the case kappa1 = 0, x falls monotonically to or towards 0 and y rises to around or about 1.5.
+In all these cases, x and y are indistinguishable from their limits before t = 20.
+However, it is clear that the convergence gets quicker as kappa1 is lowered,
+though the relation between rate of convergence and kappa1's value is unclear.
+For kappa1 in {0.1, 0.2}, some form of periodic behavior occurs.
+Notably, the graphed peak magnitude does not appear to be constant,
+though this may be an issue with the "granularity" of our simulation,
+i.e. the number of points at which the simulated state was saved.
+A cursory look suggests the period of oscillation may decrease as kappa1 increases,
+but this is by no means certain.
+Similarly, the amplitude of the oscillations may decrease with kappa1.
+We will further investigate these oscillations, and other behavior, next.
+We note that we should decrease the number of interpolated values for kappa1,
+or risk getting a jumbled mess of similarly colored wave curves,
+without being able to glean anything from them other than maybe one or two general trends.
+
+
