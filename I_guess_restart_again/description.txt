@@ -12,3 +12,14 @@ Things I need to do:
 
 Ugh.
 
+...
+
+
+I'm just going to run a bunch of simulations and list off the results.
+
+
+2024-05-10. 16:51 CEST.
+
+simple unreduced Model:
+dependent variables:
+p, q, x, y, r, s..............................
