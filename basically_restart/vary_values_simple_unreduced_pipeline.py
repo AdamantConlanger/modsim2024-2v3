@@ -1,5 +1,4 @@
 from new_simulator import simulate
-from visualize_simple_unreduced_1 import visualize_simple_unreduced_1
 from visualize_simple_unreduced_2 import visualize_simple_unreduced_2
 from cartesian_product import cartesian_product_for_variations
 import numpy as np
