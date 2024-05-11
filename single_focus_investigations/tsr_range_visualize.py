@@ -67,7 +67,7 @@ def decide_color_broader(variables, is_focus, extrema_variables):
     # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
     
 
-def visualize(f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list, is_focus, extrema_variables, *, suppress_legend=False, suppress_ghosts=False, time_restricted=None):
+def visualize(f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list, is_focus, extrema_variables, *, suppress_legend=False, suppress_ghosts=False, time_restricted=None, broader_colors=False):
     fig, axs = plt.subplots(1, 2, layout='constrained')
     if len(solution_list) == 0:
         the_subtitle = ""
@@ -82,7 +82,10 @@ def visualize(f, initials_list, coefficients_list, interval_list, evaluations_li
         if n == 1:
             the_subtitle = make_subtitle(x0, y0, kappa1, kappa2, is_focus)
         the_label = make_label(x0, y0, kappa1, kappa2, is_focus)
-        the_color = decide_color_broader([x0, y0, kappa1, kappa2], is_focus, extrema_variables)
+        if broader_colors:
+            the_color = decide_color_broader([x0, y0, kappa1, kappa2], is_focus, extrema_variables)
+        else:
+            the_color = decide_color([x0, y0, kappa1, kappa2], is_focus, extrema_variables)
         axs[0].plot(t, x, label=the_label, linewidth=1.5, color=the_color)
         axs[1].plot(t, y, label=the_label, linewidth=1.5, color=the_color)
     if not suppress_ghosts:
@@ -95,7 +98,10 @@ def visualize(f, initials_list, coefficients_list, interval_list, evaluations_li
             x0, y0 = initials_out
             kappa1, kappa2 = coefficients_out
             the_label = make_label(x0, y0, kappa1, kappa2, is_focus)
-            the_color = decide_color_broader([x0, y0, kappa1, kappa2], is_focus, extrema_variables)
+            if broader_colors:
+                the_color = decide_color_broader([x0, y0, kappa1, kappa2], is_focus, extrema_variables)
+            else:
+                the_color = decide_color([x0, y0, kappa1, kappa2], is_focus, extrema_variables)
             axs[0].plot(t, y, label=the_label, alpha=0.2, linewidth=1.5, color=the_color)  # for comparison
             axs[1].plot(t, x, label=the_label, alpha=0.2, linewidth=1.5, color=the_color)  # for comparison
             # TODO: make the color of these lines appear in the legend too
