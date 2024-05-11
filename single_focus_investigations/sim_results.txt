@@ -72,8 +72,13 @@ y_red = y * math.sqrt(k3 / (k2 * q));
 t_red = t * k2 * q
 kappa1 = math.sqrt(k3 / (k2 * q)) * k1 * p / (k2 * q)
 kappa2 = k4 / (k2 * q)
-mu1 = kappa1 / kappa2
-mu2 = kappa1 * kappa2
+mu1 = kappa1 / kappa2 = math.sqrt(k3 / (k2 * q)) * k1 * p / k4
+mu2 = kappa1 * kappa2 = math.sqrt(k3 / (k2 * q)) * k1 * k4 * p / (k2**2 * q**2)
+
+||NI 7
+As found in the findings_1.txt document,
+we can control the time scale and concentration scale (for x an y),
+without affecting the shape of the graph (up to scalings, duh) at all.
 
 |SIMS
 
@@ -525,6 +530,111 @@ Yeah, it's clear that this is an unstable equilibrium.
 If you start off on one side of it, you're sent half a period offset in phase away from the other side,
 but you'll always end up converging to the same periodic solution, up to phase offset.
 
+||TSQ SIM 1
+model: TSQ
+investigating: effect of mu1 in range (0, 1] on fixed point.
+behavioral parameters: [varies], 3/50
+initial values: 1, 1
+varied item base value: 0
+variation type: additive
+interpolated variation values: 60 because 61 minus 1
+range for variation values: (0, 1] by removing 0 from [0, 1]
+time span: (0, 100)
+granularity: 1600 saved points
+time interval plotted: full
+color spectrum broadened.
+simulation run with tsq_range_investigations.py.
+simulation run at 2024-05-11 18:28.
+saved as Figure_tsq_mu1_investigations_1.png in the project2 folder.
+Results:
+Though this is fascinating and a lot _can_ be gleaned from these sims,
+I think it'd be beneficial to take fewer interpolated values to illustrate the points better.
 
+||TSQ SIM 2
+model: TSQ
+investigating: effect of mu1 in range (0, 1] on fixed point.
+behavioral parameters: [varies], 3/50
+initial values: 1, 1
+varied item base value: 0
+variation type: additive
+interpolated variation values: 10 because 11 minus 1
+range for variation values: (0, 1] by removing 0 from [0, 1]
+time span: (0, 100)
+granularity: 1600 saved points
+time interval plotted: full
+color spectrum broadened.
+simulation run with tsq_range_investigations.py.
+simulation run at 2024-05-11 18:30.
+saved as Figure_tsq_mu1_investigations_2.png in the project2 folder.
+Results:
+We see that mu1 doesn't just affect the equilibrium values.
+Lower values of mu1 correspond to spikier, less sinusoidal graphs,
+as we've seen before with the effect of kappa1.
+lower values of mu1 also correspond to longer periods of oscillation,
+and higher amplitudes on both sides of the waves for both x and y.
+We see that some values of mu1 close to 1 lead to x and y devolving into a fixed point.
+The threshold for this happening should be investigated further,
+but that should probably be done on a 2d plot where "time until solution dies off" is graphed
+as a dependent variable on the z-axis against kappa1 and kappa2 on the horizontal plane.
 
+||TSQ SIM 3
+model: TSQ
+investigating: does mu = (9/10, 3/50) have a stable solution?
+behavioral parameters: 9/10, 3/50
+initial values: [varies], [varies]
+varied item base value: [9/10, 10/9]
+variation type: multiplicative
+interpolated variation values: 5 times 5
+range for variation (scale) values: [0.99975, 1.00025]
+time span: (0, 100)
+granularity: 1600 saved points
+time interval plotted: full
+2d color spectrum.
+simulation run with tsq_range_investigations.py.
+simulation run at 2024-05-11 19:33.
+saved as Figure_tsq_stability_investigations_1.png in the project2 folder.
+Results:
 
+||TSQ SIM 4
+model: TSQ
+investigating: does mu = (9/10, 3/50) have a stable solution?
+behavioral parameters: 9/10, 3/50
+initial values: [varies], [varies]
+varied item base value: [9/10, 10/9]
+variation type: multiplicative
+interpolated variation values: 5 times 5
+range for variation (scale) values: [0.99975, 1.00025]
+time span: (0, 100)
+granularity: 12800 saved points
+time interval plotted: full
+2d color spectrum.
+simulation run with tsq_range_investigations.py.
+simulation run at 2024-05-11 19:35.
+saved as Figure_tsq_stability_investigations_2.png in the project2 folder.
+Results:
+
+||TSQ SIM 5
+model: TSQ
+investigating: does mu = (9/10, 3/50) have a stable solution?
+behavioral parameters: 9/10, 3/50
+initial values: [varies], [varies]
+varied item base value: [9/10, 10/9]
+variation type: multiplicative
+interpolated variation values: 2 times 2
+range for variation (scale) values: [0.99975, 1)
+time span: (0, 100)
+granularity: 102400 saved points
+time interval plotted: full
+2d color spectrum.
+simulation run with tsq_range_investigations.py.
+simulation run at 2024-05-11 19:40.
+saved as Figure_tsq_stability_investigations_3.png in the project2 folder.
+Results:
+Yup. Code must be broken.
+We've come to the conclusion that solving method inaccuracy causes inaccuracies to pile up,
+which in turn causes the solution to collapse into a fixed point.
+
+I've also run a mu2 investigation (ha! Mewtwo).
+The next thing I want to look for, is how to keep [enter property here] constant while varying mu1;
+that'll form the basis for a parametrization nu1=mu1, nu2=F(mu1, mu2).
+So TBC.
