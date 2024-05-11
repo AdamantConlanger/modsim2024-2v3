@@ -105,7 +105,7 @@ def decide_color_broader(variables, is_focus, extrema_variables):
 
 def decide_color_2d(variables, is_focus, extrema_variables):
     focused_index = is_focus.index(True)
-    next_focused_index = is_focus[focused_index+1:].index(True)
+    next_focused_index = is_focus[focused_index+1:].index(True) + 1
     focused_extrema = extrema_variables[focused_index]
     next_focused_extrema = extrema_variables[next_focused_index]
     colorizing_value = (variables[focused_index] - focused_extrema[0]) / (focused_extrema[1] - focused_extrema[0])
@@ -113,7 +113,9 @@ def decide_color_2d(variables, is_focus, extrema_variables):
     next_colorizing_value = tmp / (next_focused_extrema[1] - next_focused_extrema[0])
     tmp = 11/12 - 3 * colorizing_value / 4
     tmp = tmp + math.ceil(tmp) if tmp < 0 else tmp
-    return clr.hsv_to_rgb([tmp, 1 - next_colorizing_value / 2, 1])
+    tmp2 = 1 - 5 * (1 - colorizing_value**2) * next_colorizing_value / 6
+    tmp3 = 1 - colorizing_value**2 * next_colorizing_value / 4
+    return clr.hsv_to_rgb([tmp, tmp2, tmp3])
     # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
     
 

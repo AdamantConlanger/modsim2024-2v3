@@ -13,7 +13,7 @@ def f(t, u, coeffs):
     ])
 
 
-base_initials = [1, 0]  # list of starting values of the variables; first part of the parameters.
+base_initials = [2/3, 3/2]  # list of starting values of the variables; first part of the parameters.
 base_coefficients = [0.2, 0.3]  # list of coefficients for reaction speeds; second part of the parameters.
 interval = (0, 100)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
 granularity = 1600  # number of points in time to actually log the values at (not counting t=0),
@@ -21,10 +21,10 @@ granularity = 1600  # number of points in time to actually log the values at (no
 plotted_interval = None # time span to actually plot, as closed interval. or None for full plot.
 
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
-multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
-variations_initials = [None, np.linspace(0, 20, 21)]
+multiplicative = True  # whether to apply variations multiplicatively (True) or additively (False)
+variations_initials = [np.linspace(0.75, 1.25, 5), np.linspace(0.75, 1.25, 5)]
 variations_coefficients = [None, None]
-is_focus_initials = [False, True]
+is_focus_initials = [True, True]
 is_focus_coefficients = [False, False]
 
 initials_length = len(base_initials)
