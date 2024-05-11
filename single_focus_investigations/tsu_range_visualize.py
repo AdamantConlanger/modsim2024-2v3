@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.colors as clr
+import math
 
 
 def make_subtitle(x0, y0, k1, k2, k3, k4, p, q, is_focus):
@@ -84,7 +85,9 @@ def decide_color(variables, is_focus, extrema_variables):
     colorizing_value = (variables[focused_index] - focused_extrema[0]) / (focused_extrema[1] - focused_extrema[0])
     # blue to yellow with constant Value 1 and Saturation at 1?
     # note that blue corresponds to lower and yellow to higher values of variables
-    return clr.hsv_to_rgb([2/3 - colorizing_value / 2, 1, 1])
+    tmp = 2/3 - colorizing_value / 2
+    tmp = tmp + math.ceil(tmp) if tmp < 0 else tmp
+    return clr.hsv_to_rgb([tmp, 1, 1])
     # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
 
 
@@ -95,7 +98,7 @@ def decide_color_broader(variables, is_focus, extrema_variables):
     # red to yellow via blue with constant Value 1 and Saturation at 1?
     # note that red corresponds to lower and yellow to higher values of variables
     tmp = 11/12 - 3 * colorizing_value / 4
-    tmp = tmp + 1 if tmp < 0 else tmp
+    tmp = tmp + math.ceil(tmp) if tmp < 0 else tmp
     return clr.hsv_to_rgb([tmp, 1, 1])
     # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
     
