@@ -22,7 +22,7 @@ plotted_interval = None # time span to actually plot, as closed interval. or Non
 
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
 multiplicative = True  # whether to apply variations multiplicatively (True) or additively (False)
-variations_initials = [np.linspace(0.75, 1.25, 5), np.linspace(0.75, 1.25, 5)]
+variations_initials = [np.linspace(0.99975, 1.00025, 5), np.linspace(0.99975, 1.00025, 5)]
 variations_coefficients = [None, None]
 is_focus_initials = [True, True]
 is_focus_coefficients = [False, False]
