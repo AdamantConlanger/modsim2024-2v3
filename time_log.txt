@@ -36,3 +36,7 @@ stop around 15:15.
 start 14:19.
 stop ~14:40.
 start 16:44.
+stop 18:58 in the middle of writing.
+2024-05-11:
+start ~09:00.
+taking a break 13:37. Putting on some more decent clothes.
