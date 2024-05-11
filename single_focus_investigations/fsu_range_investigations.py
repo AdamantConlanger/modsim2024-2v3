@@ -22,7 +22,7 @@ base_coefficients = [0.19, 1.07, 0.85, 0.22]  # list of coefficients for reactio
 interval = (0, 1000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
 granularity = 500  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
-plotted_interval = (300, 400)  # time span to actually plot, as closed interval. or None for full plot.
+plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
 
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
 multiplicative = True  # whether to apply variations multiplicatively (True) or additively (False)
