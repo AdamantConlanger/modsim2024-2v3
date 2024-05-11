@@ -116,9 +116,23 @@ def decide_color_broader(variables, is_focus, extrema_variables):
     tmp = tmp + math.ceil(tmp) if tmp < 0 else tmp
     return clr.hsv_to_rgb([tmp, 1, 1])
     # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
+
+
+def decide_color_2d(variables, is_focus, extrema_variables):
+    focused_index = is_focus.index(True)
+    next_focused_index = is_focus[focused_index+1:].index(True)
+    focused_extrema = extrema_variables[focused_index]
+    next_focused_extrema = extrema_variables[next_focused_index]
+    colorizing_value = (variables[focused_index] - focused_extrema[0]) / (focused_extrema[1] - focused_extrema[0])
+    tmp = variables[next_focused_index] - next_focused_extrema[0]
+    next_colorizing_value = tmp / (next_focused_extrema[1] - next_focused_extrema[0])
+    tmp = 11/12 - 3 * colorizing_value / 4
+    tmp = tmp + math.ceil(tmp) if tmp < 0 else tmp
+    return clr.hsv_to_rgb([tmp, 1 - next_colorizing_value / 2, 1])
+    # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
     
 
-def visualize(f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list, is_focus, extrema_variables, *, suppress_legend=False, suppress_ghosts=False, time_restricted=None, broader_colors=False):
+def visualize(f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list, is_focus, extrema_variables, *, suppress_legend=False, suppress_ghosts=False, time_restricted=None, broader_colors=False, colors_2d=False):
     fig, axs = plt.subplots(3, 2, layout='constrained')
     if len(solution_list) == 0:
         the_subtitle = ""
@@ -135,6 +149,8 @@ def visualize(f, initials_list, coefficients_list, interval_list, evaluations_li
         the_label = make_label(p0, q0, x0, y0, r0, s0, k1, k2, k3, k4, is_focus)
         if broader_colors:
             the_color = decide_color_broader([p0, q0, x0, y0, r0, s0, k1, k2, k3, k4], is_focus, extrema_variables)
+        elif colors_2d:
+            the_color = decide_color_2d([p0, q0, x0, y0, r0, s0, k1, k2, k3, k4], is_focus, extrema_variables)
         else:
             the_color = decide_color([p0, q0, x0, y0, r0, s0, k1, k2, k3, k4], is_focus, extrema_variables)
         axs[0, 0].plot(t, p, label=the_label, linewidth=1.5, color=the_color)
@@ -155,6 +171,8 @@ def visualize(f, initials_list, coefficients_list, interval_list, evaluations_li
             the_label = make_label(p0, q0, x0, y0, r0, s0, k1, k2, k3, k4, is_focus)
             if broader_colors:
                 the_color = decide_color_broader([p0, q0, x0, y0, r0, s0, k1, k2, k3, k4], is_focus, extrema_variables)
+            elif colors_2d:
+                the_color = decide_color_2d([p0, q0, x0, y0, r0, s0, k1, k2, k3, k4], is_focus, extrema_variables)
             else:
                 the_color = decide_color([p0, q0, x0, y0, r0, s0, k1, k2, k3, k4], is_focus, extrema_variables)
             axs[1, 0].plot(t, y, label=the_label, alpha=0.2, linewidth=1.5, color=the_color)  # for comparison

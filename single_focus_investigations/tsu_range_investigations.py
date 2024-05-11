@@ -76,4 +76,4 @@ result = simulate(f, initials_list, coefficients_list, interval_list, evaluation
 f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list = result
 
 visualize(f, initials_list, coefficients_list, interval_list,
-          evaluations_list, solution_list, is_focus, extrema_variables, suppress_legend=False, suppress_ghosts=True, time_restricted=plotted_interval)
+          evaluations_list, solution_list, is_focus, extrema_variables, suppress_legend=False, suppress_ghosts=True, time_restricted=plotted_interval, broader_colors=False, colors_2d=False)
