@@ -633,6 +633,7 @@ Results:
 Yup. Code must be broken.
 We've come to the conclusion that solving method inaccuracy causes inaccuracies to pile up,
 which in turn causes the solution to collapse into a fixed point.
+(the perpetrating values I investigated were x=0.8998167843549414, y=1.1112388453809450.)
 
 I've also run a mu2 investigation (ha! Mewtwo).
 The next thing I want to look for, is how to keep [enter property here] constant while varying mu1;
