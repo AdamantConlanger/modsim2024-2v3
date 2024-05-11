@@ -14,19 +14,19 @@ def f(t, u, coeffs):
     ])
 
 
-base_initials = [1, 1]  # list of starting values of the variables; first part of the parameters.
-base_coefficients = [2/3, 3/50]  # list of coefficients for reaction speeds; second part of the parameters.
+base_initials = [9/10, 10/9]  # list of starting values of the variables; first part of the parameters.
+base_coefficients = [9/10, 3/50]  # list of coefficients for reaction speeds; second part of the parameters.
 interval = (0, 100)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
-granularity = 1600  # number of points in time to actually log the values at (not counting t=0),
+granularity = 102400  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
 plotted_interval = None # time span to actually plot, as closed interval. or None for full plot.
 
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
-multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
-variations_initials = [None, None]
-variations_coefficients = [np.linspace(0, 2, 21), None]
-is_focus_initials = [False, False]
-is_focus_coefficients = [True, False]
+multiplicative = True  # whether to apply variations multiplicatively (True) or additively (False)
+variations_initials = [0.99975, np.linspace(0.99975, 1, 3)]
+variations_coefficients = [None, None]
+is_focus_initials = [False, True]
+is_focus_coefficients = [False, False]
 
 initials_length = len(base_initials)
 coefficients_length = len(base_coefficients)
@@ -35,6 +35,7 @@ variations_variables = variations_initials + variations_coefficients
 is_focus = is_focus_initials + is_focus_coefficients
 
 tmp = np.array([int(multiplicative)])
+variations_variables = [[item] if isinstance(item, int | float) else item for item in variations_variables]
 variations_variables = [tmp if item is None else np.array(item) for item in variations_variables]
 minima_variations = [min(item) for item in variations_variables]
 maxima_variations = [max(item) for item in variations_variables]

@@ -15,11 +15,11 @@ def make_subtitle(x0, y0, mu1, mu2, is_focus):
     if not is_focus[2]:
         if result != "":
             result += "; "
-        result += f"kappa1/kappa2={mu1}"
+        result += f"{mu1=}"
     if not is_focus[3]:
         if result != "":
             result += "; "
-        result += f"kappa1*kappa2={mu2}"
+        result += f"{mu2=}"
 
     return result
 
@@ -37,11 +37,11 @@ def make_label(x0, y0, mu1, mu2, is_focus):
     if is_focus[2]:
         if result != "":
             result += "; "
-        result += f"kappa1/kappa2={mu1}"
+        result += f"{mu1=}"
     if is_focus[3]:
         if result != "":
             result += "; "
-        result += f"kappa1*kappa2={mu2}"
+        result += f"{mu2=}"
 
     return result
 
@@ -145,7 +145,7 @@ def visualize(f, initials_list, coefficients_list, interval_list, evaluations_li
     print("graph success")
     handles, labels = axs[0].get_legend_handles_labels()
     if not suppress_legend:
-        fig.legend(handles, labels, mode='expand', loc='outside lower center', ncols=3, fontsize="small")
+        fig.legend(handles, labels, mode='expand', loc='outside lower center', ncols=5, fontsize="small")
     the_title = "A graph of the truncated simple (reduced) quoduct model."
     fig.suptitle(the_title + "\n" + the_subtitle)
     plt.show()

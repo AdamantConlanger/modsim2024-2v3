@@ -38,6 +38,7 @@ variations_variables = variations_initials + variations_coefficients
 is_focus = is_focus_initials + is_focus_coefficients
 
 tmp = np.array([int(multiplicative)])
+variations_variables = [[item] if isinstance(item, int | float) else item for item in variations_variables]
 variations_variables = [tmp if item is None else np.array(item) for item in variations_variables]
 minima_variations = [min(item) for item in variations_variables]
 maxima_variations = [max(item) for item in variations_variables]
