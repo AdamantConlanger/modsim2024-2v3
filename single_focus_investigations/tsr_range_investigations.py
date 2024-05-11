@@ -15,14 +15,15 @@ def f(t, u, coeffs):
 
 base_initials = [1, 1]  # list of starting values of the variables; first part of the parameters.
 base_coefficients = [0, 0.3]  # list of coefficients for reaction speeds; second part of the parameters.
-interval = (0, 1000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
-granularity = 500  # number of points in time to actually log the values at (not counting t=0),
+interval = (0, 100)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+granularity = 800  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
+plotted_interval = (300, 400) # time span to actually plot, as closed interval. or None for full plot.
 
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
 multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
 variations_initials = [None, None]
-variations_coefficients = [np.linspace(0, 2, 21), None]
+variations_coefficients = [np.linspace(0.2, 0.3, 11), None]
 is_focus_initials = [False, False]
 is_focus_coefficients = [True, False]
 
@@ -73,4 +74,4 @@ result = simulate(f, initials_list, coefficients_list, interval_list, evaluation
 f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list = result
 
 visualize(f, initials_list, coefficients_list, interval_list,
-                             evaluations_list, solution_list, is_focus, extrema_variables, suppress_legend=False, suppress_ghosts=True)
+                             evaluations_list, solution_list, is_focus, extrema_variables, suppress_legend=False, suppress_ghosts=True, time_restricted=plotted_interval)

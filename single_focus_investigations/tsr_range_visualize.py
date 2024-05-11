@@ -55,7 +55,7 @@ def decide_color(variables, is_focus, extrema_variables):
     # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
     
 
-def visualize(f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list, is_focus, extrema_variables, *, suppress_legend=False, suppress_ghosts=False):
+def visualize(f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list, is_focus, extrema_variables, *, suppress_legend=False, suppress_ghosts=False, time_restricted=None):
     fig, axs = plt.subplots(1, 2, layout='constrained')
     if len(solution_list) == 0:
         the_subtitle = ""
@@ -98,6 +98,9 @@ def visualize(f, initials_list, coefficients_list, interval_list, evaluations_li
     if not suppress_ghosts:
         axs[0].set_ylim(min(x_min, y_min), max(x_max, y_max))
         axs[1].set_ylim(min(x_min, y_min), max(x_max, y_max))
+    if time_restricted is not None:
+        axs[0].set_xlim(time_restricted[0], time_restricted[1])
+        axs[1].set_xlim(time_restricted[0], time_restricted[1])
     print("graph success")
     handles, labels = axs[0].get_legend_handles_labels()
     if not suppress_legend:
