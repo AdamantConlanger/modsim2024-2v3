@@ -34,6 +34,15 @@ model time derivative: (
     x - x * x * y
 )
 
+||SIMPLE QUODUCT MODEL (TSQ):
+model dependent variables: x, y
+model behavioral parameters: mu1, mu2
+model initial values: x0, y0
+model time derivative: (
+    x * x * y - x - math.sqrt(mu2 / mu1) * x + math.sqrt(mu1 * mu2),
+    x - x * x * y
+)
+
 |NOTABLE INFORMATION
 
 ||NI 1
@@ -56,6 +65,15 @@ At any given point, in the reduced model, y is decreasing iff y * x > 1 and incr
 
 ||NI 5
 For any equilibrium solution of the reduced model, we have x = kappa1/kappa2 and y = kappa2/kappa1.
+
+||NI 6
+x_red = x * math.sqrt(k3 / (k2 * q))
+y_red = y * math.sqrt(k3 / (k2 * q));
+t_red = t * k2 * q
+kappa1 = math.sqrt(k3 / (k2 * q)) * k1 * p / (k2 * q)
+kappa2 = k4 / (k2 * q)
+mu1 = kappa1 / kappa2
+mu2 = kappa1 * kappa2
 
 |SIMS
 
@@ -506,6 +524,7 @@ Results:
 Yeah, it's clear that this is an unstable equilibrium.
 If you start off on one side of it, you're sent half a period offset in phase away from the other side,
 but you'll always end up converging to the same periodic solution, up to phase offset.
+
 
 
 
