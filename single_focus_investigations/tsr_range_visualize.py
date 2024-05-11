@@ -59,9 +59,11 @@ def decide_color_broader(variables, is_focus, extrema_variables):
     focused_index = is_focus.index(True)
     focused_extrema = extrema_variables[focused_index]
     colorizing_value = (variables[focused_index] - focused_extrema[0]) / (focused_extrema[1] - focused_extrema[0])
-    # blue to red with constant Value 1 and Saturation at 1?
-    # note that blue corresponds to lower and red to higher values of variables
-    return clr.hsv_to_rgb([3/4 - 3 * colorizing_value / 4, 1, 1])
+    # red to yellow via blue with constant Value 1 and Saturation at 1?
+    # note that red corresponds to lower and yellow to higher values of variables
+    tmp = 11/12 - 3 * colorizing_value / 4
+    tmp = tmp + 1 if tmp < 0 else tmp
+    return clr.hsv_to_rgb([tmp, 1, 1])
     # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
     
 
@@ -80,7 +82,7 @@ def visualize(f, initials_list, coefficients_list, interval_list, evaluations_li
         if n == 1:
             the_subtitle = make_subtitle(x0, y0, kappa1, kappa2, is_focus)
         the_label = make_label(x0, y0, kappa1, kappa2, is_focus)
-        the_color = decide_color([x0, y0, kappa1, kappa2], is_focus, extrema_variables)
+        the_color = decide_color_broader([x0, y0, kappa1, kappa2], is_focus, extrema_variables)
         axs[0].plot(t, x, label=the_label, linewidth=1.5, color=the_color)
         axs[1].plot(t, y, label=the_label, linewidth=1.5, color=the_color)
     if not suppress_ghosts:
@@ -93,7 +95,7 @@ def visualize(f, initials_list, coefficients_list, interval_list, evaluations_li
             x0, y0 = initials_out
             kappa1, kappa2 = coefficients_out
             the_label = make_label(x0, y0, kappa1, kappa2, is_focus)
-            the_color = decide_color([x0, y0, kappa1, kappa2], is_focus, extrema_variables)
+            the_color = decide_color_broader([x0, y0, kappa1, kappa2], is_focus, extrema_variables)
             axs[0].plot(t, y, label=the_label, alpha=0.2, linewidth=1.5, color=the_color)  # for comparison
             axs[1].plot(t, x, label=the_label, alpha=0.2, linewidth=1.5, color=the_color)  # for comparison
             # TODO: make the color of these lines appear in the legend too
