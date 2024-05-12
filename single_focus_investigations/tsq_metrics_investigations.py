@@ -150,3 +150,5 @@ axs.set_xlabel("mu1")
 fig.suptitle("A graph of the period of oscillation for the truncated simple (reduced) quoduct model.\nx0=1, y0=1.")
 fig.colorbar(im, ax=axs, label='period of oscillation (0 if n/a)')
 plt.show()
+
+# TODO: merge simulation and metric-determining parts so we don't need 4GB or something to simulate it.
