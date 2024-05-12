@@ -638,4 +638,10 @@ which in turn causes the solution to collapse into a fixed point.
 I've also run a mu2 investigation (ha! Mewtwo).
 The next thing I want to look for, is how to keep [enter property here] constant while varying mu1;
 that'll form the basis for a parametrization nu1=mu1, nu2=F(mu1, mu2).
-So TBC.
+So tbc.
+
+It's 2024-05-12 by now. Yesterday was cut short by Eurovision.
+
+What do I still need to do?
+
+Let's start with writing up some code to determine the period of the oscillations.
