@@ -137,12 +137,14 @@ fig, axs = plt.subplots(1, 1, layout='constrained')
 use_smooth_block_interpolation = False
 use_smooth_lossy_interpolation = False
 
+extent = (first_min, first_max, second_min, second_max)
+
 if use_smooth_block_interpolation:
-    im = axs.imshow(plottable_data.T, interpolation="spline16", origin='lower', cmap="viridis")
+    im = axs.imshow(plottable_data.T, extent=extent, interpolation="spline16", origin='lower', cmap="viridis")
 elif use_smooth_lossy_interpolation:
-    im = axs.imshow(plottable_data.T, interpolation="bicubic", origin='lower', cmap="viridis")
+    im = axs.imshow(plottable_data.T, extent=extent, interpolation="bicubic", origin='lower', cmap="viridis")
 else:
-    im = axs.imshow(plottable_data.T, interpolation="none", origin='lower', cmap="viridis")
+    im = axs.imshow(plottable_data.T, extent=extent, interpolation="none", origin='lower', cmap="viridis")
 axs.set_ylabel("mu2")
 axs.set_xlabel("mu1")
 fig.suptitle("A graph of the period of oscillation for the truncated simple (reduced) quoduct model.\nx0=1, y0=1.")
