@@ -14,13 +14,11 @@ def determine_metrics(f, initials_list, coefficients_list, interval_list, evalua
     metrics_list = []
     for n in range(len(solution_list)):
         current_metrics = dict()
-        initials_out = initials_list[n]
         coefficients_out = coefficients_list[n]
         solution_out = solution_list[n]
         t = solution_out.t
         x, y = solution_out.y
-        x0, y0 = initials_out
-        mu1, mu2 = coefficients_out
+        mu1 = coefficients_out[0]
         x_equi = mu1
         y_equi = 1/mu1
         tol_x = tolerance[0] * x_equi if use_relative else tolerance[0]
@@ -127,7 +125,7 @@ def determine_metrics(f, initials_list, coefficients_list, interval_list, evalua
 
             for index in range(len(t) - 1):
                 if y[index] > y_equi and y[index + 1] < y_equi:
-                    x_events.append(index)
+                    y_events.append(index)
                     continue
                 if y[index] < y_equi and y[index + 1] > y_equi:
                     y_events.append(index)
@@ -284,6 +282,74 @@ def determine_metrics(f, initials_list, coefficients_list, interval_list, evalua
             current_metrics["y_lower_amplitude"] = y_lower_amplitude if y_has_minimum else None
 
         metrics_list.append(current_metrics)
+
+
+
+
+        # freeing memory
+        current_metrics = None
+        coefficients_out = None
+        solution_out = None
+        t = None
+        x = None
+        y = None
+        mu1 = None
+        x_equi = None
+        y_equi = None
+        tol_x = None
+        tol_y = None
+        tolerability_x = None
+        tolerability_y = None
+        tolerability = None
+        late_index = None
+        seems_collapsed = None
+        tolerability_bounds_reverse_indices = None
+        tolerability_span_lengths = None
+        lower_index = None
+        upper_index = None
+        seems_collapsed = None
+        is_collapsed = None
+        is_collapse_certain = None
+        collapse_moment = None
+        use_exits_x = None
+        use_exits_y = None
+        x_events = None
+        y_events = None
+        use_falling_x = None
+        use_falling_y = None
+        x_usable_events = None
+        y_usable_events = None
+        use_events_x = None
+        use_events_y = None
+        x_period_estimates = None
+        x_weighted_period_estimates = None
+        x_weights = None
+        x_period = None
+        y_period_estimates = None
+        y_weighted_period_estimates = None
+        y_weights = None
+        y_period = None
+        estimated_period = None
+        x_maxima_indices = None
+        x_minima_indices = None
+        y_maxima_indices = None
+        y_minima_indices = None
+        is_x_falling = None
+        is_y_falling = None
+        is_x_rising = None
+        is_y_rising = None
+        x_has_maximum = None
+        x_has_minimum = None
+        y_has_maximum = None
+        y_has_minimum = None
+        x_maximum = None
+        x_minimum = None
+        y_maximum = None
+        y_minimum = None
+        x_upper_amplitude = None
+        x_lower_amplitude = None
+        y_upper_amplitude = None
+        y_lower_amplitude = None
     return metrics_list
 
             

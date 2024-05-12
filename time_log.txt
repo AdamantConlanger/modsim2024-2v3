@@ -46,3 +46,8 @@ stop 20:33 for Eurovision.
 start 13:15.
 stop 15:19 to take a break before coding the extremum calculations.
 start 16:40.
+stop ~19:00 to eat.
+start 20:37.
+stop 21:12; gotta implement Thorsten Kranz's answer after this.
+start 21:38. Losing focus a bit.
+stop 23:24. Finished the period sims.
