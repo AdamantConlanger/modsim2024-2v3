@@ -45,3 +45,4 @@ stop 20:33 for Eurovision.
 2024-05-12:
 start 13:15.
 stop 15:19 to take a break before coding the extremum calculations.
+start 16:40.
