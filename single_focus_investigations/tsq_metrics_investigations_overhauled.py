@@ -14,18 +14,16 @@ def f(t, u, coeffs):
 
 
 ##################################
-# base_initials = [0.675, 1.475]  # list of starting values of the variables; first part of the parameters.
-base_initials = [1, 1]  # list of starting values of the variables; first part of the parameters.
-base_coefficients = [2/3, 0]  # list of coefficients for reaction speeds; second part of the parameters.
-interval = (0, 3200)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
-granularity = 12800  # number of points in time to actually log the values at (not counting t=0),
+base_initials = [0, 0]  # list of starting values of the variables; first part of the parameters.
+base_coefficients = [0, 0]  # list of coefficients for reaction speeds; second part of the parameters.
+interval = (0, 1600)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+granularity = 1600  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
 
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
 multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
 variations_initials = [None, None]
-# variations_coefficients = [np.linspace(0, 1, 51)[1:], np.linspace(0, 1, 51)[1:]]
-variations_coefficients = [None, np.linspace(0.52, 0.56, 3)]
+variations_coefficients = [np.linspace(0, 1, 51)[1:], np.linspace(0, 1, 51)[1:]]
 
 
 ############################################

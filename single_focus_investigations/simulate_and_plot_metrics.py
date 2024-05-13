@@ -296,6 +296,7 @@ def simulate_and_plot_metrics(f, initials, coefficients_list, interval, granular
             current_metrics["y_lower_amplitude"] = y_lower_amplitude if y_has_minimum else None
 
         metrics_list.append(current_metrics)
+        print(f"finished case {coefficients_out}")
 
     desired_range_x, desired_range_y = np.meshgrid(np.linspace(mu1_min, mu1_max, mu1_len),
                                                    np.linspace(mu2_min, mu2_max, mu2_len), indexing='ij')
