@@ -53,3 +53,5 @@ start 21:38. Losing focus a bit.
 stop 23:24. Finished the period sims.
 2024-05-13:
 start ~08:30 for optimizing.
+stop 12:46; need to get a vaccination. Fixed some issues, still need to apply them to stuff other than period.
+start 15:12. That took longer than expected.

@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 import scipy.integrate as scint
 
 
-def simulate_and_plot_metrics(f, initials_list, coefficients_list, interval_list, tolerance=(10**-4, 10**-4), evaluations_list=None, use_relative=False, plot_periods=True, plot_upper_x_amps=False, plot_lower_x_amps=False, plot_upper_y_amps=False, plot_lower_y_amps=False, plot_collapse_moments=False):
+def simulate_and_plot_metrics(f, initials, coefficients_list, interval, granularity, atol=10**-6, rtol=10**-3, tolerance=(10**-4, 10**-4), evaluations_list=None, use_relative=False, plot_periods=True, plot_upper_x_amps=False, plot_lower_x_amps=False, plot_upper_y_amps=False, plot_lower_y_amps=False, plot_collapse_moments=False):
+    x0, y0 = initials
     mu1_max = max([item[0] for item in coefficients_list])
     mu1_min = min([item[0] for item in coefficients_list])
     mu2_max = max([item[1] for item in coefficients_list])
@@ -17,15 +18,17 @@ def simulate_and_plot_metrics(f, initials_list, coefficients_list, interval_list
 
     metrics_list = []
 
-    for iteration in range(len(initials_list)):
+    for iteration in range(len(coefficients_list)):
         t_eval = None if evaluations_list is None else evaluations_list[iteration]
 
         sol = scint.solve_ivp(fun=f,
-                              t_span=interval_list[iteration],
-                              y0=initials_list[iteration],
+                              t_span=interval,
+                              y0=initials,
                               method="Radau",
                               t_eval=t_eval,
-                              args=(coefficients_list[iteration],))
+                              args=(coefficients_list[iteration],),
+                              rtol=rtol,
+                              atol=atol)
 
         current_metrics = dict()
         coefficients_out = coefficients_list[iteration]
@@ -297,13 +300,12 @@ def simulate_and_plot_metrics(f, initials_list, coefficients_list, interval_list
     desired_range_x, desired_range_y = np.meshgrid(np.linspace(mu1_min, mu1_max, mu1_len),
                                                    np.linspace(mu2_min, mu2_max, mu2_len), indexing='ij')
     desired_range = (desired_range_x, desired_range_y)
-    print(desired_range)
-    print(coefficients_list)
 
     metrics_range = range(len(metrics_list))
     are_collapsed = [item["is_collapsed"] if "is_collapsed" in item else False for item in metrics_list]
 
-
+    sliver = 10**-6
+    # or np.finfo(type(extent[0])).eps
     
 
     if plot_periods:
@@ -313,16 +315,35 @@ def simulate_and_plot_metrics(f, initials_list, coefficients_list, interval_list
         periods_data = griddata(coefficients_list, periods, desired_range, method="nearest")
 
         fig, axs = plt.subplots(1, 1, layout='constrained')
-        dx, = np.diff(extent[:2])/(periods_data.T.shape[1]-1)
-        dy, = -np.diff(extent[2:])/(periods_data.T.shape[0]-1)
-        shifted_extent = [extent[0]-dx/2, extent[1]+dx/2, extent[2]+dy/2, extent[3]-dy/2]
+        if np.diff(extent[:2]) <= sliver:
+            shifted_extent = [extent[0] - sliver, extent[1] + sliver]
+            the_xticks = np.array([extent[0]])
+        else:
+            dx, = np.diff(extent[:2])/(periods_data.T.shape[1]-1)
+            shifted_extent = [extent[0]-dx/2, extent[1]+dx/2]
+            x_step = dx
+            while 20 * x_step < np.diff(extent[:2]):
+                x_step = 2 * x_step
+            the_xticks = np.arange(extent[0], extent[1]+dx, x_step)
+        if np.diff(extent[2:]) <= 10**-6:
+            shifted_extent.extend([extent[2] - sliver, extent[3] + sliver])
+            the_yticks = np.array([extent[2]])
+        else:
+            dy, = np.diff(extent[2:])/(periods_data.T.shape[0]-1)
+            shifted_extent.extend([extent[2]-dy/2, extent[3]+dy/2])
+            y_step = dy
+            while 20 * y_step < np.diff(extent[2:]):
+                y_step = 2 * y_step
+            the_yticks = np.arange(extent[2], extent[3]+dy, y_step)
         im = axs.imshow(periods_data.T, interpolation="none", origin='lower',
                         cmap="viridis", extent=shifted_extent, aspect='auto')
-        axs.set_xticks(np.arange(extent[0], extent[1]+dx, dx))
-        axs.set_yticks(np.arange(extent[3], extent[2]+dy, dy))
+        axs.set_xticks(the_xticks)
+        axs.set_yticks(the_yticks)
         axs.set_ylabel("mu2")
         axs.set_xlabel("mu1")
-        fig.suptitle("A graph of the period of oscillation\nfor the truncated simple (reduced) quoduct model,\nwith x0=1, y0=1.")
+        the_title = "A graph of the period of oscillation\nfor the truncated simple (reduced) quoduct model,\n"
+        the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
+        fig.suptitle(the_title)
         fig.colorbar(im, ax=axs, label='period of oscillation (0 if converges)')
         plt.show()
     if plot_upper_x_amps:
@@ -333,16 +354,35 @@ def simulate_and_plot_metrics(f, initials_list, coefficients_list, interval_list
         x_upper_amps_data = griddata(coefficients_list, x_upper_amps, desired_range, method="nearest")
 
         fig, axs = plt.subplots(1, 1, layout='constrained')
-        dx, = np.diff(extent[:2])/(x_upper_amps_data.T.shape[1]-1)
-        dy, = -np.diff(extent[2:])/(x_upper_amps_data.T.shape[0]-1)
-        shifted_extent = [extent[0]-dx/2, extent[1]+dx/2, extent[2]+dy/2, extent[3]-dy/2]
+        if np.diff(extent[:2]) <= sliver:
+            shifted_extent = [extent[0] - sliver, extent[1] + sliver]
+            the_xticks = np.array([extent[0]])
+        else:
+            dx, = np.diff(extent[:2])/(x_upper_amps_data.T.shape[1]-1)
+            shifted_extent = [extent[0]-dx/2, extent[1]+dx/2]
+            x_step = dx
+            while 20 * x_step < np.diff(extent[:2]):
+                x_step = 2 * x_step
+            the_xticks = np.arange(extent[0], extent[1]+dx, x_step)
+        if np.diff(extent[2:]) <= 10**-6:
+            shifted_extent.extend([extent[2] - sliver, extent[3] + sliver])
+            the_yticks = np.array([extent[2]])
+        else:
+            dy, = np.diff(extent[2:])/(x_upper_amps_data.T.shape[0]-1)
+            shifted_extent.extend([extent[2]-dy/2, extent[3]+dy/2])
+            y_step = dy
+            while 20 * y_step < np.diff(extent[2:]):
+                y_step = 2 * y_step
+            the_yticks = np.arange(extent[2], extent[3]+dy, y_step)
         im = axs.imshow(x_upper_amps_data.T, interpolation="none", origin='lower',
                         cmap="viridis", extent=shifted_extent, aspect='auto')
-        axs.set_xticks(np.arange(extent[0], extent[1]+dx, dx))
-        axs.set_yticks(np.arange(extent[3], extent[2]+dy, dy))
+        axs.set_xticks(the_xticks)
+        axs.set_yticks(the_yticks)
         axs.set_ylabel("mu2")
         axs.set_xlabel("mu1")
-        fig.suptitle("A graph of the upper x wave amplitude\nfor the truncated simple (reduced) quoduct model,\nwith x0=1, y0=1.")
+        the_title = "A graph of the upper x wave amplitude\nfor the truncated simple (reduced) quoduct model,\n"
+        the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
+        fig.suptitle(the_title)
         fig.colorbar(im, ax=axs, label='upper x amplitude (0 if converges)')
         plt.show()
     if plot_lower_x_amps:
@@ -353,16 +393,35 @@ def simulate_and_plot_metrics(f, initials_list, coefficients_list, interval_list
         x_lower_amps_data = griddata(coefficients_list, x_lower_amps, desired_range, method="nearest")
 
         fig, axs = plt.subplots(1, 1, layout='constrained')
-        dx, = np.diff(extent[:2])/(x_lower_amps_data.T.shape[1]-1)
-        dy, = -np.diff(extent[2:])/(x_lower_amps_data.T.shape[0]-1)
-        shifted_extent = [extent[0]-dx/2, extent[1]+dx/2, extent[2]+dy/2, extent[3]-dy/2]
+        if np.diff(extent[:2]) <= sliver:
+            shifted_extent = [extent[0] - sliver, extent[1] + sliver]
+            the_xticks = np.array([extent[0]])
+        else:
+            dx, = np.diff(extent[:2])/(x_lower_amps_data.T.shape[1]-1)
+            shifted_extent = [extent[0]-dx/2, extent[1]+dx/2]
+            x_step = dx
+            while 20 * x_step < np.diff(extent[:2]):
+                x_step = 2 * x_step
+            the_xticks = np.arange(extent[0], extent[1]+dx, x_step)
+        if np.diff(extent[2:]) <= 10**-6:
+            shifted_extent.extend([extent[2] - sliver, extent[3] + sliver])
+            the_yticks = np.array([extent[2]])
+        else:
+            dy, = np.diff(extent[2:])/(x_lower_amps_data.T.shape[0]-1)
+            shifted_extent.extend([extent[2]-dy/2, extent[3]+dy/2])
+            y_step = dy
+            while 20 * y_step < np.diff(extent[2:]):
+                y_step = 2 * y_step
+            the_yticks = np.arange(extent[2], extent[3]+dy, y_step)
         im = axs.imshow(x_lower_amps_data.T, interpolation="none", origin='lower',
                         cmap="viridis", extent=shifted_extent, aspect='auto')
-        axs.set_xticks(np.arange(extent[0], extent[1]+dx, dx))
-        axs.set_yticks(np.arange(extent[3], extent[2]+dy, dy))
+        axs.set_xticks(the_xticks)
+        axs.set_yticks(the_yticks)
         axs.set_ylabel("mu2")
         axs.set_xlabel("mu1")
-        fig.suptitle("A graph of the lower x wave amplitude\nfor the truncated simple (reduced) quoduct model,\nwith x0=1, y0=1.")
+        the_title = "A graph of the lower x wave amplitude\nfor the truncated simple (reduced) quoduct model,\n"
+        the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
+        fig.suptitle(the_title)
         fig.colorbar(im, ax=axs, label='lower x amplitude (0 if converges)')
         plt.show()
     if plot_upper_y_amps:
@@ -373,16 +432,35 @@ def simulate_and_plot_metrics(f, initials_list, coefficients_list, interval_list
         y_upper_amps_data = griddata(coefficients_list, y_upper_amps, desired_range, method="nearest")
 
         fig, axs = plt.subplots(1, 1, layout='constrained')
-        dx, = np.diff(extent[:2])/(y_upper_amps_data.T.shape[1]-1)
-        dy, = -np.diff(extent[2:])/(y_upper_amps_data.T.shape[0]-1)
-        shifted_extent = [extent[0]-dx/2, extent[1]+dx/2, extent[2]+dy/2, extent[3]-dy/2]
+        if np.diff(extent[:2]) <= sliver:
+            shifted_extent = [extent[0] - sliver, extent[1] + sliver]
+            the_xticks = np.array([extent[0]])
+        else:
+            dx, = np.diff(extent[:2])/(y_upper_amps_data.T.shape[1]-1)
+            shifted_extent = [extent[0]-dx/2, extent[1]+dx/2]
+            x_step = dx
+            while 20 * x_step < np.diff(extent[:2]):
+                x_step = 2 * x_step
+            the_xticks = np.arange(extent[0], extent[1]+dx, x_step)
+        if np.diff(extent[2:]) <= 10**-6:
+            shifted_extent.extend([extent[2] - sliver, extent[3] + sliver])
+            the_yticks = np.array([extent[2]])
+        else:
+            dy, = np.diff(extent[2:])/(y_upper_amps_data.T.shape[0]-1)
+            shifted_extent.extend([extent[2]-dy/2, extent[3]+dy/2])
+            y_step = dy
+            while 20 * y_step < np.diff(extent[2:]):
+                y_step = 2 * y_step
+            the_yticks = np.arange(extent[2], extent[3]+dy, y_step)
         im = axs.imshow(y_upper_amps_data.T, interpolation="none", origin='lower',
                         cmap="viridis", extent=shifted_extent, aspect='auto')
-        axs.set_xticks(np.arange(extent[0], extent[1]+dx, dx))
-        axs.set_yticks(np.arange(extent[3], extent[2]+dy, dy))
+        axs.set_xticks(the_xticks)
+        axs.set_yticks(the_yticks)
         axs.set_ylabel("mu2")
         axs.set_xlabel("mu1")
-        fig.suptitle("A graph of the upper y wave amplitude\nfor the truncated simple (reduced) quoduct model,\nwith x0=1, y0=1.")
+        the_title = "A graph of the upper y wave amplitude\nfor the truncated simple (reduced) quoduct model,\n"
+        the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
+        fig.suptitle(the_title)
         fig.colorbar(im, ax=axs, label='upper y amplitude (0 if converges)')
         plt.show()
     if plot_lower_y_amps:
@@ -393,16 +471,35 @@ def simulate_and_plot_metrics(f, initials_list, coefficients_list, interval_list
         y_lower_amps_data = griddata(coefficients_list, y_lower_amps, desired_range, method="nearest")
 
         fig, axs = plt.subplots(1, 1, layout='constrained')
-        dx, = np.diff(extent[:2])/(y_lower_amps_data.T.shape[1]-1)
-        dy, = -np.diff(extent[2:])/(y_lower_amps_data.T.shape[0]-1)
-        shifted_extent = [extent[0]-dx/2, extent[1]+dx/2, extent[2]+dy/2, extent[3]-dy/2]
+        if np.diff(extent[:2]) <= sliver:
+            shifted_extent = [extent[0] - sliver, extent[1] + sliver]
+            the_xticks = np.array([extent[0]])
+        else:
+            dx, = np.diff(extent[:2])/(y_lower_amps_data.T.shape[1]-1)
+            shifted_extent = [extent[0]-dx/2, extent[1]+dx/2]
+            x_step = dx
+            while 20 * x_step < np.diff(extent[:2]):
+                x_step = 2 * x_step
+            the_xticks = np.arange(extent[0], extent[1]+dx, x_step)
+        if np.diff(extent[2:]) <= 10**-6:
+            shifted_extent.extend([extent[2] - sliver, extent[3] + sliver])
+            the_yticks = np.array([extent[2]])
+        else:
+            dy, = np.diff(extent[2:])/(y_lower_amps_data.T.shape[0]-1)
+            shifted_extent.extend([extent[2]-dy/2, extent[3]+dy/2])
+            y_step = dy
+            while 20 * y_step < np.diff(extent[2:]):
+                y_step = 2 * y_step
+            the_yticks = np.arange(extent[2], extent[3]+dy, y_step)
         im = axs.imshow(y_lower_amps_data.T, interpolation="none", origin='lower',
                         cmap="viridis", extent=shifted_extent, aspect='auto')
-        axs.set_xticks(np.arange(extent[0], extent[1]+dx, dx))
-        axs.set_yticks(np.arange(extent[3], extent[2]+dy, dy))
+        axs.set_xticks(the_xticks)
+        axs.set_yticks(the_yticks)
         axs.set_ylabel("mu2")
         axs.set_xlabel("mu1")
-        fig.suptitle("A graph of the lower y wave amplitude\nfor the truncated simple (reduced) quoduct model,\nwith x0=1, y0=1.")
+        the_title = "A graph of the lower y wave amplitude\nfor the truncated simple (reduced) quoduct model,\n"
+        the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
+        fig.suptitle(the_title)
         fig.colorbar(im, ax=axs, label='lower y amplitude (0 if converges)')
         plt.show()
     if plot_collapse_moments:
@@ -410,17 +507,36 @@ def simulate_and_plot_metrics(f, initials_list, coefficients_list, interval_list
         collapse_moments_data = griddata(coefficients_list, collapse_moments, desired_range, method="nearest")
 
         fig, axs = plt.subplots(1, 1, layout='constrained')
-        dx, = np.diff(extent[:2])/(collapse_moments_data.T.shape[1]-1)
-        dy, = -np.diff(extent[2:])/(collapse_moments_data.T.shape[0]-1)
-        shifted_extent = [extent[0]-dx/2, extent[1]+dx/2, extent[2]+dy/2, extent[3]-dy/2]
+        if np.diff(extent[:2]) <= sliver:
+            shifted_extent = [extent[0] - sliver, extent[1] + sliver]
+            the_xticks = np.array([extent[0]])
+        else:
+            dx, = np.diff(extent[:2])/(collapse_moments_data.T.shape[1]-1)
+            shifted_extent = [extent[0]-dx/2, extent[1]+dx/2]
+            x_step = dx
+            while 20 * x_step < np.diff(extent[:2]):
+                x_step = 2 * x_step
+            the_xticks = np.arange(extent[0], extent[1]+dx, x_step)
+        if np.diff(extent[2:]) <= 10**-6:
+            shifted_extent.extend([extent[2] - sliver, extent[3] + sliver])
+            the_yticks = np.array([extent[2]])
+        else:
+            dy, = np.diff(extent[2:])/(collapse_moments_data.T.shape[0]-1)
+            shifted_extent.extend([extent[2]-dy/2, extent[3]+dy/2])
+            y_step = dy
+            while 20 * y_step < np.diff(extent[2:]):
+                y_step = 2 * y_step
+            the_yticks = np.arange(extent[2], extent[3]+dy, y_step)
         im = axs.imshow(collapse_moments_data.T, interpolation="none", origin='lower',
                         cmap="viridis", extent=shifted_extent, aspect='auto')
-        axs.set_xticks(np.arange(extent[0], extent[1]+dx, dx))
-        axs.set_yticks(np.arange(extent[3], extent[2]+dy, dy))
+        axs.set_xticks(the_xticks)
+        axs.set_yticks(the_yticks)
         axs.set_ylabel("mu2")
         axs.set_xlabel("mu1")
-        tol_type = "relative" if use_relative else "absolute"
-        fig.suptitle(f"A graph of \"the moment\" x and y converge\nfor the truncated simple (reduced) quoduct model,\nwith x0=1, y0=1, {tol_type} tolerances={tolerance}.")
+        tol_type = "rel" if use_relative else "abs"
+        the_title = "A graph of \"the moment\" x and y converge\nfor the truncated simple (reduced) quoduct model,\n"
+        the_title += f"with {x0=}, {y0=}, {tol_type} tol={tolerance}, t_max={interval[1]}, grains={granularity}."
+        fig.suptitle(the_title)
         fig.colorbar(im, ax=axs, label='moment of convergence within tolerances')
         plt.show()
     

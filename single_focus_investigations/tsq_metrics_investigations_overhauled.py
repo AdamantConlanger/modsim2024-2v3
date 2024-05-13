@@ -13,19 +13,20 @@ def f(t, u, coeffs):
     ])
 
 
-
 ##################################
+# base_initials = [0.675, 1.475]  # list of starting values of the variables; first part of the parameters.
 base_initials = [1, 1]  # list of starting values of the variables; first part of the parameters.
-base_coefficients = [0, 0]  # list of coefficients for reaction speeds; second part of the parameters.
-interval = (0, 800)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
-granularity = 6400  # number of points in time to actually log the values at (not counting t=0),
+base_coefficients = [2/3, 0]  # list of coefficients for reaction speeds; second part of the parameters.
+interval = (0, 3200)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+granularity = 12800  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
-plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
 
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
 multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
 variations_initials = [None, None]
-variations_coefficients = [np.linspace(0, 1, 6)[1:], np.linspace(0, 0.1, 6)[1:]]
+# variations_coefficients = [np.linspace(0, 1, 51)[1:], np.linspace(0, 1, 51)[1:]]
+variations_coefficients = [None, np.linspace(0.52, 0.56, 3)]
+
 
 ############################################
 
@@ -91,5 +92,5 @@ else:
 
 #metrics = determine_and_plot_metrics(coefficients_list, solution_list, separate_modified_variables, coeffs_extents, (10**-4, 10**-4), use_relative=False)
 
-simulate_and_plot_metrics(f, initials_list, coefficients_list, interval_list, tolerance=(10**-4, 10**-4), evaluations_list=None, use_relative=False,
+simulate_and_plot_metrics(f, base_initials, coefficients_list, interval, granularity, atol=10**-6, rtol=10**-5, tolerance=(10**-4, 10**-4), evaluations_list=evaluations_list, use_relative=False,
                           plot_periods=True, plot_upper_x_amps=True, plot_lower_x_amps=True, plot_upper_y_amps=True, plot_lower_y_amps=True, plot_collapse_moments=True)
