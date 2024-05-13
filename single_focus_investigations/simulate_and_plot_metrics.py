@@ -2,29 +2,35 @@ import math
 import numpy as np
 from scipy.interpolate import griddata
 import matplotlib.pyplot as plt
+import scipy.integrate as scint
 
 
-# takes in the output of a TSQ simulation and determines whether or not it collapsed,
-# and what the amplitude (on both sides) and period are if not.
-# collapse is defined as staying within the tolerance limits of the equilibrium
-# for the last 25% of the simulation.
-# if, however, the period of time in which x and y are within tolerances at the end
-# is not the longest span of time that x and y have stayed within tolerances for in the entire sim,
-# we deem it uncertain whether or not they have actually collapsed.
-# note: the actual algorithm for determining this may be changed without it being mentioned here.
-# tolerance is a tuple of the x-tolerance and y-tolerance
-# if relative tolerances are desired, equi * tolerance is used as true tolerance limit radius.
-# Else, tolerance is used.
+def simulate_and_plot_metrics(f, initials_list, coefficients_list, interval_list, tolerance=(10**-4, 10**-4), evaluations_list=None, use_relative=False, plot_periods=True, plot_upper_x_amps=False, plot_lower_x_amps=False, plot_upper_y_amps=False, plot_lower_y_amps=False, plot_collapse_moments=False):
+    mu1_max = max([item[0] for item in coefficients_list])
+    mu1_min = min([item[0] for item in coefficients_list])
+    mu2_max = max([item[1] for item in coefficients_list])
+    mu2_min = min([item[1] for item in coefficients_list])
+    mu1_len = len(set([item[0] for item in coefficients_list]))
+    mu2_len = len(set([item[1] for item in coefficients_list]))
+    extent = (mu1_min, mu1_max, mu2_min, mu2_max)
+    
 
-
-def determine_and_plot_metrics(coefficients_list, solution_list, separate_modified_variables, coeffs_extents, tolerance, use_relative=False, plot_periods=True, plot_upper_x_amps=False, plot_lower_x_amps=False, plot_upper_y_amps=False, plot_lower_y_amps=False, plot_collapse_moments=False):
     metrics_list = []
-    for n in range(len(solution_list)):
+
+    for iteration in range(len(initials_list)):
+        t_eval = None if evaluations_list is None else evaluations_list[iteration]
+
+        sol = scint.solve_ivp(fun=f,
+                              t_span=interval_list[iteration],
+                              y0=initials_list[iteration],
+                              method="Radau",
+                              t_eval=t_eval,
+                              args=(coefficients_list[iteration],))
+
         current_metrics = dict()
-        coefficients_out = coefficients_list[n]
-        solution_out = solution_list[n]
-        t = solution_out.t
-        x, y = solution_out.y
+        coefficients_out = coefficients_list[iteration]
+        t = sol.t
+        x, y = sol.y
         mu1 = coefficients_out[0]
         x_equi = mu1
         y_equi = 1/mu1
@@ -47,7 +53,6 @@ def determine_and_plot_metrics(coefficients_list, solution_list, separate_modifi
         # determine whether collapse: first check whether the last 25% is within tolerance
         late_index = math.floor(len(t) * 3 / 4)
         seems_collapsed = any(tolerability[late_index:])
-
 
         # if it collapses, check whether that's the longest span and deem it certain or uncertain
         if seems_collapsed:
@@ -87,7 +92,7 @@ def determine_and_plot_metrics(coefficients_list, solution_list, separate_modifi
 
             # add metrics to current metrics
             current_metrics["collapse_moment"] = collapse_moment
-        
+
         else:
             # if it doesn't seem collapsed, it also isn't collapsed
             is_collapsed = False
@@ -103,7 +108,6 @@ def determine_and_plot_metrics(coefficients_list, solution_list, separate_modifi
         # is_collapse_certain: is it staying within tolerances for considerably longer than ever before?
         # collapse_moment: first point within tolerances after which it stays so for the rest of the sim.
 
-        
         # if it doesn't collapse, we determine periods and amplitudes
         if not is_collapsed:
             # we need to determine all local maxima and minima and "characterisic" points for calculating periods,
@@ -147,7 +151,7 @@ def determine_and_plot_metrics(coefficients_list, solution_list, separate_modifi
                 current_metrics["has_usable_oscillations"] = False
                 metrics_list.append(current_metrics)
                 continue
-            
+
             # next, we determine the monotonicity of x and y at the respective last of these points.
             use_falling_x = x[x_events[-1] + 1] > x[x_events[-1]]
             use_falling_y = y[y_events[-1] + 1] > y[y_events[-1]]
@@ -240,13 +244,13 @@ def determine_and_plot_metrics(coefficients_list, solution_list, separate_modifi
                         y_maxima_indices.append(index - 1)
                         is_y_rising = False
                     is_y_falling = True
-            
+
             # if there are no minima and/or maxima, give up on that department
             x_has_maximum = len(x_maxima_indices) > 0
             x_has_minimum = len(x_minima_indices) > 0
             y_has_maximum = len(y_maxima_indices) > 0
             y_has_minimum = len(y_minima_indices) > 0
-            
+
             current_metrics["x_has_maximum"] = x_has_maximum
             current_metrics["x_has_minimum"] = x_has_minimum
             current_metrics["y_has_maximum"] = y_has_maximum
@@ -261,7 +265,7 @@ def determine_and_plot_metrics(coefficients_list, solution_list, separate_modifi
                 y_maxima_indices = y_maxima_indices[math.floor(len(y_maxima_indices) / 3):]
             if y_has_minimum:
                 y_minima_indices = y_minima_indices[math.floor(len(y_minima_indices) / 3):]
-            
+
             # we now take the largest maxima and smallest minima as our true maxima
             if x_has_maximum:
                 x_maximum = max([x[index] for index in x_maxima_indices])
@@ -288,162 +292,140 @@ def determine_and_plot_metrics(coefficients_list, solution_list, separate_modifi
             current_metrics["y_upper_amplitude"] = y_upper_amplitude if y_has_maximum else None
             current_metrics["y_lower_amplitude"] = y_lower_amplitude if y_has_minimum else None
 
-            # free some memory:
-            solution_list[n] = None
-
         metrics_list.append(current_metrics)
 
+    desired_range_x, desired_range_y = np.meshgrid(np.linspace(mu1_min, mu1_max, mu1_len),
+                                                   np.linspace(mu2_min, mu2_max, mu2_len), indexing='ij')
+    desired_range = (desired_range_x, desired_range_y)
+    print(desired_range)
+    print(coefficients_list)
+
+    metrics_range = range(len(metrics_list))
+    are_collapsed = [item["is_collapsed"] if "is_collapsed" in item else False for item in metrics_list]
 
 
-
-        # freeing memory
-        current_metrics = None
-        coefficients_out = None
-        solution_out = None
-        t = None
-        x = None
-        y = None
-        mu1 = None
-        x_equi = None
-        y_equi = None
-        tol_x = None
-        tol_y = None
-        tolerability_x = None
-        tolerability_y = None
-        tolerability = None
-        late_index = None
-        seems_collapsed = None
-        tolerability_bounds_reverse_indices = None
-        tolerability_span_lengths = None
-        lower_index = None
-        upper_index = None
-        seems_collapsed = None
-        is_collapsed = None
-        is_collapse_certain = None
-        collapse_moment = None
-        use_exits_x = None
-        use_exits_y = None
-        x_events = None
-        y_events = None
-        use_falling_x = None
-        use_falling_y = None
-        x_usable_events = None
-        y_usable_events = None
-        use_events_x = None
-        use_events_y = None
-        x_period_estimates = None
-        x_weighted_period_estimates = None
-        x_weights = None
-        x_period = None
-        y_period_estimates = None
-        y_weighted_period_estimates = None
-        y_weights = None
-        y_period = None
-        estimated_period = None
-        x_maxima_indices = None
-        x_minima_indices = None
-        y_maxima_indices = None
-        y_minima_indices = None
-        is_x_falling = None
-        is_y_falling = None
-        is_x_rising = None
-        is_y_rising = None
-        x_has_maximum = None
-        x_has_minimum = None
-        y_has_maximum = None
-        y_has_minimum = None
-        x_maximum = None
-        x_minimum = None
-        y_maximum = None
-        y_minimum = None
-        x_upper_amplitude = None
-        x_lower_amplitude = None
-        y_upper_amplitude = None
-        y_lower_amplitude = None
-
-    metrics = metrics_list
-
-
-    # freeing memory
-    solution_list = None
-
-    # coefficients_to_indices = dict()
-    mu1_list = separate_modified_variables[2]
-    mu2_list = separate_modified_variables[3]
-    mu1_count = len(mu1_list)
-    mu2_count = len(mu2_list)
+    
 
     if plot_periods:
-        periods = [item["estimated_period"] if "estimated_period" in item else 0 if item["is_collapsed"] else np.nan for item in metrics]
-    elif plot_upper_x_amps:
-        upper_x_amps = [item["x_upper_amplitude"]
-                        if "x_upper_amplitude" in item else 0 if item["is_collapsed"] else np.nan for item in metrics]
-    elif plot_lower_x_amps:
-        lower_x_amps = [item["x_lower_amplitude"]
-                        if "x_lower_amplitude" in item else 0 if item["is_collapsed"] else np.nan for item in metrics]
-    elif plot_upper_y_amps:
-        upper_y_amps = [item["y_upper_amplitude"]
-                        if "y_upper_amplitude" in item else 0 if item["is_collapsed"] else np.nan for item in metrics]
-    elif plot_lower_y_amps:
-        lower_y_amps = [item["y_lower_amplitude"]
-                        if "y_lower_amplitude" in item else 0 if item["is_collapsed"] else np.nan for item in metrics]
-    elif plot_collapse_moments:
-        collapse_moments = [item["collapse_moment"] if "collapse_moment" in item else np.nan for item in metrics]
-    else:
-        return
+        have_period = ["estimated_period" in item for item in metrics_list]
+        periods = [metrics_list[index]["estimated_period"] if have_period[index] else np.nan for index in metrics_range]
+        periods = [0 if are_collapsed[index] else periods[index] for index in metrics_range]
+        periods_data = griddata(coefficients_list, periods, desired_range, method="nearest")
+
+        fig, axs = plt.subplots(1, 1, layout='constrained')
+        dx, = np.diff(extent[:2])/(periods_data.T.shape[1]-1)
+        dy, = -np.diff(extent[2:])/(periods_data.T.shape[0]-1)
+        shifted_extent = [extent[0]-dx/2, extent[1]+dx/2, extent[2]+dy/2, extent[3]-dy/2]
+        im = axs.imshow(periods_data.T, interpolation="none", origin='lower',
+                        cmap="viridis", extent=shifted_extent, aspect='auto')
+        axs.set_xticks(np.arange(extent[0], extent[1]+dx, dx))
+        axs.set_yticks(np.arange(extent[3], extent[2]+dy, dy))
+        axs.set_ylabel("mu2")
+        axs.set_xlabel("mu1")
+        fig.suptitle("A graph of the period of oscillation\nfor the truncated simple (reduced) quoduct model,\nwith x0=1, y0=1.")
+        fig.colorbar(im, ax=axs, label='period of oscillation (0 if converges)')
+        plt.show()
+    if plot_upper_x_amps:
+        have_x_upper_amps = ["x_upper_amplitude" in item for item in metrics_list]
+        x_upper_amps = [metrics_list[index]["x_upper_amplitude"]
+                   if have_x_upper_amps[index] else np.nan for index in metrics_range]
+        x_upper_amps = [0 if are_collapsed[index] else x_upper_amps[index] for index in metrics_range]
+        x_upper_amps_data = griddata(coefficients_list, x_upper_amps, desired_range, method="nearest")
+
+        fig, axs = plt.subplots(1, 1, layout='constrained')
+        dx, = np.diff(extent[:2])/(x_upper_amps_data.T.shape[1]-1)
+        dy, = -np.diff(extent[2:])/(x_upper_amps_data.T.shape[0]-1)
+        shifted_extent = [extent[0]-dx/2, extent[1]+dx/2, extent[2]+dy/2, extent[3]-dy/2]
+        im = axs.imshow(x_upper_amps_data.T, interpolation="none", origin='lower',
+                        cmap="viridis", extent=shifted_extent, aspect='auto')
+        axs.set_xticks(np.arange(extent[0], extent[1]+dx, dx))
+        axs.set_yticks(np.arange(extent[3], extent[2]+dy, dy))
+        axs.set_ylabel("mu2")
+        axs.set_xlabel("mu1")
+        fig.suptitle("A graph of the upper x wave amplitude\nfor the truncated simple (reduced) quoduct model,\nwith x0=1, y0=1.")
+        fig.colorbar(im, ax=axs, label='upper x amplitude (0 if converges)')
+        plt.show()
+    if plot_lower_x_amps:
+        have_x_lower_amps = ["x_lower_amplitude" in item for item in metrics_list]
+        x_lower_amps = [metrics_list[index]["x_lower_amplitude"]
+                        if have_x_lower_amps[index] else np.nan for index in metrics_range]
+        x_lower_amps = [0 if are_collapsed[index] else x_lower_amps[index] for index in metrics_range]
+        x_lower_amps_data = griddata(coefficients_list, x_lower_amps, desired_range, method="nearest")
+
+        fig, axs = plt.subplots(1, 1, layout='constrained')
+        dx, = np.diff(extent[:2])/(x_lower_amps_data.T.shape[1]-1)
+        dy, = -np.diff(extent[2:])/(x_lower_amps_data.T.shape[0]-1)
+        shifted_extent = [extent[0]-dx/2, extent[1]+dx/2, extent[2]+dy/2, extent[3]-dy/2]
+        im = axs.imshow(x_lower_amps_data.T, interpolation="none", origin='lower',
+                        cmap="viridis", extent=shifted_extent, aspect='auto')
+        axs.set_xticks(np.arange(extent[0], extent[1]+dx, dx))
+        axs.set_yticks(np.arange(extent[3], extent[2]+dy, dy))
+        axs.set_ylabel("mu2")
+        axs.set_xlabel("mu1")
+        fig.suptitle("A graph of the lower x wave amplitude\nfor the truncated simple (reduced) quoduct model,\nwith x0=1, y0=1.")
+        fig.colorbar(im, ax=axs, label='lower x amplitude (0 if converges)')
+        plt.show()
+    if plot_upper_y_amps:
+        have_y_upper_amps = ["y_upper_amplitude" in item for item in metrics_list]
+        y_upper_amps = [metrics_list[index]["y_upper_amplitude"]
+                        if have_y_upper_amps[index] else np.nan for index in metrics_range]
+        y_upper_amps = [0 if are_collapsed[index] else y_upper_amps[index] for index in metrics_range]
+        y_upper_amps_data = griddata(coefficients_list, y_upper_amps, desired_range, method="nearest")
+
+        fig, axs = plt.subplots(1, 1, layout='constrained')
+        dx, = np.diff(extent[:2])/(y_upper_amps_data.T.shape[1]-1)
+        dy, = -np.diff(extent[2:])/(y_upper_amps_data.T.shape[0]-1)
+        shifted_extent = [extent[0]-dx/2, extent[1]+dx/2, extent[2]+dy/2, extent[3]-dy/2]
+        im = axs.imshow(y_upper_amps_data.T, interpolation="none", origin='lower',
+                        cmap="viridis", extent=shifted_extent, aspect='auto')
+        axs.set_xticks(np.arange(extent[0], extent[1]+dx, dx))
+        axs.set_yticks(np.arange(extent[3], extent[2]+dy, dy))
+        axs.set_ylabel("mu2")
+        axs.set_xlabel("mu1")
+        fig.suptitle("A graph of the upper y wave amplitude\nfor the truncated simple (reduced) quoduct model,\nwith x0=1, y0=1.")
+        fig.colorbar(im, ax=axs, label='upper y amplitude (0 if converges)')
+        plt.show()
+    if plot_lower_y_amps:
+        have_y_lower_amps = ["y_lower_amplitude" in item for item in metrics_list]
+        y_lower_amps = [metrics_list[index]["y_lower_amplitude"]
+                        if have_y_lower_amps[index] else np.nan for index in metrics_range]
+        y_lower_amps = [0 if are_collapsed[index] else y_lower_amps[index] for index in metrics_range]
+        y_lower_amps_data = griddata(coefficients_list, y_lower_amps, desired_range, method="nearest")
+
+        fig, axs = plt.subplots(1, 1, layout='constrained')
+        dx, = np.diff(extent[:2])/(y_lower_amps_data.T.shape[1]-1)
+        dy, = -np.diff(extent[2:])/(y_lower_amps_data.T.shape[0]-1)
+        shifted_extent = [extent[0]-dx/2, extent[1]+dx/2, extent[2]+dy/2, extent[3]-dy/2]
+        im = axs.imshow(y_lower_amps_data.T, interpolation="none", origin='lower',
+                        cmap="viridis", extent=shifted_extent, aspect='auto')
+        axs.set_xticks(np.arange(extent[0], extent[1]+dx, dx))
+        axs.set_yticks(np.arange(extent[3], extent[2]+dy, dy))
+        axs.set_ylabel("mu2")
+        axs.set_xlabel("mu1")
+        fig.suptitle("A graph of the lower y wave amplitude\nfor the truncated simple (reduced) quoduct model,\nwith x0=1, y0=1.")
+        fig.colorbar(im, ax=axs, label='lower y amplitude (0 if converges)')
+        plt.show()
+    if plot_collapse_moments:
+        collapse_moments = [item["collapse_moment"] if "collapse_moment" in item else np.nan for item in metrics_list]
+        collapse_moments_data = griddata(coefficients_list, collapse_moments, desired_range, method="nearest")
+
+        fig, axs = plt.subplots(1, 1, layout='constrained')
+        dx, = np.diff(extent[:2])/(collapse_moments_data.T.shape[1]-1)
+        dy, = -np.diff(extent[2:])/(collapse_moments_data.T.shape[0]-1)
+        shifted_extent = [extent[0]-dx/2, extent[1]+dx/2, extent[2]+dy/2, extent[3]-dy/2]
+        im = axs.imshow(collapse_moments_data.T, interpolation="none", origin='lower',
+                        cmap="viridis", extent=shifted_extent, aspect='auto')
+        axs.set_xticks(np.arange(extent[0], extent[1]+dx, dx))
+        axs.set_yticks(np.arange(extent[3], extent[2]+dy, dy))
+        axs.set_ylabel("mu2")
+        axs.set_xlabel("mu1")
+        tol_type = "relative" if use_relative else "absolute"
+        fig.suptitle(f"A graph of \"the moment\" x and y converge\nfor the truncated simple (reduced) quoduct model,\nwith x0=1, y0=1, {tol_type} tolerances={tolerance}.")
+        fig.colorbar(im, ax=axs, label='moment of convergence within tolerances')
+        plt.show()
+    
 
 
-    # freeing memory
-    metrics = None
 
-    mu1_min, mu1_max, mu2_min, mu2_max = coeffs_extents
-    desired_range_x, desired_range_y = np.meshgrid(np.linspace(mu1_min, mu1_max, mu1_count),
-                                                np.linspace(mu2_min, mu2_max, mu2_count), indexing='ij')
-    print(f"{mu1_list=}")
-    print(f"{mu2_list=}")
-    print(f"{desired_range_x=}")
-    print(f"{desired_range_y=}")
-    print(f"{coefficients_list=}")
-    desired_range = (desired_range_x, desired_range_y)
-
-    # https://stackoverflow.com/a/14140554/18375328,
-    # which is superseded by https://docs.scipy.org/doc/scipy/tutorial/interpolate/ND_unstructured.html
-
-    # TODO: make this dependent on which stuff needs to be plotted
-
-    plottable_data = griddata(coefficients_list, periods, desired_range, method="nearest")
-
-
-    fig, axs = plt.subplots(1, 1, layout='constrained')
-
-    use_smooth_block_interpolation = False
-    use_smooth_lossy_interpolation = False
-
-    if use_smooth_block_interpolation:
-        im = axs.imshow(plottable_data.T, extent=coeffs_extents, interpolation="spline16", origin='lower', cmap="viridis")
-    elif use_smooth_lossy_interpolation:
-        im = axs.imshow(plottable_data.T, extent=coeffs_extents, interpolation="bicubic", origin='lower', cmap="viridis")
-    else:
-        im = axs.imshow(plottable_data.T, extent=coeffs_extents, interpolation="none", origin='lower', cmap="viridis")
-    axs.set_ylabel("mu2")
-    axs.set_xlabel("mu1")
-    fig.suptitle("A graph of the period of oscillation for the truncated simple (reduced) quoduct model.\nx0=1, y0=1.")
-    fig.colorbar(im, ax=axs, label='period of oscillation (0 if n/a)')
-    plt.show()
-
-            
-                    
-
-
-
-
-
-
-            
-            
-
-
-            
-            
 
 

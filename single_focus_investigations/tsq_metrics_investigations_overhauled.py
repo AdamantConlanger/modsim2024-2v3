@@ -1,6 +1,5 @@
-from simulate import simulate
 from cartesian_product import cartesian_product
-from determine_and_plot_metrics import determine_and_plot_metrics
+from simulate_and_plot_metrics import simulate_and_plot_metrics
 import numpy as np
 import math
 
@@ -17,16 +16,16 @@ def f(t, u, coeffs):
 
 ##################################
 base_initials = [1, 1]  # list of starting values of the variables; first part of the parameters.
-base_coefficients = [0.1, 0]  # list of coefficients for reaction speeds; second part of the parameters.
-interval = (0, 400)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
-granularity = 1600  # number of points in time to actually log the values at (not counting t=0),
+base_coefficients = [0, 0]  # list of coefficients for reaction speeds; second part of the parameters.
+interval = (0, 800)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+granularity = 6400  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
 plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
 
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
 multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
 variations_initials = [None, None]
-variations_coefficients = [np.linspace(0, 0.2, 11)[1:], np.linspace(0, 0.1, 11)[1:]]
+variations_coefficients = [np.linspace(0, 1, 6)[1:], np.linspace(0, 0.1, 6)[1:]]
 
 ############################################
 
@@ -80,18 +79,17 @@ if granularity is None:
 else:
     evaluations_list = [np.linspace(interval[0], interval[1], granularity + 1) for item in variables_list]
 
-result = simulate(f, initials_list, coefficients_list, interval_list, evaluations_list)
-f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list = result
+# result = simulate(f, initials_list, coefficients_list, interval_list, evaluations_list)
+# f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list = result
 
-# freeing memory
-result = None
-f = None
-initials_list = None
-interval_list = None
-evaluations_list = None
+# # freeing memory
+# result = None
+# f = None
+# initials_list = None
+# interval_list = None
+# evaluations_list = None
 
-metrics = determine_and_plot_metrics(coefficients_list, solution_list, separate_modified_variables, coeffs_extents, (10**-4, 10**-4), use_relative=False)
+#metrics = determine_and_plot_metrics(coefficients_list, solution_list, separate_modified_variables, coeffs_extents, (10**-4, 10**-4), use_relative=False)
 
-
-# TODO: merge simulation and metric-determining parts so we don't need 4GB or something to simulate it.
-# TODO: make it so uncertain values are left out
+simulate_and_plot_metrics(f, initials_list, coefficients_list, interval_list, tolerance=(10**-4, 10**-4), evaluations_list=None, use_relative=False,
+                          plot_periods=True, plot_upper_x_amps=True, plot_lower_x_amps=True, plot_upper_y_amps=True, plot_lower_y_amps=True, plot_collapse_moments=True)
