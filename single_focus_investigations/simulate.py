@@ -1,6 +1,6 @@
 import scipy.integrate as scint
 
-def simulate(f, initials_list, coefficients_list, interval_list, evaluations_list = None):
+def simulate(f, initials_list, coefficients_list, interval_list, evaluations_list = None, atol=10**-6, rtol=10**-3):
     solution_list = list()
 
     for iteration in range(len(initials_list)):
@@ -11,7 +11,9 @@ def simulate(f, initials_list, coefficients_list, interval_list, evaluations_lis
                               y0=initials_list[iteration],
                               method="Radau",
                               t_eval=t_eval,
-                              args=(coefficients_list[iteration],))
+                              args=(coefficients_list[iteration],),
+                              atol=atol,
+                              rtol=rtol)
         
         solution_list.append(sol)
     
