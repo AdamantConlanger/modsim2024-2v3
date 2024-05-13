@@ -51,3 +51,5 @@ start 20:37.
 stop 21:12; gotta implement Thorsten Kranz's answer after this.
 start 21:38. Losing focus a bit.
 stop 23:24. Finished the period sims.
+2024-05-13:
+start ~08:30 for optimizing.

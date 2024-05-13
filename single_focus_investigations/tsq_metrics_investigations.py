@@ -17,16 +17,16 @@ def f(t, u, coeffs):
 
 
 base_initials = [1, 1]  # list of starting values of the variables; first part of the parameters.
-base_coefficients = [0, 0]  # list of coefficients for reaction speeds; second part of the parameters.
-interval = (0, 800)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
-granularity = 12800  # number of points in time to actually log the values at (not counting t=0),
+base_coefficients = [0.1, 0]  # list of coefficients for reaction speeds; second part of the parameters.
+interval = (0, 400)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+granularity = 1600  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
 plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
 
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
 multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
 variations_initials = [None, None]
-variations_coefficients = [np.linspace(0, 1, 51)[1:], np.linspace(0, 0.25, 51)[1:]]
+variations_coefficients = [np.linspace(0, 0.2, 11)[1:], np.linspace(0, 0.1, 11)[1:]]
 is_focus_initials = [False, False]
 is_focus_coefficients = [True, True]
 
@@ -122,7 +122,12 @@ first_min = min(first_coeffs)
 second_max = max(second_coeffs)
 second_min = min(second_coeffs)
 desired_range_x, desired_range_y = np.meshgrid(np.linspace(first_min, first_max, len_first),
-                            np.linspace(second_min, second_max, len_second), indexing='ij')
+                                               np.linspace(second_min, second_max, len_second), indexing='ij')
+# print(f"{first_coeffs=}")
+# print(f"{second_coeffs=}")
+# print(f"{desired_range_x=}")
+# print(f"{desired_range_y=}")
+# print(f"{coefficients_list=}")
 desired_range = (desired_range_x, desired_range_y)
 current_points = coefficients_list
 
@@ -152,3 +157,4 @@ fig.colorbar(im, ax=axs, label='period of oscillation (0 if n/a)')
 plt.show()
 
 # TODO: merge simulation and metric-determining parts so we don't need 4GB or something to simulate it.
+# TODO: make it so uncertain values are left out
