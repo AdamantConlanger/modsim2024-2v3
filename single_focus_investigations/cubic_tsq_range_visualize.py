@@ -72,7 +72,7 @@ def decide_color_broader(variables, is_focus, extrema_variables):
 
 def decide_color_2d(variables, is_focus, extrema_variables):
     focused_index = is_focus.index(True)
-    next_focused_index = is_focus[focused_index+1:].index(True) + 1
+    next_focused_index = is_focus[focused_index+1:].index(True) + focused_index
     focused_extrema = extrema_variables[focused_index]
     next_focused_extrema = extrema_variables[next_focused_index]
     colorizing_value = (variables[focused_index] - focused_extrema[0]) / (focused_extrema[1] - focused_extrema[0])
