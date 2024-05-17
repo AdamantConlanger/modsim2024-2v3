@@ -1,0 +1,10 @@
+sfu: simple full unreduced model.
+stu: simple truncated unreduced model.
+str: simple truncated reduced model.
+stq: simple truncated quoduct model.
+stp: simple truncated parametric model.
+cfu: cubic full unreduced model.
+ctu: cubic truncated unreduced model.
+ctr: cubic truncated reduced model.
+ctq: cubic truncated quoduct model.
+ctp: cubic truncated parametric model.
