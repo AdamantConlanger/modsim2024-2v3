@@ -13,19 +13,19 @@ def f(t, u, coeffs):
     ])
 
 
-base_initials = [2/3, 3/2]  # list of starting values of the variables; first part of the parameters.
-base_coefficients = [0.2, 0.3]  # list of coefficients for reaction speeds; second part of the parameters.
-interval = (0, 100)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
-granularity = 1600  # number of points in time to actually log the values at (not counting t=0),
+base_initials = [0, 0]  # list of starting values of the variables; first part of the parameters.
+base_coefficients = [0.1, 0]  # list of coefficients for reaction speeds; second part of the parameters.
+interval = (0, 2000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+granularity = 8000  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
 plotted_interval = None # time span to actually plot, as closed interval. or None for full plot.
 
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
-multiplicative = True  # whether to apply variations multiplicatively (True) or additively (False)
-variations_initials = [np.linspace(0.99975, 1.00025, 5), np.linspace(0.99975, 1.00025, 5)]
-variations_coefficients = [None, None]
-is_focus_initials = [True, True]
-is_focus_coefficients = [False, False]
+multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
+variations_initials = [None, None]
+variations_coefficients = [None, np.array([0.05, 0.1, 0.5, 1, 1.5])]
+is_focus_initials = [False, False]
+is_focus_coefficients = [False, True]
 
 initials_length = len(base_initials)
 coefficients_length = len(base_coefficients)
@@ -70,8 +70,8 @@ if granularity is None:
 else:
     evaluations_list = [np.linspace(interval[0], interval[1], granularity + 1) for item in variations]
 
-result = simulate(f, initials_list, coefficients_list, interval_list, evaluations_list)
+result = simulate(f, initials_list, coefficients_list, interval_list, evaluations_list, atol=10**-6, rtol=10**-5)
 f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list = result
 
 visualize(f, initials_list, coefficients_list, interval_list,
-                             evaluations_list, solution_list, is_focus, extrema_variables, suppress_legend=False, suppress_ghosts=True, time_restricted=plotted_interval, broader_colors=False, colors_2d=True)
+                             evaluations_list, solution_list, is_focus, extrema_variables, suppress_legend=False, suppress_ghosts=True, time_restricted=plotted_interval, broader_colors=False, colors_2d=False, mini_text=False, mini_mini_text=False)

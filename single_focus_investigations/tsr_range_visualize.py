@@ -86,7 +86,7 @@ def decide_color_2d(variables, is_focus, extrema_variables):
     # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
     
 
-def visualize(f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list, is_focus, extrema_variables, *, suppress_legend=False, suppress_ghosts=False, time_restricted=None, broader_colors=False, colors_2d=False):
+def visualize(f, initials_list, coefficients_list, interval_list, evaluations_list, solution_list, is_focus, extrema_variables, *, suppress_legend=False, suppress_ghosts=False, time_restricted=None, broader_colors=False, colors_2d=False, mini_text=False, mini_mini_text=False):
     fig, axs = plt.subplots(1, 2, layout='constrained')
     if len(solution_list) == 0:
         the_subtitle = ""
@@ -107,8 +107,8 @@ def visualize(f, initials_list, coefficients_list, interval_list, evaluations_li
             the_color = decide_color_2d([x0, y0, kappa1, kappa2], is_focus, extrema_variables)
         else:
             the_color = decide_color([x0, y0, kappa1, kappa2], is_focus, extrema_variables)
-        axs[0].plot(t, x, label=the_label, linewidth=1.5, color=the_color)
-        axs[1].plot(t, y, label=the_label, linewidth=1.5, color=the_color)
+        axs[0].plot(t, x, label=the_label, alpha=1, linewidth=1.5, color=the_color)
+        axs[1].plot(t, y, label=the_label, alpha=1, linewidth=1.5, color=the_color)
     if not suppress_ghosts:
         for n in range(len(solution_list)):
             initials_out = initials_list[n]
@@ -145,7 +145,8 @@ def visualize(f, initials_list, coefficients_list, interval_list, evaluations_li
     print("graph success")
     handles, labels = axs[0].get_legend_handles_labels()
     if not suppress_legend:
-        fig.legend(handles, labels, mode='expand', loc='outside lower center', ncols=3, fontsize="small")
+        fontsize = "xx-small" if mini_mini_text else "x-small" if mini_text else "small" # TODO: apply to all visualize functions
+        fig.legend(handles, labels, mode='expand', loc='outside lower center', ncols=5, fontsize=fontsize)
     the_title = "A graph of the truncated simple reduced model."
     fig.suptitle(the_title + "\n" + the_subtitle)
     plt.show()
