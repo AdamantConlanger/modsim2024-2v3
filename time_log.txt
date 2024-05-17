@@ -62,3 +62,4 @@ stop 20:07, though all I really did after dinner was wait until the sim was done
 start 18:20 to write final versions and render graphs for the report.
 stop 21:14 as a break; done standardizing and verslag-version-izing everything but the metrics investigations.
 start 21:52 to port those metrics things.
+stop 22:43; fixed a major bug in amplitude calcs, found another bug, way too tired to be effective.
