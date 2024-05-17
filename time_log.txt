@@ -58,3 +58,5 @@ start 15:12. That took longer than expected.
 stop 17:03. Done with all simulations as far as I can tell.
 start 18:sth to do cubic model, with break around 19:00 until 19:20 to eat dinner.
 stop 20:07, though all I really did after dinner was wait until the sim was done and save 70 imgs or so.
+2024-05-17:
+start 18:20 to write final versions and render graphs for the report.
