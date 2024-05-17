@@ -273,11 +273,11 @@ def simulate_and_plot_metrics(f, initials, coefficients_list, interval, granular
             if x_has_maximum:
                 x_maximum = max([x[index] for index in x_maxima_indices])
             if x_has_minimum:
-                x_minimum = max([x[index] for index in x_minima_indices])
+                x_minimum = min([x[index] for index in x_minima_indices])
             if y_has_maximum:
                 y_maximum = max([y[index] for index in y_maxima_indices])
             if y_has_minimum:
-                y_minimum = max([y[index] for index in y_minima_indices])
+                y_minimum = min([y[index] for index in y_minima_indices])
 
             # finally, we calculate the amplitudes
             if x_has_maximum:

@@ -23,7 +23,9 @@ granularity = 1600  # number of points in time to actually log the values at (no
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
 multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
 variations_initials = [None, None]
-variations_coefficients = [np.linspace(0, 1, 51)[1:], np.linspace(0, 1, 51)[1:]]
+# variations_coefficients = [np.linspace(0, 1, 51)[1:], np.linspace(0, 1, 51)[1:]]
+variations_coefficients = [np.linspace(0, 2, 11)[1:], np.linspace(0, 2, 11)[1:]]
+
 
 
 ############################################
