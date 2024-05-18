@@ -17,7 +17,7 @@ def perform_program(simulate, cartesian_product):
         the_subtitle = make_subtitle(items, item_names)
         axs[0].plot(t, x, linewidth=1.5)
         axs[1].plot(t, y, linewidth=1.5)
-        if show_ghosts or paired_bounds:
+        if show_ghosts:
             axs[0].plot(t, y, alpha=0.2, linewidth=1.5)  # for comparison
             axs[1].plot(t, x, alpha=0.2, linewidth=1.5)  # for comparison
             # TODO: make the color of these lines appear in the legend too
@@ -61,7 +61,8 @@ def perform_program(simulate, cartesian_product):
     granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
     plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
-    show_ghosts = False # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
+    show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
+    paired_bounds = True  # whether to force the graphs for x and y to use the same graph extent
     show_legend = False # whether to add a legend or not.
     text_smallness = 0 # 0 for standard legend text size, 1 for smaller, 2 for tiny.
     absolute_tolerance = 10**-7 # absolute tolerance of the simulation.

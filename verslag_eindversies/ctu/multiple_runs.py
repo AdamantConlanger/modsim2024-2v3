@@ -82,7 +82,7 @@ def perform_program(simulate, cartesian_product):
                 the_color = decide_color(items_out, focus, extrema_variables)
             axs[0].plot(t, x, label=the_label, linewidth=1.5, color=the_color)
             axs[1].plot(t, y, label=the_label, linewidth=1.5, color=the_color)
-            if show_ghosts or paired_bounds:
+            if show_ghosts:
                 axs[0].plot(t, y, label=the_label, alpha=0.2, linewidth=1.5, color=the_color)  # for comparison
                 axs[1].plot(t, x, label=the_label, alpha=0.2, linewidth=1.5, color=the_color)  # for comparison
                 # TODO: make the color of these lines appear in the legend too
