@@ -4,7 +4,6 @@ def perform_program(simulate, cartesian_product):
     import matplotlib.colors as clr
     import math
 
-
     def make_subtitle(items, names, focus):
         result = ""
         for index in range(len(items)):
@@ -12,14 +11,12 @@ def perform_program(simulate, cartesian_product):
                 result += ("" if result == "" else "; ") + names[index] + f"={items[index]}"
         return result
 
-
     def make_label(items, names, focus):
         result = ""
         for index in range(len(items)):
             if focus[index]:
                 result += ("" if result == "" else "; ") + names[index] + f"={items[index]}"
         return result
-
 
     def decide_color(variables, focus, extrema_variables):
         focused_index = focus.index(True)
@@ -32,7 +29,6 @@ def perform_program(simulate, cartesian_product):
         return clr.hsv_to_rgb([tmp, 1, 1])
         # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
 
-
     def decide_color_broader(variables, focus, extrema_variables):
         focused_index = focus.index(True)
         focused_extrema = extrema_variables[focused_index]
@@ -43,7 +39,6 @@ def perform_program(simulate, cartesian_product):
         tmp = tmp + math.ceil(tmp) if tmp < 0 else tmp
         return clr.hsv_to_rgb([tmp, 1, 1])
         # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
-
 
     def decide_color_2d(variables, focus, extrema_variables):
         focused_index = focus.index(True)
@@ -144,7 +139,6 @@ def perform_program(simulate, cartesian_product):
 
     # TODO: make it so the names of the variables and parameters are passed along so the label makers are general.
 
-
     def f(t, u, coeffs):
         p, q, x, y, r, s = u
         k1, k2, k3, k4 = coeffs
@@ -156,7 +150,6 @@ def perform_program(simulate, cartesian_product):
             k2 * q * x,
             k4 * x
         ])
-
 
     item_names = ["p0", "q0", "x0", "y0", "r0", "s0", "k1", "k2", "k3", "k4"]  # names of initials and coeffs.
     base_initials = [0.59, 0.56, 0.83, 1.25, 0, 0]  # list of starting values of the variables.
@@ -170,7 +163,7 @@ def perform_program(simulate, cartesian_product):
     show_legend = True  # whether to add a legend or not.
     broader_colors = False  # whether to use a larger-than-usual color spectrum.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
-    linewidth = 1.5 # width of plotted lines
+    linewidth = 1.5  # width of plotted lines
     absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
     relative_tolerance = 10**-6  # relative tolerance of the simulation.
     vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
@@ -179,7 +172,6 @@ def perform_program(simulate, cartesian_product):
     variations_coefficients = [np.linspace(1.3, 1.35, 20), None, None, None]  # variations in the coeffs.
     focus_initials = [False, False, False, False, False, False]  # which variations should determine plot colors?
     focus_coefficients = [True, False, False, False]  # which variations should determine plot colors?
-
 
     initials_length = len(base_initials)
     base_variables = base_initials + base_coefficients

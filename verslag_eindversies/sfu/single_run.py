@@ -2,7 +2,6 @@ def perform_program(simulate, cartesian_product):
     import numpy as np
     import matplotlib.pyplot as plt
 
-
     def make_subtitle(items, names):
         result = ""
         for index in range(len(items)):
@@ -77,8 +76,6 @@ def perform_program(simulate, cartesian_product):
 
     # TODO: make it so the names of the variables and parameters are passed along so the label makers are general.
 
-
-
     def f(t, u, coeffs):
         p, q, x, y, r, s = u
         k1, k2, k3, k4 = coeffs
@@ -91,7 +88,7 @@ def perform_program(simulate, cartesian_product):
             k4 * x
         ])
 
-    item_names = ["p0", "q0", "x0", "y0", "r0", "s0", "k1", "k2", "k3", "k4"] # names of initials and coeffs.
+    item_names = ["p0", "q0", "x0", "y0", "r0", "s0", "k1", "k2", "k3", "k4"]  # names of initials and coeffs.
     initials = [0.59, 0.56, 0.83, 1.25, 0, 0]  # list of starting values of the variables.
     coefficients = [0.19, 1.07, 0.85, 0.22]  # list of coefficients for reaction speeds.
     interval = (0, 500)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
@@ -102,7 +99,7 @@ def perform_program(simulate, cartesian_product):
     paired_bounds = True  # whether to force the graphs for x and y to use the same graph extent
     show_legend = False  # whether to add a legend or not.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
-    linewidth = 1.5 # width of plotted lines
+    linewidth = 1.5  # width of plotted lines
     absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
     relative_tolerance = 10**-6  # relative tolerance of the simulation.
 

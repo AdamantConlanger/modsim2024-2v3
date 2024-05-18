@@ -3,7 +3,6 @@ def perform_program(simulate, cartesian_product):
     import matplotlib.pyplot as plt
     import math
 
-
     def make_subtitle(items, names):
         result = ""
         for index in range(len(items)):
@@ -55,7 +54,7 @@ def perform_program(simulate, cartesian_product):
             x - x * x * x * y
         ])
 
-    item_names = ["reduced x0", "reduced y0", "alpha/beta", "alpha*beta"] # names of initials and coeffs.
+    item_names = ["reduced x0", "reduced y0", "alpha/beta", "alpha*beta"]  # names of initials and coeffs.
     initials = [0, 0]  # list of starting values of the variables.
     coefficients = [2/3, 3/50]  # list of coefficients for reaction speeds.
     interval = (0, 3200)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
@@ -64,11 +63,11 @@ def perform_program(simulate, cartesian_product):
     plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
     show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
     paired_bounds = True  # whether to force the graphs for x and y to use the same graph extent
-    show_legend = False # whether to add a legend or not.
+    show_legend = False  # whether to add a legend or not.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
-    linewidth = 1.5 # width of plotted lines
-    absolute_tolerance = 10**-7 # absolute tolerance of the simulation.
-    relative_tolerance = 10**-6 # relative tolerance of the simulation.
+    linewidth = 1.5  # width of plotted lines
+    absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
+    relative_tolerance = 10**-6  # relative tolerance of the simulation.
 
     evaluations = None if granularity is None else np.linspace(interval[0], interval[1], granularity + 1)
     mini_text = text_smallness == 1
@@ -76,4 +75,5 @@ def perform_program(simulate, cartesian_product):
 
     solution, = simulate(f, [initials], [coefficients], interval, evaluations, absolute_tolerance, relative_tolerance)
 
-    visualize(item_names, initials, coefficients, solution, show_legend=show_legend, show_ghosts=show_ghosts, paired_bounds=paired_bounds, plotted_interval=plotted_interval, mini_text=mini_text, mini_mini_text=mini_mini_text, linewidth=linewidth)
+    visualize(item_names, initials, coefficients, solution, show_legend=show_legend, show_ghosts=show_ghosts, paired_bounds=paired_bounds,
+              plotted_interval=plotted_interval, mini_text=mini_text, mini_mini_text=mini_mini_text, linewidth=linewidth)

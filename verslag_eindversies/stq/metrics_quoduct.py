@@ -20,13 +20,13 @@ def perform_program(simulate, cartesian_product):
         for iteration in range(len(coefficients_list)):
 
             sol = scint.solve_ivp(fun=f,
-                                t_span=interval,
-                                y0=initials,
-                                method="Radau",
-                                t_eval=evaluations,
-                                args=(coefficients_list[iteration],),
-                                rtol=rtol,
-                                atol=atol)
+                                  t_span=interval,
+                                  y0=initials,
+                                  method="Radau",
+                                  t_eval=evaluations,
+                                  args=(coefficients_list[iteration],),
+                                  rtol=rtol,
+                                  atol=atol)
 
             current_metrics = dict()
             coefficients_out = coefficients_list[iteration]
@@ -184,7 +184,8 @@ def perform_program(simulate, cartesian_product):
                     x_weighted_period_estimates = []
                     x_weights = []
                     for index in range(len(x_period_estimates)):
-                        x_weighted_period_estimates.append(x_period_estimates[index] / (len(x_period_estimates) - index))
+                        x_weighted_period_estimates.append(
+                            x_period_estimates[index] / (len(x_period_estimates) - index))
                         x_weights.append(1 / (len(x_period_estimates) - index))
                     x_period = sum(x_weighted_period_estimates) / sum(x_weights)
                 if use_events_y:
@@ -194,7 +195,8 @@ def perform_program(simulate, cartesian_product):
                     y_weighted_period_estimates = []
                     y_weights = []
                     for index in range(len(y_period_estimates)):
-                        y_weighted_period_estimates.append(y_period_estimates[index] / (len(y_period_estimates) - index))
+                        y_weighted_period_estimates.append(
+                            y_period_estimates[index] / (len(y_period_estimates) - index))
                         y_weights.append(1 / (len(y_period_estimates) - index))
                     y_period = sum(y_weighted_period_estimates) / sum(y_weights)
 
@@ -280,7 +282,7 @@ def perform_program(simulate, cartesian_product):
             print(f"finished case {coefficients_out}")
 
         desired_range_x, desired_range_y = np.meshgrid(np.linspace(mu1_min, mu1_max, mu1_len),
-                                                    np.linspace(mu2_min, mu2_max, mu2_len), indexing='ij')
+                                                       np.linspace(mu2_min, mu2_max, mu2_len), indexing='ij')
         desired_range = (desired_range_x, desired_range_y)
 
         metrics_range = range(len(metrics_list))
@@ -291,7 +293,8 @@ def perform_program(simulate, cartesian_product):
 
         if plot_periods:
             have_period = ["estimated_period" in item for item in metrics_list]
-            periods = [metrics_list[index]["estimated_period"] if have_period[index] else np.nan for index in metrics_range]
+            periods = [metrics_list[index]["estimated_period"]
+                       if have_period[index] else np.nan for index in metrics_range]
             periods = [0 if are_collapsed[index] else periods[index] for index in metrics_range]
             periods_data = griddata(coefficients_list, periods, desired_range, method="nearest")
 
@@ -330,7 +333,7 @@ def perform_program(simulate, cartesian_product):
         if plot_x_amps:
             have_x_amps = ["x_amplitude" in item for item in metrics_list]
             x_amps = [metrics_list[index]["x_amplitude"]
-                            if have_x_amps[index] else np.nan for index in metrics_range]
+                      if have_x_amps[index] else np.nan for index in metrics_range]
             x_amps = [0 if are_collapsed[index] else x_amps[index] for index in metrics_range]
             x_amps_data = griddata(coefficients_list, x_amps, desired_range, method="nearest")
 
@@ -369,7 +372,7 @@ def perform_program(simulate, cartesian_product):
         if plot_y_amps:
             have_y_amps = ["y_amplitude" in item for item in metrics_list]
             y_amps = [metrics_list[index]["y_amplitude"]
-                            if have_y_amps[index] else np.nan for index in metrics_range]
+                      if have_y_amps[index] else np.nan for index in metrics_range]
             y_amps = [0 if are_collapsed[index] else y_amps[index] for index in metrics_range]
             y_amps_data = griddata(coefficients_list, y_amps, desired_range, method="nearest")
 
@@ -406,7 +409,8 @@ def perform_program(simulate, cartesian_product):
             fig.colorbar(im, ax=axs, label='upper y amplitude (0 if converges)')
             plt.show()
         if plot_collapse_moments:
-            collapse_moments = [item["collapse_moment"] if "collapse_moment" in item else np.nan for item in metrics_list]
+            collapse_moments = [item["collapse_moment"]
+                                if "collapse_moment" in item else np.nan for item in metrics_list]
             collapse_moments_data = griddata(coefficients_list, collapse_moments, desired_range, method="nearest")
 
             fig, axs = plt.subplots(1, 1, layout='constrained')
@@ -443,13 +447,6 @@ def perform_program(simulate, cartesian_product):
             fig.colorbar(im, ax=axs, label='moment of convergence within tolerances')
             plt.show()
 
-
-
-
-
-
-
-
     def f(t, u, coeffs):
         x, y = u
         mu1, mu2 = coeffs
@@ -457,7 +454,6 @@ def perform_program(simulate, cartesian_product):
             x * x * y - x - math.sqrt(mu2 / mu1) * x + math.sqrt(mu1 * mu2),
             x - x * x * y
         ])
-
 
     ##################################
     base_initials = [0, 0]  # list of starting values of the variables; first part of the parameters.
@@ -469,9 +465,8 @@ def perform_program(simulate, cartesian_product):
     vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
     multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
     variations_initials = [None, None]
-    #variations_coefficients = [np.linspace(0, 1, 51)[1:], np.linspace(0, 1, 51)[1:]]
+    # variations_coefficients = [np.linspace(0, 1, 51)[1:], np.linspace(0, 1, 51)[1:]]
     variations_coefficients = [np.linspace(0, 2, 11)[1:], np.linspace(0, 2, 11)[1:]]
-
 
     ############################################
 
@@ -500,11 +495,9 @@ def perform_program(simulate, cartesian_product):
     variables_list = [tmp * item if multiplicative else tmp + item for item in variations_combined]
     coefficients_list = [variables[initials_length:] for variables in variables_list]
 
-    
     evaluations = None if granularity is None else np.linspace(interval[0], interval[1], granularity + 1)
 
     simulate_and_plot_metrics(f, base_initials, coefficients_list, interval, granularity, atol=10**-7, rtol=10**-6, tolerance=(10**-5, 10**-5), evaluations=evaluations, use_relative=False,
-                            plot_periods=True, plot_x_amps=True, plot_y_amps=True, plot_collapse_moments=True)
-
+                              plot_periods=True, plot_x_amps=True, plot_y_amps=True, plot_collapse_moments=True)
 
     # TODO: debug this; it's giving zero-only plots and stuff
