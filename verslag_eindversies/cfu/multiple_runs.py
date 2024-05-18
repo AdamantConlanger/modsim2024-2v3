@@ -138,7 +138,7 @@ def perform_program(simulate, cartesian_product):
         if show_legend:
             fontsize = "xx-small" if mini_mini_text else "x-small" if mini_text else "small"
             fig.legend(handles, labels, mode='expand', loc='outside lower center', ncols=5, fontsize=fontsize)
-        the_title = "A graph of the simple full unreduced model."
+        the_title = "A graph of the cubic full unreduced model."
         fig.suptitle(the_title + "\n" + the_subtitle)
         plt.show()
 

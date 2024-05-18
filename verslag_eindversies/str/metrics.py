@@ -470,7 +470,7 @@ def perform_program(simulate, cartesian_product):
     multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
     variations_initials = [None, None]
     #variations_coefficients = [np.linspace(0, 1, 51)[1:], np.linspace(0, 1, 51)[1:]]
-    variations_coefficients = [np.linspace(0, 2, 11)[1:], np.linspace(0, 2, 11)[1:]]
+    variations_coefficients = [np.linspace(0, 2, 6)[1:], np.linspace(0, 2, 6)[1:]]
 
 
     ############################################

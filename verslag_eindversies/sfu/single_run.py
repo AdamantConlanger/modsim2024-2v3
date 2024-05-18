@@ -71,7 +71,7 @@ def perform_program(simulate, cartesian_product):
         if show_legend:
             fontsize = "xx-small" if mini_mini_text else "x-small" if mini_text else "small"
             fig.legend(handles, labels, mode='expand', loc='outside lower center', ncols=5, fontsize=fontsize)
-        the_title = "A graph of the cubic full unreduced model."
+        the_title = "A graph of the simple full unreduced model."
         fig.suptitle(the_title + "\n" + the_subtitle)
         plt.show()
 
@@ -94,7 +94,7 @@ def perform_program(simulate, cartesian_product):
     item_names = ["p0", "q0", "x0", "y0", "r0", "s0", "k1", "k2", "k3", "k4"] # names of initials and coeffs.
     initials = [0.59, 0.56, 0.83, 1.25, 0, 0]  # list of starting values of the variables.
     coefficients = [0.19, 1.07, 0.85, 0.22]  # list of coefficients for reaction speeds.
-    interval = (0, 1000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+    interval = (0, 500)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
     granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
     plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
