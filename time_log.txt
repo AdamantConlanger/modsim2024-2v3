@@ -67,3 +67,4 @@ stop 22:43; fixed a major bug in amplitude calcs, found another bug, way too tir
 start 07:23 to write the metric things.
 stop ~8:00? I don't remember.
 start 11:49 to make graphs; I'll be working on and off on this, because I'll be writing in between.
+stop 18:33; get DINNER.
