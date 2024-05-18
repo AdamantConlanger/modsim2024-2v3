@@ -102,7 +102,7 @@ def perform_program(simulate, cartesian_product):
     paired_bounds = True  # whether to force the graphs for x and y to use the same graph extent
     show_legend = False  # whether to add a legend or not.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
-    linewidth = 1 # width of plotted lines
+    linewidth = 1.5 # width of plotted lines
     absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
     relative_tolerance = 10**-6  # relative tolerance of the simulation.
 

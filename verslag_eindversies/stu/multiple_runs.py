@@ -128,10 +128,10 @@ def perform_program(simulate, cartesian_product):
     plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
     show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
     paired_bounds = False  # whether to force the graphs for x and y to use the same graph extent
-    show_legend = False  # whether to add a legend or not.
+    show_legend = True  # whether to add a legend or not.
     broader_colors = False  # whether to use a larger-than-usual color spectrum.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
-    linewidth = 1 # width of plotted lines
+    linewidth = 1.5 # width of plotted lines
     absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
     relative_tolerance = 10**-6  # relative tolerance of the simulation.
     vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
