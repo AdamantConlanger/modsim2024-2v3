@@ -8,17 +8,17 @@ def perform_program(simulate, cartesian_product):
             result += ("" if result == "" else "; ") + names[index] + f"={items[index]}"
         return result
 
-    def visualize(item_names, initials, coefficients, solution, *, show_legend=True, show_ghosts=False, paired_bounds=True, plotted_interval=None, mini_text=False, mini_mini_text=False, linewidth=1.5):
+    def visualize(item_names, initials, coefficients, solution, *, show_legend=True, show_ghosts=False, paired_bounds=True, plotted_interval=None, mini_text=False, mini_mini_text=False, linewidth=1.5, invert_colors=False):
         fig, axs = plt.subplots(1, 2, layout='constrained')
         t = solution.t
         x, y = solution.y
         items = list(initials) + list(coefficients)
         the_subtitle = make_subtitle(items, item_names)
-        axs[0].plot(t, x, linewidth=linewidth)
-        axs[1].plot(t, y, linewidth=linewidth)
+        axs[0].plot(t, x, linewidth=linewidth, invert_colors=invert_colors)
+        axs[1].plot(t, y, linewidth=linewidth, invert_colors=invert_colors)
         if show_ghosts:
-            axs[0].plot(t, y, alpha=0.2, linewidth=linewidth)  # for comparison
-            axs[1].plot(t, x, alpha=0.2, linewidth=linewidth)  # for comparison
+            axs[0].plot(t, y, alpha=0.2, linewidth=linewidth, invert_colors=invert_colors)  # for comparison
+            axs[1].plot(t, x, alpha=0.2, linewidth=linewidth, invert_colors=invert_colors)  # for comparison
             # TODO: make the color of these lines appear in the legend too
             # TODO: make these lines appear behind the other ones, but with these colors
         # TODO: make it so the labels are aligned with one another
@@ -65,6 +65,7 @@ def perform_program(simulate, cartesian_product):
     show_legend = False  # whether to add a legend or not.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
     linewidth = 1.5  # width of plotted lines
+    invert_colors = False  # whether to use invert the color scheme. "False" uses blue for low values.
     absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
     relative_tolerance = 10**-6  # relative tolerance of the simulation.
 
@@ -75,4 +76,4 @@ def perform_program(simulate, cartesian_product):
     solution, = simulate(f, [initials], [coefficients], interval, evaluations, absolute_tolerance, relative_tolerance)
 
     visualize(item_names, initials, coefficients, solution, show_legend=show_legend, show_ghosts=show_ghosts, paired_bounds=paired_bounds,
-              plotted_interval=plotted_interval, mini_text=mini_text, mini_mini_text=mini_mini_text, linewidth=linewidth)
+              plotted_interval=plotted_interval, mini_text=mini_text, mini_mini_text=mini_mini_text, linewidth=linewidth, invert_colors=invert_colors)

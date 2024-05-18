@@ -18,10 +18,12 @@ def perform_program(simulate, cartesian_product):
                 result += ("" if result == "" else "; ") + names[index] + f"={items[index]}"
         return result
 
-    def decide_color(variables, focus, extrema_variables):
+    def decide_color(variables, focus, extrema_variables, invert_colors=False):
         focused_index = focus.index(True)
         focused_extrema = extrema_variables[focused_index]
         colorizing_value = (variables[focused_index] - focused_extrema[0]) / (focused_extrema[1] - focused_extrema[0])
+        if invert_colors:
+            colorizing_value = 1 - colorizing_value
         # blue to yellow with constant Value 1 and Saturation at 1?
         # note that blue corresponds to lower and yellow to higher values of variables
         tmp = 2/3 - colorizing_value / 2
@@ -29,10 +31,12 @@ def perform_program(simulate, cartesian_product):
         return clr.hsv_to_rgb([tmp, 1, 1])
         # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
 
-    def decide_color_broader(variables, focus, extrema_variables):
+    def decide_color_broader(variables, focus, extrema_variables, invert_colors=False):
         focused_index = focus.index(True)
         focused_extrema = extrema_variables[focused_index]
         colorizing_value = (variables[focused_index] - focused_extrema[0]) / (focused_extrema[1] - focused_extrema[0])
+        if invert_colors:
+            colorizing_value = 1 - colorizing_value
         # red to yellow via blue with constant Value 1 and Saturation at 1?
         # note that red corresponds to lower and yellow to higher values of variables
         tmp = 11/12 - 3 * colorizing_value / 4
@@ -40,14 +44,18 @@ def perform_program(simulate, cartesian_product):
         return clr.hsv_to_rgb([tmp, 1, 1])
         # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
 
-    def decide_color_2d(variables, focus, extrema_variables):
+    def decide_color_2d(variables, focus, extrema_variables, invert_colors=False):
         focused_index = focus.index(True)
         next_focused_index = focus[focused_index+1:].index(True) + focused_index
         focused_extrema = extrema_variables[focused_index]
         next_focused_extrema = extrema_variables[next_focused_index]
         colorizing_value = (variables[focused_index] - focused_extrema[0]) / (focused_extrema[1] - focused_extrema[0])
+        if invert_colors:
+            colorizing_value = 1 - colorizing_value
         tmp = variables[next_focused_index] - next_focused_extrema[0]
         next_colorizing_value = tmp / (next_focused_extrema[1] - next_focused_extrema[0])
+        if invert_colors:
+            next_colorizing_value = 1 - next_colorizing_value
         tmp = 11/12 - 3 * colorizing_value / 4
         tmp = tmp + math.ceil(tmp) if tmp < 0 else tmp
         tmp2 = 1 - 5 * (1 - colorizing_value**2) * next_colorizing_value / 6
@@ -55,7 +63,7 @@ def perform_program(simulate, cartesian_product):
         return clr.hsv_to_rgb([tmp, tmp2, tmp3])
         # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
 
-    def visualize(item_names, initials_list, coefficients_list, solution_list, focus, extrema_variables, *, show_legend=True, show_ghosts=False, paired_bounds=True, plotted_interval=None, broader_colors=False, colors_2d=False, mini_text=False, mini_mini_text=False, linewidth=1.5):
+    def visualize(item_names, initials_list, coefficients_list, solution_list, focus, extrema_variables, *, show_legend=True, show_ghosts=False, paired_bounds=True, plotted_interval=None, broader_colors=False, colors_2d=False, mini_text=False, mini_mini_text=False, linewidth=1.5, invert_colors=False):
         fig, axs = plt.subplots(1, 2, layout='constrained')
         if len(solution_list) == 0:
             the_subtitle = ""
@@ -70,11 +78,11 @@ def perform_program(simulate, cartesian_product):
                 the_subtitle = make_subtitle(items_out, item_names, focus)
             the_label = make_label(items_out, item_names, focus)
             if broader_colors:
-                the_color = decide_color_broader(items_out, focus, extrema_variables)
+                the_color = decide_color_broader(items_out, focus, extrema_variables, invert_colors=invert_colors)
             elif colors_2d:
-                the_color = decide_color_2d(items_out, focus, extrema_variables)
+                the_color = decide_color_2d(items_out, focus, extrema_variables, invert_colors=invert_colors)
             else:
-                the_color = decide_color(items_out, focus, extrema_variables)
+                the_color = decide_color(items_out, focus, extrema_variables, invert_colors=invert_colors)
             axs[0].plot(t, x, label=the_label, linewidth=linewidth, color=the_color)
             axs[1].plot(t, y, label=the_label, linewidth=linewidth, color=the_color)
             if show_ghosts:
@@ -117,8 +125,8 @@ def perform_program(simulate, cartesian_product):
     item_names = ["x0", "y0", "k1", "k2", "k3", "k4", "p", "q"]  # names of initials and coeffs.
     base_initials = [0, 0]  # list of starting values of the variables.
     base_coefficients = [0, 1.07, 0.85, 0.22, 0.59, 0.56]  # list of coefficients for reaction speeds.
-    interval = (0, 400)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
-    granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
+    interval = (0, 300)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+    granularity = 3000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
     plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
     show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
@@ -127,12 +135,13 @@ def perform_program(simulate, cartesian_product):
     broader_colors = False  # whether to use a larger-than-usual color spectrum.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
     linewidth = 1.5  # width of plotted lines
+    invert_colors = False  # whether to use invert the color scheme. "False" uses blue for low values.
     absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
     relative_tolerance = 10**-6  # relative tolerance of the simulation.
     vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
     multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False).
     variations_initials = [None, None]  # variations in the initials.
-    variations_coefficients = [np.linspace(0, 2, 41)[1:], None, None, None, None, None]  # variations in the coeffs.
+    variations_coefficients = [np.linspace(0, 1, 21)[1:], None, None, None, None, None]  # variations in the coeffs.
     focus_initials = [False, False]  # which variations should determine plot colors?
     focus_coefficients = [True, False, False, False, False, False]  # which variations should determine plot colors?
 
@@ -180,4 +189,4 @@ def perform_program(simulate, cartesian_product):
                              evaluations, absolute_tolerance, relative_tolerance)
 
     visualize(item_names, initials_list, coefficients_list, solution_list, focus, extrema_variables, show_legend=show_legend,
-              show_ghosts=show_ghosts, paired_bounds=paired_bounds, plotted_interval=plotted_interval, broader_colors=broader_colors, colors_2d=colors_2d, mini_text=mini_text, mini_mini_text=mini_mini_text, linewidth=linewidth)
+              show_ghosts=show_ghosts, paired_bounds=paired_bounds, plotted_interval=plotted_interval, broader_colors=broader_colors, colors_2d=colors_2d, mini_text=mini_text, mini_mini_text=mini_mini_text, linewidth=linewidth, invert_colors=invert_colors)
