@@ -22,6 +22,10 @@ def perform_program(simulate, cartesian_product):
         focused_index = focus.index(True)
         focused_extrema = extrema_variables[focused_index]
         colorizing_value = (variables[focused_index] - focused_extrema[0]) / (focused_extrema[1] - focused_extrema[0])
+        if colorizing_value > 1:
+            colorizing_value = 1
+        if colorizing_value < 0:
+            colorizing_value = 0
         if invert_colors:
             colorizing_value = 1 - colorizing_value
         # blue to yellow with constant Value 1 and Saturation at 1?
@@ -35,6 +39,10 @@ def perform_program(simulate, cartesian_product):
         focused_index = focus.index(True)
         focused_extrema = extrema_variables[focused_index]
         colorizing_value = (variables[focused_index] - focused_extrema[0]) / (focused_extrema[1] - focused_extrema[0])
+        if colorizing_value > 1:
+            colorizing_value = 1
+        if colorizing_value < 0:
+            colorizing_value = 0
         if invert_colors:
             colorizing_value = 1 - colorizing_value
         # red to yellow via blue with constant Value 1 and Saturation at 1?
@@ -50,10 +58,18 @@ def perform_program(simulate, cartesian_product):
         focused_extrema = extrema_variables[focused_index]
         next_focused_extrema = extrema_variables[next_focused_index]
         colorizing_value = (variables[focused_index] - focused_extrema[0]) / (focused_extrema[1] - focused_extrema[0])
+        if colorizing_value > 1:
+            colorizing_value = 1
+        if colorizing_value < 0:
+            colorizing_value = 0
         if invert_colors:
             colorizing_value = 1 - colorizing_value
         tmp = variables[next_focused_index] - next_focused_extrema[0]
         next_colorizing_value = tmp / (next_focused_extrema[1] - next_focused_extrema[0])
+        if next_colorizing_value > 1:
+            next_colorizing_value = 1
+        if next_colorizing_value < 0:
+            next_colorizing_value = 0
         if invert_colors:
             next_colorizing_value = 1 - next_colorizing_value
         tmp = 11/12 - 3 * colorizing_value / 4
@@ -124,9 +140,9 @@ def perform_program(simulate, cartesian_product):
 
     item_names = ["x0", "y0", "k1", "k2", "k3", "k4", "p", "q"]  # names of initials and coeffs.
     base_initials = [0, 0]  # list of starting values of the variables.
-    base_coefficients = [0, 1.07, 0.85, 0.22, 0.59, 0.56]  # list of coefficients for reaction speeds.
-    interval = (0, 300)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
-    granularity = 3000  # number of points in time to actually log the values at (not counting t=0),
+    base_coefficients = [0.19, 1.07, 0.85, 0.22, 0.59, 0.56]  # list of coefficients for reaction speeds.
+    interval = (0, 200)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+    granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
     plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
     show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
@@ -134,16 +150,18 @@ def perform_program(simulate, cartesian_product):
     show_legend = True  # whether to add a legend or not.
     broader_colors = False  # whether to use a larger-than-usual color spectrum.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
-    linewidth = 1.5  # width of plotted lines
+    linewidth = 2  # width of plotted lines
     invert_colors = False  # whether to use invert the color scheme. "False" uses blue for low values.
     absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
     relative_tolerance = 10**-6  # relative tolerance of the simulation.
     vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
     multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False).
-    variations_initials = [None, None]  # variations in the initials.
-    variations_coefficients = [np.linspace(0, 1, 21)[1:], None, None, None, None, None]  # variations in the coeffs.
-    focus_initials = [False, False]  # which variations should determine plot colors?
-    focus_coefficients = [True, False, False, False, False, False]  # which variations should determine plot colors?
+    variations_initials = [None, np.linspace(0, 20, 9) / 10]  # variations in the initials.
+    # variations in the coeffs.
+    # my_tmp = np.concatenate((np.linspace(50, 250, 9), np.array([1000]))) / 100
+    variations_coefficients = [None, None, None, None, None, None]
+    focus_initials = [False, True]  # which variations should determine plot colors?
+    focus_coefficients = [False, False, False, False, False, False]  # which variations should determine plot colors?
 
     initials_length = len(base_initials)
     base_variables = base_initials + base_coefficients
@@ -177,6 +195,9 @@ def perform_program(simulate, cartesian_product):
         minima_variables = np.array(base_variables) + np.array(minima_variations)
         maxima_variables = np.array(base_variables) + np.array(maxima_variations)
         extrema_variables = [(minima_variables[index], maxima_variables[index]) for index in range(len(base_variables))]
+
+    # extrema_variables = [(0.0, 0.0), (0.0, 0.0), (0.19, 0.19), (1.07, 1.07),
+    #                      (0.5, 2.5), (0.22, 0.22), (0.59, 0.59), (0.56, 0.56)]
 
     initials_list = [variables[:initials_length] for variables in variables_list]
     coefficients_list = [variables[initials_length:] for variables in variables_list]

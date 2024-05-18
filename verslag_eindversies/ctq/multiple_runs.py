@@ -22,6 +22,10 @@ def perform_program(simulate, cartesian_product):
         focused_index = focus.index(True)
         focused_extrema = extrema_variables[focused_index]
         colorizing_value = (variables[focused_index] - focused_extrema[0]) / (focused_extrema[1] - focused_extrema[0])
+        if colorizing_value > 1:
+            colorizing_value = 1
+        if colorizing_value < 0:
+            colorizing_value = 0
         if invert_colors:
             colorizing_value = 1 - colorizing_value
         # blue to yellow with constant Value 1 and Saturation at 1?
@@ -35,6 +39,10 @@ def perform_program(simulate, cartesian_product):
         focused_index = focus.index(True)
         focused_extrema = extrema_variables[focused_index]
         colorizing_value = (variables[focused_index] - focused_extrema[0]) / (focused_extrema[1] - focused_extrema[0])
+        if colorizing_value > 1:
+            colorizing_value = 1
+        if colorizing_value < 0:
+            colorizing_value = 0
         if invert_colors:
             colorizing_value = 1 - colorizing_value
         # red to yellow via blue with constant Value 1 and Saturation at 1?
@@ -50,10 +58,18 @@ def perform_program(simulate, cartesian_product):
         focused_extrema = extrema_variables[focused_index]
         next_focused_extrema = extrema_variables[next_focused_index]
         colorizing_value = (variables[focused_index] - focused_extrema[0]) / (focused_extrema[1] - focused_extrema[0])
+        if colorizing_value > 1:
+            colorizing_value = 1
+        if colorizing_value < 0:
+            colorizing_value = 0
         if invert_colors:
             colorizing_value = 1 - colorizing_value
         tmp = variables[next_focused_index] - next_focused_extrema[0]
         next_colorizing_value = tmp / (next_focused_extrema[1] - next_focused_extrema[0])
+        if next_colorizing_value > 1:
+            next_colorizing_value = 1
+        if next_colorizing_value < 0:
+            next_colorizing_value = 0
         if invert_colors:
             next_colorizing_value = 1 - next_colorizing_value
         tmp = 11/12 - 3 * colorizing_value / 4
