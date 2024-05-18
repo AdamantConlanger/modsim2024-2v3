@@ -7,13 +7,13 @@ def perform_program(simulate, cartesian_product):
 
     def simulate_and_plot_metrics(f, initials, coefficients_list, interval, granularity, atol=10**-7, rtol=10**-6, tolerance=(10**-5, 10**-5), evaluations=None, use_relative=False, plot_periods=True, plot_x_amps=False, plot_y_amps=False, plot_collapse_moments=False):
         x0, y0 = initials
-        kappa1_max = max([item[0] for item in coefficients_list])
-        kappa1_min = min([item[0] for item in coefficients_list])
-        kappa2_max = max([item[1] for item in coefficients_list])
-        kappa2_min = min([item[1] for item in coefficients_list])
-        kappa1_len = len(set([item[0] for item in coefficients_list]))
-        kappa2_len = len(set([item[1] for item in coefficients_list]))
-        extent = (kappa1_min, kappa1_max, kappa2_min, kappa2_max)
+        alpha_max = max([item[0] for item in coefficients_list])
+        alpha_min = min([item[0] for item in coefficients_list])
+        beta_max = max([item[1] for item in coefficients_list])
+        beta_min = min([item[1] for item in coefficients_list])
+        alpha_len = len(set([item[0] for item in coefficients_list]))
+        beta_len = len(set([item[1] for item in coefficients_list]))
+        extent = (alpha_min, alpha_max, beta_min, beta_max)
 
         metrics_list = []
 
@@ -32,9 +32,9 @@ def perform_program(simulate, cartesian_product):
             coefficients_out = coefficients_list[iteration]
             t = sol.t
             x, y = sol.y
-            kappa1, kappa2 = coefficients_out
-            x_equi = kappa1 / kappa2
-            y_equi = kappa2 / kappa1
+            alpha, beta = coefficients_out
+            x_equi = alpha / beta
+            y_equi = beta / alpha
             tol_x = tolerance[0] * x_equi if use_relative else tolerance[0]
             tol_y = tolerance[1] * y_equi if use_relative else tolerance[1]
 
@@ -279,8 +279,8 @@ def perform_program(simulate, cartesian_product):
             metrics_list.append(current_metrics)
             print(f"finished case {coefficients_out}")
 
-        desired_range_x, desired_range_y = np.meshgrid(np.linspace(kappa1_min, kappa1_max, kappa1_len),
-                                                    np.linspace(kappa2_min, kappa2_max, kappa2_len), indexing='ij')
+        desired_range_x, desired_range_y = np.meshgrid(np.linspace(alpha_min, alpha_max, alpha_len),
+                                                    np.linspace(beta_min, beta_max, beta_len), indexing='ij')
         desired_range = (desired_range_x, desired_range_y)
 
         metrics_range = range(len(metrics_list))
@@ -320,8 +320,8 @@ def perform_program(simulate, cartesian_product):
                             cmap="viridis", extent=shifted_extent, aspect='auto')
             axs.set_xticks(the_xticks)
             axs.set_yticks(the_yticks)
-            axs.set_ylabel("kappa2")
-            axs.set_xlabel("kappa1")
+            axs.set_ylabel("beta")
+            axs.set_xlabel("alpha")
             the_title = "A graph of the period of oscillation\nfor the simple truncated reduced model,\n"
             the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
             fig.suptitle(the_title)
@@ -359,8 +359,8 @@ def perform_program(simulate, cartesian_product):
                             cmap="viridis", extent=shifted_extent, aspect='auto')
             axs.set_xticks(the_xticks)
             axs.set_yticks(the_yticks)
-            axs.set_ylabel("kappa2")
-            axs.set_xlabel("kappa1")
+            axs.set_ylabel("beta")
+            axs.set_xlabel("alpha")
             the_title = "A graph of the x wave amplitude\nfor the simple truncated reduced model,\n"
             the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
             fig.suptitle(the_title)
@@ -398,8 +398,8 @@ def perform_program(simulate, cartesian_product):
                             cmap="viridis", extent=shifted_extent, aspect='auto')
             axs.set_xticks(the_xticks)
             axs.set_yticks(the_yticks)
-            axs.set_ylabel("kappa2")
-            axs.set_xlabel("kappa1")
+            axs.set_ylabel("beta")
+            axs.set_xlabel("alpha")
             the_title = "A graph of the y wave amplitude\nfor the simple truncated reduced model,\n"
             the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
             fig.suptitle(the_title)
@@ -434,8 +434,8 @@ def perform_program(simulate, cartesian_product):
                             cmap="viridis", extent=shifted_extent, aspect='auto')
             axs.set_xticks(the_xticks)
             axs.set_yticks(the_yticks)
-            axs.set_ylabel("kappa2")
-            axs.set_xlabel("kappa1")
+            axs.set_ylabel("beta")
+            axs.set_xlabel("alpha")
             tol_type = "rel" if use_relative else "abs"
             the_title = "A graph of \"the moment\" x and y converge\nfor the simple truncated reduced model,\n"
             the_title += f"with {x0=}, {y0=}, {tol_type} tol={tolerance}, t_max={interval[1]}, grains={granularity}."
@@ -452,9 +452,9 @@ def perform_program(simulate, cartesian_product):
 
     def f(t, u, coeffs):
         x, y = u
-        kappa1, kappa2 = coeffs
+        alpha, beta = coeffs
         return np.array([
-            x * x * y - x - kappa2 * x + kappa1,
+            x * x * y - x - beta * x + alpha,
             x - x * x * y
         ])
 

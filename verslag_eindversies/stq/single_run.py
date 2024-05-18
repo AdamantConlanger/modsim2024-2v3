@@ -55,7 +55,7 @@ def perform_program(simulate, cartesian_product):
             x - x * x * y
         ])
 
-    item_names = ["reduced x0", "reduced y0", "kappa1/kappa2", "kappa1*kappa2"] # names of initials and coeffs.
+    item_names = ["reduced x0", "reduced y0", "alpha/beta", "alpha*beta"] # names of initials and coeffs.
     initials = [0, 0]  # list of starting values of the variables.
     coefficients = [2/3, 3/50]  # list of coefficients for reaction speeds.
     interval = (0, 3200)  # cutoff point in time to stop the simulation at, or None for the default value of 50.

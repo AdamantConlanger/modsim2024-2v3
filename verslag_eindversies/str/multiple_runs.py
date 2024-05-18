@@ -113,13 +113,13 @@ def perform_program(simulate, cartesian_product):
 
     def f(t, u, coeffs):
         x, y = u
-        kappa1, kappa2 = coeffs
+        alpha, beta = coeffs
         return np.array([
-            x * x * y - x - kappa2 * x + kappa1,
+            x * x * y - x - beta * x + alpha,
             x - x * x * y
         ])
 
-    item_names = ["reduced x0", "reduced y0", "kappa1", "kappa2"]  # names of initials and coeffs.
+    item_names = ["reduced x0", "reduced y0", "alpha", "beta"]  # names of initials and coeffs.
     base_initials = [0, 0]  # list of starting values of the variables.
     base_coefficients = [0.2, 0]  # list of coefficients for reaction speeds.
     interval = (0, 2000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
