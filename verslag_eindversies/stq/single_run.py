@@ -18,7 +18,7 @@ def perform_program(simulate, cartesian_product):
         the_subtitle = make_subtitle(items, item_names)
         axs[0].plot(t, x, linewidth=1.5)
         axs[1].plot(t, y, linewidth=1.5)
-        if show_ghosts:
+        if show_ghosts or paired_bounds:
             axs[0].plot(t, y, alpha=0.2, linewidth=1.5)  # for comparison
             axs[1].plot(t, x, alpha=0.2, linewidth=1.5)  # for comparison
             # TODO: make the color of these lines appear in the legend too
