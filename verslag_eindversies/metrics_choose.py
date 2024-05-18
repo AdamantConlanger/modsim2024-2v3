@@ -12,10 +12,10 @@ elif model == "stu":
     exit()
     from stu.metrics import perform_program
 elif model == "str":
-    print("model not available yet")
-    exit()
     from str.metrics import perform_program
 elif model == "stq":
+    print("model not available yet")
+    exit()
     from stq.metrics import perform_program
 elif model == "stp":
     print("model not available yet")
@@ -30,10 +30,10 @@ elif model == "ctu":
     exit()
     from ctu.metrics import perform_program
 elif model == "ctr":
-    print("model not available yet")
-    exit()
     from ctr.metrics import perform_program
 elif model == "ctq":
+    print("model not available yet")
+    exit()
     from ctq.metrics import perform_program
 elif model == "ctp":
     print("model not available yet")
