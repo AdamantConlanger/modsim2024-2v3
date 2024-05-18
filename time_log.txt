@@ -63,3 +63,5 @@ start 18:20 to write final versions and render graphs for the report.
 stop 21:14 as a break; done standardizing and verslag-version-izing everything but the metrics investigations.
 start 21:52 to port those metrics things.
 stop 22:43; fixed a major bug in amplitude calcs, found another bug, way too tired to be effective.
+2024-05-18:
+start 07:23 to write the metric things.
