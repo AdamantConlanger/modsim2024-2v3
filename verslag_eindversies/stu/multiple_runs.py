@@ -60,7 +60,7 @@ def perform_program(simulate, cartesian_product):
         return clr.hsv_to_rgb([tmp, tmp2, tmp3])
         # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
 
-    def visualize(item_names, initials_list, coefficients_list, solution_list, focus, extrema_variables, *, show_legend=True, show_ghosts=False, paired_bounds=True, plotted_interval=None, broader_colors=False, colors_2d=False, mini_text=False, mini_mini_text=False):
+    def visualize(item_names, initials_list, coefficients_list, solution_list, focus, extrema_variables, *, show_legend=True, show_ghosts=False, paired_bounds=True, plotted_interval=None, broader_colors=False, colors_2d=False, mini_text=False, mini_mini_text=False, linewidth=1.5):
         fig, axs = plt.subplots(1, 2, layout='constrained')
         if len(solution_list) == 0:
             the_subtitle = ""
@@ -80,11 +80,11 @@ def perform_program(simulate, cartesian_product):
                 the_color = decide_color_2d(items_out, focus, extrema_variables)
             else:
                 the_color = decide_color(items_out, focus, extrema_variables)
-            axs[0].plot(t, x, label=the_label, linewidth=1.5, color=the_color)
-            axs[1].plot(t, y, label=the_label, linewidth=1.5, color=the_color)
+            axs[0].plot(t, x, label=the_label, linewidth=linewidth, color=the_color)
+            axs[1].plot(t, y, label=the_label, linewidth=linewidth, color=the_color)
             if show_ghosts:
-                axs[0].plot(t, y, label=the_label, alpha=0.2, linewidth=1.5, color=the_color)  # for comparison
-                axs[1].plot(t, x, label=the_label, alpha=0.2, linewidth=1.5, color=the_color)  # for comparison
+                axs[0].plot(t, y, label=the_label, alpha=0.2, linewidth=linewidth, color=the_color)  # for comparison
+                axs[1].plot(t, x, label=the_label, alpha=0.2, linewidth=linewidth, color=the_color)  # for comparison
                 # TODO: make the color of these lines appear in the legend too
                 # TODO: make these lines appear behind the other ones, but with these colors
         # TODO: make it so the labels are aligned with one another
@@ -120,23 +120,24 @@ def perform_program(simulate, cartesian_product):
         ])
 
     item_names = ["x0", "y0", "k1", "k2", "k3", "k4", "p", "q"]  # names of initials and coeffs.
-    base_initials = [0.83, 1.25]  # list of starting values of the variables.
-    base_coefficients = [0.19, 1.07, 0.85, 0.22, 0.59, 0.56]  # list of coefficients for reaction speeds.
-    interval = (0, 1000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+    base_initials = [0, 0]  # list of starting values of the variables.
+    base_coefficients = [0, 1.07, 0.85, 0.22, 0.59, 0.56]  # list of coefficients for reaction speeds.
+    interval = (0, 400)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
     granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
     plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
     show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
-    paired_bounds = True  # whether to force the graphs for x and y to use the same graph extent
-    show_legend = True  # whether to add a legend or not.
+    paired_bounds = False  # whether to force the graphs for x and y to use the same graph extent
+    show_legend = False  # whether to add a legend or not.
     broader_colors = False  # whether to use a larger-than-usual color spectrum.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
+    linewidth = 1 # width of plotted lines
     absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
     relative_tolerance = 10**-6  # relative tolerance of the simulation.
     vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
-    multiplicative = True  # whether to apply variations multiplicatively (True) or additively (False).
+    multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False).
     variations_initials = [None, None]  # variations in the initials.
-    variations_coefficients = [np.linspace(1.3, 1.35, 20), None, None, None, None, None]  # variations in the coeffs.
+    variations_coefficients = [np.linspace(0, 2, 41)[1:], None, None, None, None, None]  # variations in the coeffs.
     focus_initials = [False, False]  # which variations should determine plot colors?
     focus_coefficients = [True, False, False, False, False, False]  # which variations should determine plot colors?
 
@@ -185,4 +186,4 @@ def perform_program(simulate, cartesian_product):
                              evaluations, absolute_tolerance, relative_tolerance)
 
     visualize(item_names, initials_list, coefficients_list, solution_list, focus, extrema_variables, show_legend=show_legend,
-              show_ghosts=show_ghosts, paired_bounds=paired_bounds, plotted_interval=plotted_interval, broader_colors=broader_colors, colors_2d=colors_2d, mini_text=mini_text, mini_mini_text=mini_mini_text)
+              show_ghosts=show_ghosts, paired_bounds=paired_bounds, plotted_interval=plotted_interval, broader_colors=broader_colors, colors_2d=colors_2d, mini_text=mini_text, mini_mini_text=mini_mini_text, linewidth=linewidth)

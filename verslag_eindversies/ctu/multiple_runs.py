@@ -60,7 +60,7 @@ def perform_program(simulate, cartesian_product):
         return clr.hsv_to_rgb([tmp, tmp2, tmp3])
         # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
 
-    def visualize(item_names, initials_list, coefficients_list, solution_list, focus, extrema_variables, *, show_legend=True, show_ghosts=False, paired_bounds=True, plotted_interval=None, broader_colors=False, colors_2d=False, mini_text=False, mini_mini_text=False):
+    def visualize(item_names, initials_list, coefficients_list, solution_list, focus, extrema_variables, *, show_legend=True, show_ghosts=False, paired_bounds=True, plotted_interval=None, broader_colors=False, colors_2d=False, mini_text=False, mini_mini_text=False, linewidth=1.5):
         fig, axs = plt.subplots(1, 2, layout='constrained')
         if len(solution_list) == 0:
             the_subtitle = ""
@@ -80,11 +80,11 @@ def perform_program(simulate, cartesian_product):
                 the_color = decide_color_2d(items_out, focus, extrema_variables)
             else:
                 the_color = decide_color(items_out, focus, extrema_variables)
-            axs[0].plot(t, x, label=the_label, linewidth=1.5, color=the_color)
-            axs[1].plot(t, y, label=the_label, linewidth=1.5, color=the_color)
+            axs[0].plot(t, x, label=the_label, linewidth=linewidth, color=the_color)
+            axs[1].plot(t, y, label=the_label, linewidth=linewidth, color=the_color)
             if show_ghosts:
-                axs[0].plot(t, y, label=the_label, alpha=0.2, linewidth=1.5, color=the_color)  # for comparison
-                axs[1].plot(t, x, label=the_label, alpha=0.2, linewidth=1.5, color=the_color)  # for comparison
+                axs[0].plot(t, y, label=the_label, alpha=0.2, linewidth=linewidth, color=the_color)  # for comparison
+                axs[1].plot(t, x, label=the_label, alpha=0.2, linewidth=linewidth, color=the_color)  # for comparison
                 # TODO: make the color of these lines appear in the legend too
                 # TODO: make these lines appear behind the other ones, but with these colors
         # TODO: make it so the labels are aligned with one another
@@ -131,6 +131,7 @@ def perform_program(simulate, cartesian_product):
     show_legend = True  # whether to add a legend or not.
     broader_colors = False  # whether to use a larger-than-usual color spectrum.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
+    linewidth = 1 # width of plotted lines
     absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
     relative_tolerance = 10**-6  # relative tolerance of the simulation.
     vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
@@ -185,4 +186,4 @@ def perform_program(simulate, cartesian_product):
                              evaluations, absolute_tolerance, relative_tolerance)
 
     visualize(item_names, initials_list, coefficients_list, solution_list, focus, extrema_variables, show_legend=show_legend,
-              show_ghosts=show_ghosts, paired_bounds=paired_bounds, plotted_interval=plotted_interval, broader_colors=broader_colors, colors_2d=colors_2d, mini_text=mini_text, mini_mini_text=mini_mini_text)
+              show_ghosts=show_ghosts, paired_bounds=paired_bounds, plotted_interval=plotted_interval, broader_colors=broader_colors, colors_2d=colors_2d, mini_text=mini_text, mini_mini_text=mini_mini_text, linewidth=linewidth)
