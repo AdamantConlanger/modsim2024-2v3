@@ -139,27 +139,27 @@ def perform_program(simulate, cartesian_product):
         ])
 
     item_names = ["reduced x0", "reduced y0", "alpha", "beta"]  # names of initials and coeffs.
-    base_initials = [0, 0]  # list of starting values of the variables.
-    base_coefficients = [0.2, 0]  # list of coefficients for reaction speeds.
-    interval = (0, 2000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
-    granularity = 8000  # number of points in time to actually log the values at (not counting t=0),
+    base_initials = [0, 1]  # list of starting values of the variables.
+    base_coefficients = [2, 2]  # list of coefficients for reaction speeds.
+    interval = (0, 50)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+    granularity = 2000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
     plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
     show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
-    paired_bounds = True  # whether to force the graphs for x and y to use the same graph extent
+    paired_bounds = False  # whether to force the graphs for x and y to use the same graph extent
     show_legend = True  # whether to add a legend or not.
     broader_colors = False  # whether to use a larger-than-usual color spectrum.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
-    linewidth = 1.5  # width of plotted lines
+    linewidth = 2  # width of plotted lines
     invert_colors = False  # whether to use invert the color scheme. "False" uses blue for low values.
     absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
     relative_tolerance = 10**-6  # relative tolerance of the simulation.
     vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
     multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False).
-    variations_initials = [None, None]  # variations in the initials.
-    variations_coefficients = [None, np.array([0.05, 0.1, 0.5, 1, 1.5])]  # variations in the coeffs.
-    focus_initials = [False, False]  # which variations should determine plot colors?
-    focus_coefficients = [False, True]  # which variations should determine plot colors?
+    variations_initials = [np.linspace(78, 82, 5) / 80, None]  # variations in the initials.
+    variations_coefficients = [None, None]  # variations in the coeffs.
+    focus_initials = [True, False]  # which variations should determine plot colors?
+    focus_coefficients = [False, False]  # which variations should determine plot colors?
 
     initials_length = len(base_initials)
     base_variables = base_initials + base_coefficients

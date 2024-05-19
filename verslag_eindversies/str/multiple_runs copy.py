@@ -198,9 +198,9 @@ def visualize(item_names, initials_list, coefficients_list, solution_list, focus
             # TODO: make the color of these lines appear in the legend too
             # TODO: make these lines appear behind the other ones, but with these colors
     # TODO: make it so the labels are aligned with one another
-    axs[0].set(ylabel="x", xlabel='reduced t')
+    axs[0].set(ylabel="reduced x", xlabel='reduced t')
     axs[0].grid(True, linestyle='dashed')
-    axs[1].set(ylabel="y", xlabel='reduced t')
+    axs[1].set(ylabel="reduced y", xlabel='reduced t')
     axs[1].grid(True, linestyle='dashed')
     x_min, x_max = axs[0].get_ylim()
     y_min, y_max = axs[1].get_ylim()
@@ -221,25 +221,27 @@ def visualize(item_names, initials_list, coefficients_list, solution_list, focus
 
 # TODO: make it so the names of the variables and parameters are passed along so the label makers are general.
 
+
 def f(t, u, coeffs):
     x, y = u
-    k1, k2, k3, k4, p, q = coeffs
+    alpha, beta = coeffs
     return np.array([
-        k1 * p - k2 * q * x + k3 * x * x * y - k4 * x,
-        k2 * q * x - k3 * x * x * y
+        x * x * y - x - beta * x + alpha,
+        x - x * x * y
     ])
 
-item_names = ["x0", "y0", "k1", "k2", "k3", "k4", "p", "q"]  # names of initials and coeffs.
+
+item_names = ["reduced x0", "reduced y0", "alpha", "beta"]  # names of initials and coeffs.
 base_initials = [0, 0]  # list of starting values of the variables.
-base_coefficients = [0.19, 1.07, 0, 0.22, 0.59, 0.56]  # list of coefficients for reaction speeds.
-interval = (0, 200)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+base_coefficients = [0.2, 0.3]  # list of coefficients for reaction speeds.
+interval = (0, 500)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
 granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
 plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
 show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
 paired_bounds = False  # whether to force the graphs for x and y to use the same graph extent
 show_legend = True  # whether to add a legend or not.
-broader_colors = True  # whether to use a larger-than-usual color spectrum.
+broader_colors = False  # whether to use a larger-than-usual color spectrum.
 text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
 linewidth = 2  # width of plotted lines
 invert_colors = False  # whether to use invert the color scheme. "False" uses blue for low values.
@@ -254,10 +256,10 @@ variations_initials = [None, None]  # variations in the initials.
 # np.linspace(48, 60, 13)
 # np.linspace(60, 80, 6)
 # my_tmp = np.concatenate((np.linspace(0, 10, 5)[1:], np.linspace(10, 22, 4)[1:], np.linspace(50, 70, 11), np.array([80]))) / 100
-my_tmp = np.concatenate((np.linspace(5, 25, 9), np.array([100]))) / 10
-variations_coefficients = [None, None, my_tmp, None, None, None]
+# my_tmp = np.concatenate((np.linspace(5, 25, 9), np.array([100]))) / 10
+variations_coefficients = [None, np.array([0.05, 0.1, 0.5, 1, 1.5])]
 focus_initials = [False, False]  # which variations should determine plot colors?
-focus_coefficients = [False, False, True, False, False, False]  # which variations should determine plot colors?
+focus_coefficients = [False, True]  # which variations should determine plot colors?
 
 initials_length = len(base_initials)
 base_variables = base_initials + base_coefficients
@@ -295,7 +297,7 @@ else:
 # extrema_variables = [(0.0, 0.0), (0.0, 0.0), (0.19, 0.19), (1.07, 1.07),
 #                      (0.5, 2.5), (0.22, 0.22), (0.59, 0.59), (0.56, 0.56)]
 
-color_stops = (7,)
+color_stops = []
 
 initials_list = [variables[:initials_length] for variables in variables_list]
 coefficients_list = [variables[initials_length:] for variables in variables_list]

@@ -140,7 +140,7 @@ def perform_program(simulate, cartesian_product):
 
     item_names = ["reduced x0", "reduced y0", "alpha", "beta"]  # names of initials and coeffs.
     base_initials = [0, 0]  # list of starting values of the variables.
-    base_coefficients = [0.2, 0]  # list of coefficients for reaction speeds.
+    base_coefficients = [0.2, 0.3]  # list of coefficients for reaction speeds.
     interval = (0, 2000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
     granularity = 8000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
