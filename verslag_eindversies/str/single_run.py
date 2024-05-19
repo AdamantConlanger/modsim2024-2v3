@@ -55,8 +55,8 @@ def perform_program(simulate, cartesian_product):
 
     item_names = ["reduced x0", "reduced y0", "alpha", "beta"]  # names of initials and coeffs.
     initials = [0, 0]  # list of starting values of the variables.
-    coefficients = [0.2, 0.3]  # list of coefficients for reaction speeds.
-    interval = (0, 1000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+    coefficients = [0.1, 0.5]  # list of coefficients for reaction speeds.
+    interval = (0, 200)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
     granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
     plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.

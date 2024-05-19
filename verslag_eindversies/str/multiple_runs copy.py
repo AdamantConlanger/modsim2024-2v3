@@ -72,7 +72,7 @@ def decide_color_by_index(index, number_of_indices, color_stops=[], invert_color
     value_from_stops = number_of_stops_before * stop_size / (number_of_stops_total + 1)
     uncorrected_colorizing_value = index / (number_of_indices - 1) if number_of_indices != 1 else 0
     colorizing_value = (uncorrected_colorizing_value + value_from_stops) / (1 + total_surplus_value_from_stops)
-    print(index, number_of_stops_before, number_of_stops_total, total_surplus_value_from_stops, value_from_stops, uncorrected_colorizing_value, colorizing_value)
+    # print(index, number_of_stops_before, number_of_stops_total, total_surplus_value_from_stops, value_from_stops, uncorrected_colorizing_value, colorizing_value)
     if colorizing_value > 1:
         colorizing_value = 1
     if colorizing_value < 0:
@@ -189,7 +189,6 @@ def visualize(item_names, initials_list, coefficients_list, solution_list, focus
         elif colors_2d:
             the_color = decide_color_2d(items_out, focus, extrema_variables, invert_colors=invert_colors)
         else:
-            print(color_stops)
             the_color = decide_color_by_index(
                 n, len(solution_list), color_stops=color_stops, invert_colors=invert_colors)
         axs[0].plot(t, x, label=the_label, linewidth=linewidth, color=the_color)
@@ -235,7 +234,7 @@ def f(t, u, coeffs):
 
 item_names = ["reduced x0", "reduced y0", "alpha", "beta"]  # names of initials and coeffs.
 base_initials = [0, 0]  # list of starting values of the variables.
-base_coefficients = [0.2, 0.3]  # list of coefficients for reaction speeds.
+base_coefficients = [0.2, 0]  # list of coefficients for reaction speeds.
 interval = (0, 500)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
 granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
@@ -253,13 +252,8 @@ vary_simultaneously = False  # whether to entrywise combine the variations (True
 multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False).
 variations_initials = [None, None]  # variations in the initials.
 # variations in the coeffs.
-# my_tmp = np.concatenate((np.linspace(50, 250, 9), np.array([1000]))) / 100
-# np.linspace(0, 20, 11)[1:]
-# np.linspace(48, 60, 13)
-# np.linspace(60, 80, 6)
-# my_tmp = np.concatenate((np.linspace(0, 10, 5)[1:], np.linspace(10, 22, 4)[1:], np.linspace(50, 70, 11), np.array([80]))) / 100
-# my_tmp = np.concatenate((np.linspace(5, 25, 9), np.array([100]))) / 10
-variations_coefficients = [None, np.array([0.05, 0.1, 0.5, 1, 1.5])]
+my_tmp = np.concatenate((np.linspace(0, 20, 5)[1:], np.linspace(30, 90, 4), np.linspace(100, 150, 3))) / 100
+variations_coefficients = [None, my_tmp]
 focus_initials = [False, False]  # which variations should determine plot colors?
 focus_coefficients = [False, True]  # which variations should determine plot colors?
 
