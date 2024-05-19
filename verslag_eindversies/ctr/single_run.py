@@ -14,11 +14,11 @@ def perform_program(simulate, cartesian_product):
         x, y = solution.y
         items = list(initials) + list(coefficients)
         the_subtitle = make_subtitle(items, item_names)
-        axs[0].plot(t, x, linewidth=linewidth, invert_colors=invert_colors)
-        axs[1].plot(t, y, linewidth=linewidth, invert_colors=invert_colors)
+        axs[0].plot(t, x, linewidth=linewidth)
+        axs[1].plot(t, y, linewidth=linewidth)
         if show_ghosts:
-            axs[0].plot(t, y, alpha=0.2, linewidth=linewidth, invert_colors=invert_colors)  # for comparison
-            axs[1].plot(t, x, alpha=0.2, linewidth=linewidth, invert_colors=invert_colors)  # for comparison
+            axs[0].plot(t, y, alpha=0.2, linewidth=linewidth)  # for comparison
+            axs[1].plot(t, x, alpha=0.2, linewidth=linewidth)  # for comparison
             # TODO: make the color of these lines appear in the legend too
             # TODO: make these lines appear behind the other ones, but with these colors
         # TODO: make it so the labels are aligned with one another
@@ -54,8 +54,8 @@ def perform_program(simulate, cartesian_product):
         ])
 
     item_names = ["reduced x0", "reduced y0", "alpha", "beta"]  # names of initials and coeffs.
-    initials = [0, 0]  # list of starting values of the variables.
-    coefficients = [0.2, 0.3]  # list of coefficients for reaction speeds.
+    initials = [4/5, 25/16]  # list of starting values of the variables.
+    coefficients = [2/5, 1/2]  # list of coefficients for reaction speeds.
     interval = (0, 1000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
     granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.

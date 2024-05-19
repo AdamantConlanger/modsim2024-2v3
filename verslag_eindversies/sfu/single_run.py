@@ -15,15 +15,15 @@ def perform_program(simulate, cartesian_product):
         p0, q0 = initials[:2]
         items = list(initials) + list(coefficients)
         the_subtitle = make_subtitle(items, item_names)
-        axs[0, 0].plot(t, p, linewidth=linewidth, invert_colors=invert_colors)
-        axs[0, 1].plot(t, q, linewidth=linewidth, invert_colors=invert_colors)
-        axs[1, 0].plot(t, x, linewidth=linewidth, invert_colors=invert_colors)
-        axs[1, 1].plot(t, y, linewidth=linewidth, invert_colors=invert_colors)
-        axs[2, 0].plot(t, r, linewidth=linewidth, invert_colors=invert_colors)
-        axs[2, 1].plot(t, s, linewidth=linewidth, invert_colors=invert_colors)
+        axs[0, 0].plot(t, p, linewidth=linewidth)
+        axs[0, 1].plot(t, q, linewidth=linewidth)
+        axs[1, 0].plot(t, x, linewidth=linewidth)
+        axs[1, 1].plot(t, y, linewidth=linewidth)
+        axs[2, 0].plot(t, r, linewidth=linewidth)
+        axs[2, 1].plot(t, s, linewidth=linewidth)
         if show_ghosts:
-            axs[1, 0].plot(t, y, alpha=0.2, linewidth=linewidth, invert_colors=invert_colors)  # for comparison
-            axs[1, 1].plot(t, x, alpha=0.2, linewidth=linewidth, invert_colors=invert_colors)  # for comparison
+            axs[1, 0].plot(t, y, alpha=0.2, linewidth=linewidth)  # for comparison
+            axs[1, 1].plot(t, x, alpha=0.2, linewidth=linewidth)  # for comparison
             # TODO: make the color of these lines appear in the legend too
             # TODO: make these lines appear behind the other ones, but with these colors
         # TODO: make it so the labels are aligned with one another

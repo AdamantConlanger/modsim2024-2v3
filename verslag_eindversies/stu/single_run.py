@@ -14,11 +14,11 @@ def perform_program(simulate, cartesian_product):
         x, y = solution.y
         items = list(initials) + list(coefficients)
         the_subtitle = make_subtitle(items, item_names)
-        axs[0].plot(t, x, linewidth=linewidth, invert_colors=invert_colors)
-        axs[1].plot(t, y, linewidth=linewidth, invert_colors=invert_colors)
+        axs[0].plot(t, x, linewidth=linewidth)
+        axs[1].plot(t, y, linewidth=linewidth)
         if show_ghosts:
-            axs[0].plot(t, y, alpha=0.2, linewidth=linewidth, invert_colors=invert_colors)  # for comparison
-            axs[1].plot(t, x, alpha=0.2, linewidth=linewidth, invert_colors=invert_colors)  # for comparison
+            axs[0].plot(t, y, alpha=0.2, linewidth=linewidth)  # for comparison
+            axs[1].plot(t, x, alpha=0.2, linewidth=linewidth)  # for comparison
             # TODO: make the color of these lines appear in the legend too
             # TODO: make these lines appear behind the other ones, but with these colors
         # TODO: make it so the labels are aligned with one another

@@ -323,8 +323,8 @@ def perform_program(simulate, cartesian_product):
                             cmap="viridis", extent=shifted_extent, aspect='auto')
             axs.set_xticks(the_xticks)
             axs.set_yticks(the_yticks)
-            axs.set_ylabel("mu2")
-            axs.set_xlabel("mu1")
+            axs.set_ylabel("alpha*beta")
+            axs.set_xlabel("alpha/beta")
             the_title = "A graph of the period of oscillation\nfor the cubic truncated reduced quoduct model,\n"
             the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
             fig.suptitle(the_title)
@@ -362,8 +362,8 @@ def perform_program(simulate, cartesian_product):
                             cmap="viridis", extent=shifted_extent, aspect='auto')
             axs.set_xticks(the_xticks)
             axs.set_yticks(the_yticks)
-            axs.set_ylabel("mu2")
-            axs.set_xlabel("mu1")
+            axs.set_ylabel("alpha*beta")
+            axs.set_xlabel("alpha/beta")
             the_title = "A graph of the x wave amplitude\nfor the cubic truncated reduced quoduct model,\n"
             the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
             fig.suptitle(the_title)
@@ -401,8 +401,8 @@ def perform_program(simulate, cartesian_product):
                             cmap="viridis", extent=shifted_extent, aspect='auto')
             axs.set_xticks(the_xticks)
             axs.set_yticks(the_yticks)
-            axs.set_ylabel("mu2")
-            axs.set_xlabel("mu1")
+            axs.set_ylabel("alpha*beta")
+            axs.set_xlabel("alpha/beta")
             the_title = "A graph of the y wave amplitude\nfor the cubic truncated reduced quoduct model,\n"
             the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
             fig.suptitle(the_title)
@@ -438,14 +438,15 @@ def perform_program(simulate, cartesian_product):
                             cmap="viridis", extent=shifted_extent, aspect='auto')
             axs.set_xticks(the_xticks)
             axs.set_yticks(the_yticks)
-            axs.set_ylabel("mu2")
-            axs.set_xlabel("mu1")
+            axs.set_ylabel("alpha*beta")
+            axs.set_xlabel("alpha/beta")
             tol_type = "rel" if use_relative else "abs"
             the_title = "A graph of \"the moment\" x and y converge\nfor the cubic truncated reduced quoduct model,\n"
             the_title += f"with {x0=}, {y0=}, {tol_type} tol={tolerance}, t_max={interval[1]}, grains={granularity}."
             fig.suptitle(the_title)
             fig.colorbar(im, ax=axs, label='moment of convergence within tolerances')
             plt.show()
+        print(metrics_list)
 
     def f(t, u, coeffs):
         x, y = u
@@ -458,15 +459,15 @@ def perform_program(simulate, cartesian_product):
     ##################################
     base_initials = [0, 0]  # list of starting values of the variables; first part of the parameters.
     base_coefficients = [0, 0]  # list of coefficients for reaction speeds; second part of the parameters.
-    interval = (0, 3200)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
-    granularity = 3200  # number of points in time to actually log the values at (not counting t=0),
+    interval = (0, 5000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+    granularity = 500  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
 
     vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
     multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
     variations_initials = [None, None]
     # variations_coefficients = [np.linspace(0, 1, 51)[1:], np.linspace(0, 1, 51)[1:]]
-    variations_coefficients = [np.linspace(0, 2, 11)[1:], np.linspace(0, 2, 11)[1:]]
+    variations_coefficients = [np.linspace(0, 4, 201)[1:], np.linspace(0, 4, 201)[1:]]
 
     ############################################
 
@@ -497,5 +498,5 @@ def perform_program(simulate, cartesian_product):
 
     evaluations = None if granularity is None else np.linspace(interval[0], interval[1], granularity + 1)
 
-    simulate_and_plot_metrics(f, base_initials, coefficients_list, interval, granularity, atol=10**-7, rtol=10**-6, tolerance=(10**-5, 10**-5), evaluations=evaluations, use_relative=False,
+    simulate_and_plot_metrics(f, base_initials, coefficients_list, interval, granularity, atol=10**-7, rtol=10**-6, tolerance=(10**-4, 10**-4), evaluations=evaluations, use_relative=False,
                               plot_periods=True, plot_x_amps=True, plot_y_amps=True, plot_collapse_moments=True)

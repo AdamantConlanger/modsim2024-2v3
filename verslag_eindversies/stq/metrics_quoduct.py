@@ -446,6 +446,7 @@ def perform_program(simulate, cartesian_product):
             fig.suptitle(the_title)
             fig.colorbar(im, ax=axs, label='moment of convergence within tolerances')
             plt.show()
+        print(metrics_list)
 
     def f(t, u, coeffs):
         x, y = u
@@ -466,7 +467,7 @@ def perform_program(simulate, cartesian_product):
     multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
     variations_initials = [None, None]
     # variations_coefficients = [np.linspace(0, 1, 51)[1:], np.linspace(0, 1, 51)[1:]]
-    variations_coefficients = [np.linspace(0, 2, 11)[1:], np.linspace(0, 2, 11)[1:]]
+    variations_coefficients = [np.linspace(0, 2, 6)[1:], np.linspace(0, 2, 6)[1:]]
 
     ############################################
 
@@ -497,7 +498,7 @@ def perform_program(simulate, cartesian_product):
 
     evaluations = None if granularity is None else np.linspace(interval[0], interval[1], granularity + 1)
 
-    simulate_and_plot_metrics(f, base_initials, coefficients_list, interval, granularity, atol=10**-7, rtol=10**-6, tolerance=(10**-5, 10**-5), evaluations=evaluations, use_relative=False,
+    simulate_and_plot_metrics(f, base_initials, coefficients_list, interval, granularity, atol=10**-7, rtol=10**-6, tolerance=(10**-4, 10**-4), evaluations=evaluations, use_relative=False,
                               plot_periods=True, plot_x_amps=True, plot_y_amps=True, plot_collapse_moments=True)
 
     # TODO: debug this; it's giving zero-only plots and stuff
