@@ -72,3 +72,4 @@ stop 18:33; get DINNER.
 start 09:37.
 stop 13:16 to go to Leiden for the Japan market.
 start 16:57.
+stop 18:54 to get dinner.
