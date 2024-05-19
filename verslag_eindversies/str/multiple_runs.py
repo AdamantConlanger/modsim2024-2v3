@@ -4,6 +4,8 @@ def perform_program(simulate, cartesian_product):
     import matplotlib.colors as clr
     import math
 
+    plt.rcParams.update({'font.size': 18})
+
     def make_subtitle(items, names, focus):
         result = ""
         for index in range(len(items)):

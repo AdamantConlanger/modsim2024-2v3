@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as clr
 import math
 
+plt.rcParams.update({'font.size': 18})
+
 # https://stackoverflow.com/a/11146645/18375328
 
 
@@ -65,7 +67,7 @@ def make_label(items, names, focus):
 def decide_color_by_index(index, number_of_indices, color_stops=[], invert_colors=False):
     number_of_stops_before = [index >= item for item in color_stops].count(True)
     number_of_stops_total = len(color_stops)
-    stop_size = 0.5  # size of a separating region relative to size of a color region
+    stop_size = 1/2  # size of a separating region relative to size of a color region
     total_surplus_value_from_stops = number_of_stops_total * stop_size / (number_of_stops_total + 1)
     value_from_stops = number_of_stops_before * stop_size / (number_of_stops_total + 1)
     uncorrected_colorizing_value = index / (number_of_indices - 1) if number_of_indices != 1 else 0
@@ -88,7 +90,7 @@ def decide_color_by_index(index, number_of_indices, color_stops=[], invert_color
 def decide_color_by_index_broader(index, number_of_indices, color_stops=[], invert_colors=False):
     number_of_stops_before = [index >= item for item in color_stops].count(True)
     number_of_stops_total = len(color_stops)
-    stop_size = 0.5 # size of a separating region relative to size of a color region
+    stop_size = 1/2 # size of a separating region relative to size of a color region
     total_surplus_value_from_stops = number_of_stops_total * stop_size / (number_of_stops_total + 1)
     value_from_stops = number_of_stops_before * stop_size / (number_of_stops_total + 1)
     uncorrected_colorizing_value = index / (number_of_indices - 1) if number_of_indices != 1 else 0
@@ -198,9 +200,9 @@ def visualize(item_names, initials_list, coefficients_list, solution_list, focus
             # TODO: make the color of these lines appear in the legend too
             # TODO: make these lines appear behind the other ones, but with these colors
     # TODO: make it so the labels are aligned with one another
-    axs[0].set(ylabel="x", xlabel='reduced t')
+    axs[0].set(ylabel="x", xlabel="t")
     axs[0].grid(True, linestyle='dashed')
-    axs[1].set(ylabel="y", xlabel='reduced t')
+    axs[1].set(ylabel="y", xlabel="t")
     axs[1].grid(True, linestyle='dashed')
     x_min, x_max = axs[0].get_ylim()
     y_min, y_max = axs[1].get_ylim()
@@ -231,8 +233,8 @@ def f(t, u, coeffs):
 
 item_names = ["x0", "y0", "k1", "k2", "k3", "k4", "p", "q"]  # names of initials and coeffs.
 base_initials = [0, 0]  # list of starting values of the variables.
-base_coefficients = [0.19, 1.07, 0, 0.22, 0.59, 0.56]  # list of coefficients for reaction speeds.
-interval = (0, 200)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+base_coefficients = [0.19, 1.07, 0.85, 0, 0.59, 0.56]  # list of coefficients for reaction speeds.
+interval = (0, 250)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
 granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
 plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
@@ -253,11 +255,11 @@ variations_initials = [None, None]  # variations in the initials.
 # np.linspace(0, 20, 11)[1:]
 # np.linspace(48, 60, 13)
 # np.linspace(60, 80, 6)
-# my_tmp = np.concatenate((np.linspace(0, 10, 5)[1:], np.linspace(10, 22, 4)[1:], np.linspace(50, 70, 11), np.array([80]))) / 100
-my_tmp = np.concatenate((np.linspace(5, 25, 9), np.array([100]))) / 10
-variations_coefficients = [None, None, my_tmp, None, None, None]
+my_tmp = np.concatenate((np.linspace(0, 10, 5)[1:], np.linspace(10, 22, 4)[1:], np.linspace(50, 70, 11), np.array([80]))) / 100
+# my_tmp = np.concatenate((np.linspace(5, 25, 9), np.array([100]))) / 10
+variations_coefficients = [None, None, None, my_tmp, None, None]
 focus_initials = [False, False]  # which variations should determine plot colors?
-focus_coefficients = [False, False, True, False, False, False]  # which variations should determine plot colors?
+focus_coefficients = [False, False, False, True, False, False]  # which variations should determine plot colors?
 
 initials_length = len(base_initials)
 base_variables = base_initials + base_coefficients

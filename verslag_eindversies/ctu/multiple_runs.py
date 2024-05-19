@@ -107,9 +107,9 @@ def perform_program(simulate, cartesian_product):
                 # TODO: make the color of these lines appear in the legend too
                 # TODO: make these lines appear behind the other ones, but with these colors
         # TODO: make it so the labels are aligned with one another
-        axs[0].set(ylabel="x", xlabel='reduced t')
+        axs[0].set(ylabel="x", xlabel="t")
         axs[0].grid(True, linestyle='dashed')
-        axs[1].set(ylabel="y", xlabel='reduced t')
+        axs[1].set(ylabel="y", xlabel="t")
         axs[1].grid(True, linestyle='dashed')
         x_min, x_max = axs[0].get_ylim()
         y_min, y_max = axs[1].get_ylim()

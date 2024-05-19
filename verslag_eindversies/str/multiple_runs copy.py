@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as clr
 import math
 
+plt.rcParams.update({'font.size': 18})
+
 # https://stackoverflow.com/a/11146645/18375328
 
 

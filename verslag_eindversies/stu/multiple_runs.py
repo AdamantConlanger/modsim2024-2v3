@@ -4,6 +4,8 @@ def perform_program(simulate, cartesian_product):
     import matplotlib.colors as clr
     import math
 
+    plt.rcParams.update({'font.size':18})
+
     def make_subtitle(items, names, focus):
         result = ""
         for index in range(len(items)):
@@ -107,9 +109,9 @@ def perform_program(simulate, cartesian_product):
                 # TODO: make the color of these lines appear in the legend too
                 # TODO: make these lines appear behind the other ones, but with these colors
         # TODO: make it so the labels are aligned with one another
-        axs[0].set(ylabel="x", xlabel='reduced t')
+        axs[0].set(ylabel="x", xlabel="t")
         axs[0].grid(True, linestyle='dashed')
-        axs[1].set(ylabel="y", xlabel='reduced t')
+        axs[1].set(ylabel="y", xlabel="t")
         axs[1].grid(True, linestyle='dashed')
         x_min, x_max = axs[0].get_ylim()
         y_min, y_max = axs[1].get_ylim()
@@ -156,12 +158,12 @@ def perform_program(simulate, cartesian_product):
     relative_tolerance = 10**-6  # relative tolerance of the simulation.
     vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
     multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False).
-    variations_initials = [None, None]  # variations in the initials.
+    variations_initials = [None, np.linspace(0, 200, 9) / 100]  # variations in the initials.
     # variations in the coeffs.
     # my_tmp = np.concatenate((np.linspace(50, 250, 9), np.array([1000]))) / 100
-    variations_coefficients = [None, None, np.linspace(0.5, 0.75, 9) / 10, None, None, None]
-    focus_initials = [False, False]  # which variations should determine plot colors?
-    focus_coefficients = [False, False, True, False, False, False]  # which variations should determine plot colors?
+    variations_coefficients = [None, None, None, None, None, None]
+    focus_initials = [False, True]  # which variations should determine plot colors?
+    focus_coefficients = [False, False, False, False, False, False]  # which variations should determine plot colors?
 
     initials_length = len(base_initials)
     base_variables = base_initials + base_coefficients
