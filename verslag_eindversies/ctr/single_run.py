@@ -11,7 +11,13 @@ def perform_program(simulate, cartesian_product):
     def visualize(item_names, initials, coefficients, solution, *, show_legend=True, show_ghosts=False, paired_bounds=True, plotted_interval=None, mini_text=False, mini_mini_text=False, linewidth=1.5, invert_colors=False):
         fig, axs = plt.subplots(1, 2, layout='constrained')
         t = solution.t
-        x, y = solution.y
+        the_vars = solution.y
+        if plotted_interval is not None:
+            the_vars = [item[t <= plotted_interval[1]] for item in the_vars]
+            t = t[t <= plotted_interval[1]]
+            the_vars = [item[t >= plotted_interval[0]] for item in the_vars]
+            t = t[t >= plotted_interval[0]]
+        x, y = the_vars
         items = list(initials) + list(coefficients)
         the_subtitle = make_subtitle(items, item_names)
         axs[0].plot(t, x, linewidth=linewidth)
@@ -29,6 +35,7 @@ def perform_program(simulate, cartesian_product):
         x_min, x_max = axs[0].get_ylim()
         y_min, y_max = axs[1].get_ylim()
         if show_ghosts or paired_bounds:
+            print("a")
             axs[0].set_ylim(min(x_min, y_min), max(x_max, y_max))
             axs[1].set_ylim(min(x_min, y_min), max(x_max, y_max))
         if plotted_interval is not None:
@@ -54,14 +61,16 @@ def perform_program(simulate, cartesian_product):
         ])
 
     item_names = ["reduced x0", "reduced y0", "alpha", "beta"]  # names of initials and coeffs.
-    initials = [4/5, 25/16]  # list of starting values of the variables.
-    coefficients = [2/5, 1/2]  # list of coefficients for reaction speeds.
-    interval = (0, 1000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+    # initials = [4/5, 25/16]  # list of starting values of the variables.
+    # coefficients = [2/5, 1/2]  # list of coefficients for reaction speeds.
+    initials = [0, 0]  # list of starting values of the variables.
+    coefficients = [49/40, 3/5]  # list of coefficients for reaction speeds.
+    interval = (0, 5000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
     granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
-    plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
+    plotted_interval = [1000, 5000]  # time span to actually plot, as closed interval. or None for full plot.
     show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
-    paired_bounds = True  # whether to force the graphs for x and y to use the same graph extent
+    paired_bounds = False  # whether to force the graphs for x and y to use the same graph extent
     show_legend = False  # whether to add a legend or not.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
     linewidth = 1.5  # width of plotted lines

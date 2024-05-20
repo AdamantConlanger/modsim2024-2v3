@@ -12,7 +12,13 @@ def perform_program(simulate, cartesian_product):
     def visualize(item_names, initials, coefficients, solution, *, show_legend=True, show_ghosts=False, paired_bounds=True, plotted_interval=None, mini_text=False, mini_mini_text=False, linewidth=1.5, invert_colors=False):
         fig, axs = plt.subplots(1, 2, layout='constrained')
         t = solution.t
-        x, y = solution.y
+        the_vars = solution.y
+        if plotted_interval is not None:
+            the_vars = [item[t <= plotted_interval[1]] for item in the_vars]
+            t = t[t <= plotted_interval[1]]
+            the_vars = [item[t >= plotted_interval[0]] for item in the_vars]
+            t = t[t >= plotted_interval[0]]
+        x, y = the_vars
         items = list(initials) + list(coefficients)
         the_subtitle = make_subtitle(items, item_names)
         axs[0].plot(t, x, linewidth=linewidth)

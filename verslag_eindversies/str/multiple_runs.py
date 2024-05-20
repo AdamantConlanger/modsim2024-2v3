@@ -142,8 +142,8 @@ def perform_program(simulate, cartesian_product):
 
     item_names = ["reduced x0", "reduced y0", "alpha", "beta"]  # names of initials and coeffs.
     base_initials = [0, 0]  # list of starting values of the variables.
-    base_coefficients = [0, 6/5]  # list of coefficients for reaction speeds.
-    interval = (0, 200)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+    base_coefficients = [0, 0]  # list of coefficients for reaction speeds.
+    interval = (0, 2000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
     granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
     plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
@@ -152,17 +152,18 @@ def perform_program(simulate, cartesian_product):
     show_legend = True  # whether to add a legend or not.
     broader_colors = False  # whether to use a larger-than-usual color spectrum.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
-    linewidth = 1.5  # width of plotted lines
+    linewidth = 1  # width of plotted lines
     invert_colors = False  # whether to use invert the color scheme. "False" uses blue for low values.
     absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
     relative_tolerance = 10**-6  # relative tolerance of the simulation.
-    vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
+    vary_simultaneously = True  # whether to entrywise combine the variations (True) or Cartesian them (False).
     multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False).
     # my_tmp = np.concatenate((np.linspace(0, 20, 5)[1:], np.linspace(30, 90, 4), np.linspace(100, 125, 2))) / 100
     variations_initials = [None, None]  # variations in the initials.
-    variations_coefficients = [np.linspace(0, 300, 61)[1:] / 100, None]  # variations in the coeffs.
+    my_tmp = np.linspace(0, 1, 21)[1:-1]
+    variations_coefficients = [np.array([math.sqrt(t**2 - t**3) for t in my_tmp]), my_tmp]  # variations in the coeffs.
     focus_initials = [False, False]  # which variations should determine plot colors?
-    focus_coefficients = [True, False]  # which variations should determine plot colors?
+    focus_coefficients = [False, True]  # which variations should determine plot colors?
 
     initials_length = len(base_initials)
     base_variables = base_initials + base_coefficients

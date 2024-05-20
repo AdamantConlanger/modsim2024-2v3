@@ -4,8 +4,9 @@ def perform_program(simulate, cartesian_product):
     import matplotlib.pyplot as plt
     import numpy as np
     import math
+    import json
 
-    def simulate_and_plot_metrics(f, initials, coefficients_list, interval, granularity, atol=10**-7, rtol=10**-6, tolerance=(10**-5, 10**-5), evaluations=None, use_relative=False, plot_periods=True, plot_x_amps=False, plot_y_amps=False, plot_collapse_moments=False):
+    def simulate_and_plot_metrics(f, initials, coefficients_list, interval, granularity, atol=10**-7, rtol=10**-6, tolerance=10**-4, evaluations=None, use_relative=False, plot_periods=True, plot_x_amps=False, plot_y_amps=False, plot_collapse_moments=False):
         x0, y0 = initials
         alpha_max = max([item[0] for item in coefficients_list])
         alpha_min = min([item[0] for item in coefficients_list])
@@ -18,6 +19,7 @@ def perform_program(simulate, cartesian_product):
         metrics_list = []
 
         for iteration in range(len(coefficients_list)):
+            coefficients_out = coefficients_list[iteration]
 
             sol = scint.solve_ivp(fun=f,
                                   t_span=interval,
@@ -27,21 +29,22 @@ def perform_program(simulate, cartesian_product):
                                   args=(coefficients_list[iteration],),
                                   rtol=rtol,
                                   atol=atol)
+            print(f"finished simulating case {coefficients_out}")
 
             current_metrics = dict()
-            coefficients_out = coefficients_list[iteration]
             t = sol.t
             x, y = sol.y
             alpha, beta = coefficients_out
             x_equi = alpha / beta
             y_equi = beta / alpha
-            tol_x = tolerance[0] * x_equi if use_relative else tolerance[0]
-            tol_y = tolerance[1] * y_equi if use_relative else tolerance[1]
+            tol_x = tolerance * x_equi if use_relative else tolerance
+            tol_y = tolerance * y_equi if use_relative else tolerance
 
             # state that everything's unknown if there are fewer than 100 evaluations.
             if len(t) < 100:
                 current_metrics["unknown"] = True
                 metrics_list.append(current_metrics)
+                print(f"finished case {coefficients_out}")
                 continue
             else:
                 current_metrics["unknown"] = False
@@ -151,6 +154,7 @@ def perform_program(simulate, cartesian_product):
                 if len(x_events) == 0 or len(y_events) == 0:
                     current_metrics["has_usable_oscillations"] = False
                     metrics_list.append(current_metrics)
+                    print(f"finished case {coefficients_out}")
                     continue
 
                 # next, we determine the monotonicity of x and y at the respective last of these points.
@@ -211,6 +215,7 @@ def perform_program(simulate, cartesian_product):
                     # if neither x nor y is usable, just give up
                     current_metrics["has_usable_oscillations"] = False
                     metrics_list.append(current_metrics)
+                    print(f"finished case {coefficients_out}")
                     continue
                 current_metrics["has_usable_oscillations"] = True
 
@@ -281,6 +286,9 @@ def perform_program(simulate, cartesian_product):
             metrics_list.append(current_metrics)
             print(f"finished case {coefficients_out}")
 
+        with open("str_metrics.json", "w") as the_newfile:
+            json.dump(metrics_list, the_newfile)
+
         desired_range_x, desired_range_y = np.meshgrid(np.linspace(alpha_min, alpha_max, alpha_len),
                                                        np.linspace(beta_min, beta_max, beta_len), indexing='ij')
         desired_range = (desired_range_x, desired_range_y)
@@ -325,8 +333,10 @@ def perform_program(simulate, cartesian_product):
             axs.set_yticks(the_yticks)
             axs.set_ylabel("beta")
             axs.set_xlabel("alpha")
+            tol_type = "rel" if use_relative else "abs"
             the_title = "A graph of the period of oscillation\nfor the simple truncated reduced model,\n"
-            the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
+            the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+            the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
             fig.suptitle(the_title)
             fig.colorbar(im, ax=axs, label='period of oscillation (0 if converges)')
             plt.show()
@@ -364,10 +374,12 @@ def perform_program(simulate, cartesian_product):
             axs.set_yticks(the_yticks)
             axs.set_ylabel("beta")
             axs.set_xlabel("alpha")
+            tol_type = "rel" if use_relative else "abs"
             the_title = "A graph of the x wave amplitude\nfor the simple truncated reduced model,\n"
-            the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
+            the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+            the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
             fig.suptitle(the_title)
-            fig.colorbar(im, ax=axs, label='upper x amplitude (0 if converges)')
+            fig.colorbar(im, ax=axs, label='x amplitude (0 if converges)')
             plt.show()
         if plot_y_amps:
             have_y_amps = ["y_amplitude" in item for item in metrics_list]
@@ -403,10 +415,12 @@ def perform_program(simulate, cartesian_product):
             axs.set_yticks(the_yticks)
             axs.set_ylabel("beta")
             axs.set_xlabel("alpha")
+            tol_type = "rel" if use_relative else "abs"
             the_title = "A graph of the y wave amplitude\nfor the simple truncated reduced model,\n"
-            the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
+            the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+            the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
             fig.suptitle(the_title)
-            fig.colorbar(im, ax=axs, label='upper y amplitude (0 if converges)')
+            fig.colorbar(im, ax=axs, label='y amplitude (0 if converges)')
             plt.show()
         if plot_collapse_moments:
             collapse_moments = [item["collapse_moment"]
@@ -442,7 +456,8 @@ def perform_program(simulate, cartesian_product):
             axs.set_xlabel("alpha")
             tol_type = "rel" if use_relative else "abs"
             the_title = "A graph of \"the moment\" x and y converge\nfor the simple truncated reduced model,\n"
-            the_title += f"with {x0=}, {y0=}, {tol_type} tol={tolerance}, t_max={interval[1]}, grains={granularity}."
+            the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+            the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
             fig.suptitle(the_title)
             fig.colorbar(im, ax=axs, label='moment of convergence within tolerances')
             plt.show()
@@ -458,15 +473,15 @@ def perform_program(simulate, cartesian_product):
     ##################################
     base_initials = [0, 0]  # list of starting values of the variables; first part of the parameters.
     base_coefficients = [0, 0]  # list of coefficients for reaction speeds; second part of the parameters.
-    interval = (0, 3200)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
-    granularity = 3200  # number of points in time to actually log the values at (not counting t=0),
+    interval = (0, 1000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+    granularity = 2000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
 
     vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False)
     multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
     variations_initials = [None, None]
     # variations_coefficients = [np.linspace(0, 1, 51)[1:], np.linspace(0, 1, 51)[1:]]
-    variations_coefficients = [np.linspace(0, 2, 6)[1:], np.linspace(0, 2, 6)[1:]]
+    variations_coefficients = [np.linspace(0, 800, 33)[1:] / 2000, np.linspace(0, 2000, 41)[1:] / 2000]
 
     ############################################
 
@@ -497,7 +512,7 @@ def perform_program(simulate, cartesian_product):
 
     evaluations = None if granularity is None else np.linspace(interval[0], interval[1], granularity + 1)
 
-    simulate_and_plot_metrics(f, base_initials, coefficients_list, interval, granularity, atol=10**-7, rtol=10**-6, tolerance=(10**-5, 10**-5), evaluations=evaluations, use_relative=False,
+    simulate_and_plot_metrics(f, base_initials, coefficients_list, interval, granularity, atol=10**-7, rtol=10**-6, tolerance=10**-4, evaluations=evaluations, use_relative=False,
                               plot_periods=True, plot_x_amps=True, plot_y_amps=True, plot_collapse_moments=True)
 
     # TODO: debug this; it's giving zero-only plots and stuff

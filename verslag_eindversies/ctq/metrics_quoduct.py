@@ -34,7 +34,7 @@ def perform_program(simulate, cartesian_product):
             x, y = sol.y
             mu1 = coefficients_out[0]
             x_equi = mu1
-            y_equi = 1/mu1
+            y_equi = 1/mu1**2
             tol_x = tolerance[0] * x_equi if use_relative else tolerance[0]
             tol_y = tolerance[1] * y_equi if use_relative else tolerance[1]
 
@@ -42,6 +42,7 @@ def perform_program(simulate, cartesian_product):
             if len(t) < 100:
                 current_metrics["unknown"] = True
                 metrics_list.append(current_metrics)
+                print(f"finished case {coefficients_out}")
                 continue
             else:
                 current_metrics["unknown"] = False
@@ -151,6 +152,7 @@ def perform_program(simulate, cartesian_product):
                 if len(x_events) == 0 or len(y_events) == 0:
                     current_metrics["has_usable_oscillations"] = False
                     metrics_list.append(current_metrics)
+                    print(f"finished case {coefficients_out}")
                     continue
 
                 # next, we determine the monotonicity of x and y at the respective last of these points.
@@ -211,6 +213,7 @@ def perform_program(simulate, cartesian_product):
                     # if neither x nor y is usable, just give up
                     current_metrics["has_usable_oscillations"] = False
                     metrics_list.append(current_metrics)
+                    print(f"finished case {coefficients_out}")
                     continue
                 current_metrics["has_usable_oscillations"] = True
 
@@ -367,7 +370,7 @@ def perform_program(simulate, cartesian_product):
             the_title = "A graph of the x wave amplitude\nfor the cubic truncated reduced quoduct model,\n"
             the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
             fig.suptitle(the_title)
-            fig.colorbar(im, ax=axs, label='upper x amplitude (0 if converges)')
+            fig.colorbar(im, ax=axs, label='x amplitude (0 if converges)')
             plt.show()
         if plot_y_amps:
             have_y_amps = ["y_amplitude" in item for item in metrics_list]
@@ -406,7 +409,7 @@ def perform_program(simulate, cartesian_product):
             the_title = "A graph of the y wave amplitude\nfor the cubic truncated reduced quoduct model,\n"
             the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}."
             fig.suptitle(the_title)
-            fig.colorbar(im, ax=axs, label='upper y amplitude (0 if converges)')
+            fig.colorbar(im, ax=axs, label='y amplitude (0 if converges)')
             plt.show()
         if plot_collapse_moments:
             collapse_moments = [item["collapse_moment"]
