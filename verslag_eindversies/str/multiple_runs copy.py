@@ -64,10 +64,9 @@ def make_label(items, names, focus):
     return result
 
 
-def decide_color_by_index(index, number_of_indices, color_stops=[], invert_colors=False):
+def decide_color_by_index(index, number_of_indices, color_stops=[], invert_colors=False, stop_size=0.5):
     number_of_stops_before = [index >= item for item in color_stops].count(True)
     number_of_stops_total = len(color_stops)
-    stop_size = 0.5  # size of a separating region relative to size of a color region
     total_surplus_value_from_stops = number_of_stops_total * stop_size / (number_of_stops_total + 1)
     value_from_stops = number_of_stops_before * stop_size / (number_of_stops_total + 1)
     uncorrected_colorizing_value = index / (number_of_indices - 1) if number_of_indices != 1 else 0
@@ -87,10 +86,9 @@ def decide_color_by_index(index, number_of_indices, color_stops=[], invert_color
     # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
 
 
-def decide_color_by_index_broader(index, number_of_indices, color_stops=[], invert_colors=False):
+def decide_color_by_index_broader(index, number_of_indices, color_stops=[], invert_colors=False, stop_size=0.5):
     number_of_stops_before = [index >= item for item in color_stops].count(True)
     number_of_stops_total = len(color_stops)
-    stop_size = 0.5 # size of a separating region relative to size of a color region
     total_surplus_value_from_stops = number_of_stops_total * stop_size / (number_of_stops_total + 1)
     value_from_stops = number_of_stops_before * stop_size / (number_of_stops_total + 1)
     uncorrected_colorizing_value = index / (number_of_indices - 1) if number_of_indices != 1 else 0
@@ -169,7 +167,8 @@ def decide_color_2d(variables, focus, extrema_variables, invert_colors=False):
     return clr.hsv_to_rgb([tmp, tmp2, tmp3])
     # TODO: use OKLAB or something similar and make sure the hues are evenly spaced.
 
-def visualize(item_names, initials_list, coefficients_list, solution_list, focus, extrema_variables, *, show_legend=True, show_ghosts=False, paired_bounds=True, plotted_interval=None, broader_colors=False, colors_2d=False, mini_text=False, mini_mini_text=False, linewidth=1.5, invert_colors=False, color_stops=[]):
+
+def visualize(item_names, initials_list, coefficients_list, solution_list, focus, extrema_variables, *, show_legend=True, show_ghosts=False, paired_bounds=True, plotted_interval=None, broader_colors=False, colors_2d=False, mini_text=False, mini_mini_text=False, linewidth=1.5, invert_colors=False, color_stops=[], stop_size=0.5):
     fig, axs = plt.subplots(1, 2, layout='constrained')
     if len(solution_list) == 0:
         the_subtitle = ""
@@ -185,12 +184,12 @@ def visualize(item_names, initials_list, coefficients_list, solution_list, focus
         the_label = make_label(items_out, item_names, focus)
         if broader_colors:
             the_color = decide_color_by_index_broader(
-                n, len(solution_list), color_stops=color_stops, invert_colors=invert_colors)
+                n, len(solution_list), color_stops=color_stops, invert_colors=invert_colors, stop_size=stop_size)
         elif colors_2d:
             the_color = decide_color_2d(items_out, focus, extrema_variables, invert_colors=invert_colors)
         else:
             the_color = decide_color_by_index(
-                n, len(solution_list), color_stops=color_stops, invert_colors=invert_colors)
+                n, len(solution_list), color_stops=color_stops, invert_colors=invert_colors, stop_size=stop_size)
         axs[0].plot(t, x, label=the_label, linewidth=linewidth, color=the_color)
         axs[1].plot(t, y, label=the_label, linewidth=linewidth, color=the_color)
         if show_ghosts:
@@ -246,6 +245,8 @@ broader_colors = False  # whether to use a larger-than-usual color spectrum.
 text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
 linewidth = 2  # width of plotted lines
 invert_colors = False  # whether to use invert the color scheme. "False" uses blue for low values.
+color_stops = []  # indices of series after which a larger difference in hue should occur.
+stop_size = 0.25  # the amount of hue skipped at a color stop, relative to the difference in hue between series.
 absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
 relative_tolerance = 10**-6  # relative tolerance of the simulation.
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
@@ -292,8 +293,6 @@ else:
 
 # extrema_variables = [(0.0, 0.0), (0.0, 0.0), (0.19, 0.19), (1.07, 1.07),
 #                      (0.5, 2.5), (0.22, 0.22), (0.59, 0.59), (0.56, 0.56)]
-
-color_stops = []
 
 initials_list = [variables[:initials_length] for variables in variables_list]
 coefficients_list = [variables[initials_length:] for variables in variables_list]
