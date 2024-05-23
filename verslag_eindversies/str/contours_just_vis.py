@@ -83,11 +83,11 @@ def perform_program(simulate, cartesian_product):
                 axs.set_ylabel("beta")
                 axs.set_xlabel("alpha")
                 tol_type = "rel" if use_relative else "abs"
-                the_title = "A contour graph of the period of oscillation\nfor the simple truncated reduced model,\n"
-                the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
-                the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
+                the_title = "Contourplot van de oscillatieperiode\nvoor het gereduceerde basismodel,\n"
+                the_title += f"{x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+                the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysetol={tolerance}."
                 fig.suptitle(the_title)
-                fig.colorbar(contour_fills, ax=axs, label='period of oscillation (0 if converges)')
+                fig.colorbar(contour_fills, ax=axs, label='oscillatieperiode (0 bij convergentie)')
                 plt.show()
         if plot_x_amps:
             have_x_amps = ["x_amplitude" in item for item in metrics_list]
@@ -140,11 +140,11 @@ def perform_program(simulate, cartesian_product):
                 axs.set_ylabel("beta")
                 axs.set_xlabel("alpha")
                 tol_type = "rel" if use_relative else "abs"
-                the_title = "A contour graph of the x wave amplitude\nfor the simple truncated reduced model,\n"
-                the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
-                the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
+                the_title = "Contourplot van de amplitude van golven in x\nvoor het gereduceerde basismodel,\n"
+                the_title += f"{x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+                the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysetol={tolerance}."
                 fig.suptitle(the_title)
-                fig.colorbar(contour_fills, ax=axs, label='x amplitude (0 if converges)')
+                fig.colorbar(contour_fills, ax=axs, label='x-amplitude (0 bij convergentie)')
                 plt.show()
         if plot_y_amps:
             have_y_amps = ["y_amplitude" in item for item in metrics_list]
@@ -197,11 +197,11 @@ def perform_program(simulate, cartesian_product):
                 axs.set_ylabel("beta")
                 axs.set_xlabel("alpha")
                 tol_type = "rel" if use_relative else "abs"
-                the_title = "A contour graph of the y wave amplitude\nfor the simple truncated reduced model,\n"
-                the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
-                the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
+                the_title = "Contourplot van de amplitude van golven in y\nvoor het gereduceerde basismodel,\n"
+                the_title += f"{x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+                the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysetol={tolerance}."
                 fig.suptitle(the_title)
-                fig.colorbar(contour_fills, ax=axs, label='y amplitude (0 if converges)')
+                fig.colorbar(contour_fills, ax=axs, label='y-amplitude (0 bij convergentie)')
                 plt.show()
         if plot_collapse_moments:
             collapse_moments = [item["collapse_moment"]
@@ -254,12 +254,12 @@ def perform_program(simulate, cartesian_product):
                 axs.set_ylabel("beta")
                 axs.set_xlabel("alpha")
                 tol_type = "rel" if use_relative else "abs"
-                the_title = "A contour graph of \"the moment\" x and y converge\n"
-                the_title += "for the simple truncated reduced model,\n"
-                the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
-                the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
+                the_title = "Contourplot van afschatting van convergentiemoment van x en y\n"
+                the_title += "voor het gereduceerde basismodel,\n"
+                the_title += f"{x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+                the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysetol={tolerance}."
                 fig.suptitle(the_title)
-                fig.colorbar(contour_fills, ax=axs, label='moment of convergence within tolerances')
+                fig.colorbar(contour_fills, ax=axs, label='convergentiemoment binnen tolerantie')
                 plt.show()
 
     def f(t, u, coeffs):
