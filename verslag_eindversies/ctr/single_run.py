@@ -2,6 +2,9 @@ def perform_program(simulate, cartesian_product):
     import numpy as np
     import matplotlib.pyplot as plt
 
+
+    plt.rcParams.update({'font.size': 18})
+
     def make_subtitle(items, names):
         result = ""
         for index in range(len(items)):
@@ -64,19 +67,19 @@ def perform_program(simulate, cartesian_product):
     # initials = [4/5, 25/16]  # list of starting values of the variables.
     # coefficients = [2/5, 1/2]  # list of coefficients for reaction speeds.
     initials = [0, 0]  # list of starting values of the variables.
-    coefficients = [49/40, 3/5]  # list of coefficients for reaction speeds.
-    interval = (0, 5000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+    coefficients = [0.3, 2]  # list of coefficients for reaction speeds.
+    interval = (0, 1500)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
     granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
-    plotted_interval = [1000, 5000]  # time span to actually plot, as closed interval. or None for full plot.
+    plotted_interval = [0, 1500]  # time span to actually plot, as closed interval. or None for full plot.
     show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x* and y* or not.
     paired_bounds = False  # whether to force the graphs for x* and y* to use the same graph extent
     show_legend = False  # whether to add a legend or not.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
-    linewidth = 1.5  # width of plotted lines
+    linewidth = 2  # width of plotted lines
     invert_colors = False  # whether to use invert the color scheme. "False" uses blue for low values.
-    absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
-    relative_tolerance = 10**-6  # relative tolerance of the simulation.
+    absolute_tolerance = 10**-8  # absolute tolerance of the simulation.
+    relative_tolerance = 10**-7  # relative tolerance of the simulation.
 
     evaluations = None if granularity is None else np.linspace(interval[0], interval[1], granularity + 1)
     mini_text = text_smallness == 1
