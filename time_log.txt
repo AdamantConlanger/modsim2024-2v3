@@ -94,3 +94,5 @@ stop 22:37 to take a break.
 
 2024-05-23:
 start 12:29.
+stop 13:12 for lunch.
+start 13:19.
