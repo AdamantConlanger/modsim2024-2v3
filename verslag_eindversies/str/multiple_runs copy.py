@@ -198,9 +198,9 @@ def visualize(item_names, initials_list, coefficients_list, solution_list, focus
             # TODO: make the color of these lines appear in the legend too
             # TODO: make these lines appear behind the other ones, but with these colors
     # TODO: make it so the labels are aligned with one another
-    axs[0].set(ylabel="reduced x", xlabel='reduced t')
+    axs[0].set(ylabel="x", xlabel='t')
     axs[0].grid(True, linestyle='dashed')
-    axs[1].set(ylabel="reduced y", xlabel='reduced t')
+    axs[1].set(ylabel="y", xlabel='t')
     axs[1].grid(True, linestyle='dashed')
     x_min, x_max = axs[0].get_ylim()
     y_min, y_max = axs[1].get_ylim()
@@ -214,8 +214,8 @@ def visualize(item_names, initials_list, coefficients_list, solution_list, focus
     handles, labels = axs[0].get_legend_handles_labels()
     if show_legend:
         fontsize = "xx-small" if mini_mini_text else "x-small" if mini_text else "small"
-        fig.legend(handles, labels, mode='expand', loc='outside lower center', ncols=5, fontsize=fontsize)
-    the_title = "A graph of the simple truncated reduced model."
+        fig.legend(handles, labels, mode='expand', loc='outside lower center', ncols=7, fontsize=fontsize)
+    the_title = "Grafiek voor het gereduceerde basismodel."
     fig.suptitle(the_title + "\n" + the_subtitle)
     plt.show()
 
@@ -231,10 +231,10 @@ def f(t, u, coeffs):
     ])
 
 
-item_names = ["reduced x0", "reduced y0", "alpha", "beta"]  # names of initials and coeffs.
+item_names = ["x0", "y0", "alpha", "beta"]  # names of initials and coeffs.
 base_initials = [0, 0]  # list of starting values of the variables.
 base_coefficients = [0.2, 0]  # list of coefficients for reaction speeds.
-interval = (0, 500)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+interval = (0, 200)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
 granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
 plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
@@ -245,16 +245,17 @@ broader_colors = False  # whether to use a larger-than-usual color spectrum.
 text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
 linewidth = 2  # width of plotted lines
 invert_colors = False  # whether to use invert the color scheme. "False" uses blue for low values.
-color_stops = []  # indices of series after which a larger difference in hue should occur.
-stop_size = 0.25  # the amount of hue skipped at a color stop, relative to the difference in hue between series.
-absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
-relative_tolerance = 10**-6  # relative tolerance of the simulation.
+color_stops = [4]  # indices of series after which a larger difference in hue should occur.
+stop_size = 0.5  # the amount of hue skipped at a color stop, relative to the difference in hue between series.
+absolute_tolerance = 10**-8  # absolute tolerance of the simulation.
+relative_tolerance = 10**-7  # relative tolerance of the simulation.
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
 multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False).
 variations_initials = [None, None]  # variations in the initials.
-# variations in the coeffs.
 my_tmp = np.concatenate((np.linspace(0, 20, 5)[1:], np.linspace(30, 90, 4), np.linspace(100, 150, 3))) / 100
-variations_coefficients = [None, my_tmp]
+# my_tmp = np.array([10, 20, 24, 30, 40]) / 100  # alpha with beta=0.3, stops=[3], size=0.25, t=200.
+# my_tmp = np.array([15, 20, 25, 50, 90, 100, 125]) / 100  # beta with alpha=0.2, stops=[4], size=0.5, t=200.
+variations_coefficients = [None, my_tmp]  # variations in the coeffs.
 focus_initials = [False, False]  # which variations should determine plot colors?
 focus_coefficients = [False, True]  # which variations should determine plot colors?
 

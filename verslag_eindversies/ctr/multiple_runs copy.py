@@ -197,9 +197,9 @@ def visualize(item_names, initials_list, coefficients_list, solution_list, focus
             # TODO: make the color of these lines appear in the legend too
             # TODO: make these lines appear behind the other ones, but with these colors
     # TODO: make it so the labels are aligned with one another
-    axs[0].set(ylabel="reduced x*", xlabel='reduced t')
+    axs[0].set(ylabel="x*", xlabel='t')
     axs[0].grid(True, linestyle='dashed')
-    axs[1].set(ylabel="reduced y*", xlabel='reduced t')
+    axs[1].set(ylabel="y*", xlabel='t')
     axs[1].grid(True, linestyle='dashed')
     x_min, x_max = axs[0].get_ylim()
     y_min, y_max = axs[1].get_ylim()
@@ -214,7 +214,7 @@ def visualize(item_names, initials_list, coefficients_list, solution_list, focus
     if show_legend:
         fontsize = "xx-small" if mini_mini_text else "x-small" if mini_text else "small"
         fig.legend(handles, labels, mode='expand', loc='outside lower center', ncols=7, fontsize=fontsize)
-    the_title = "A graph of the cubic truncated reduced model."
+    the_title = "Grafiek voor de gereduceerde uitbreiding."
     fig.suptitle(the_title + "\n" + the_subtitle)
     plt.show()
 
@@ -230,10 +230,10 @@ def f(t, u, coeffs):
     ])
 
 
-item_names = ["reduced x*0", "reduced y*0", "alpha*", "beta*"]  # names of initials and coeffs.
+item_names = ["x*0", "y*0", "alpha*", "beta*"]  # names of initials and coeffs.
 base_initials = [0, 0]  # list of starting values of the variables.
-base_coefficients = [0.3, 0]  # list of coefficients for reaction speeds.
-interval = (0, 1500)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+base_coefficients = [0, 0.2]  # list of coefficients for reaction speeds.
+interval = (0, 200)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
 granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
 plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
@@ -244,22 +244,21 @@ broader_colors = False  # whether to use a larger-than-usual color spectrum.
 text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
 linewidth = 2  # width of plotted lines
 invert_colors = False  # whether to use invert the color scheme. "False" uses blue for low values.
-color_stops = []  # indices of series after which a larger difference in hue should occur.
+color_stops = [3]  # indices of series after which a larger difference in hue should occur.
 stop_size = 0.25  # the amount of hue skipped at a color stop, relative to the difference in hue between series.
 absolute_tolerance = 10**-8  # absolute tolerance of the simulation.
 relative_tolerance = 10**-7  # relative tolerance of the simulation.
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
 multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False).
 variations_initials = [None, None]  # variations in the initials.
-# variations in the coeffs.
-# my_tmp = np.concatenate((np.linspace(20, 26, 7), np.array([40, 60]))) / 100
+my_tmp = np.concatenate((np.linspace(20, 26, 7), np.array([40, 60]))) / 100
 # my_tmp = np.array([23, 24, 25, 40, 60]) / 100  # (alpha with beta=0.2, stops=[3], size=0.25, t=200.)
 # my_tmp = np.array([15, 24, 25, 26, 30, 35]) / 100  # (beta with alpha=0.3, stops=[4], size=0.5, t=200.)
 # my_tmp = np.array([15, 24, 25, 26, 30, 35, 200]) / 100  # for beta; see bottom of doc
-my_tmp = np.array([190, 200, 210]) / 100  # (beta with alpha=0.3, stops=[], t=1500.)
-variations_coefficients = [None, my_tmp]
+# my_tmp = np.array([190, 200, 210]) / 100  # (beta with alpha=0.3, stops=[], t=1500.)
+variations_coefficients = [my_tmp, None]  # variations in the coeffs.
 focus_initials = [False, False]  # which variations should determine plot colors?
-focus_coefficients = [False, True]  # which variations should determine plot colors?
+focus_coefficients = [True, False]  # which variations should determine plot colors?
 
 initials_length = len(base_initials)
 base_variables = base_initials + base_coefficients
@@ -320,7 +319,5 @@ visualize(item_names, initials_list, coefficients_list, solution_list, focus, ex
 #     colorizing_value = 1.1
 # if colorizing_value < 0:
 #     colorizing_value = -0.1
-# if invert_colors:
-#     colorizing_value = 1 - colorizing_value
 # axs[0].set_ylim(-0.26510833725605554, 5.567275082377166)
 # axs[1].set_ylim(-0.24596712861048334, 5.16530970082015)
