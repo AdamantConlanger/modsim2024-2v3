@@ -49,7 +49,7 @@ def perform_program(simulate, cartesian_product):
             else:
                 current_metrics["unknown"] = False
 
-            # determine when x and y are "near enough" to the equilibria
+            # determine when x* and y* are "near enough" to the equilibria
             tolerability_x = [abs(item - x_equi) <= tol_x for item in x]
             tolerability_y = [abs(item - y_equi) <= tol_y for item in y]
             tolerability = [tolerability_x[index] and tolerability_y[index] for index in range(len(t))]
@@ -60,7 +60,7 @@ def perform_program(simulate, cartesian_product):
 
             # if it collapses, check whether that's the longest span and deem it certain or uncertain
             if seems_collapsed:
-                # determine the boundaries of the regions where x and y are tolerable
+                # determine the boundaries of the regions where x* and y* are tolerable
                 tolerability_bounds_reverse_indices = [0]
                 for index in range(1, len(t)):
                     if tolerability[-index] != tolerability[-(index+1)]:
@@ -122,7 +122,7 @@ def perform_program(simulate, cartesian_product):
                 use_exits_x = not tolerability_x[-1]
                 use_exits_y = not tolerability_y[-1]
 
-                # first, we determine all the places x and y leave/enter their ranges of tolerability (separately),
+                # first, we determine all the places x* and y* leave/enter their ranges of tolerability (separately),
                 # or full-on cross the equilibrium.
                 x_events = []
                 y_events = []
@@ -157,7 +157,7 @@ def perform_program(simulate, cartesian_product):
                     print(f"finished case {coefficients_out}")
                     continue
 
-                # next, we determine the monotonicity of x and y at the respective last of these points.
+                # next, we determine the monotonicity of x* and y* at the respective last of these points.
                 use_falling_x = x[x_events[-1] + 1] > x[x_events[-1]]
                 use_falling_y = y[y_events[-1] + 1] > y[y_events[-1]]
 
@@ -222,7 +222,7 @@ def perform_program(simulate, cartesian_product):
                 # add the period to the metrics
                 current_metrics["estimated_period"] = estimated_period
 
-                # next, we calculate the local minima and maxima of x and y.
+                # next, we calculate the local minima and maxima of x* and y*.
                 x_maxima_indices = []
                 x_minima_indices = []
                 y_maxima_indices = []
@@ -331,11 +331,11 @@ def perform_program(simulate, cartesian_product):
                             cmap="viridis", extent=shifted_extent, aspect='auto')
             axs.set_xticks(the_xticks)
             axs.set_yticks(the_yticks)
-            axs.set_ylabel("beta")
-            axs.set_xlabel("alpha")
+            axs.set_ylabel("beta*")
+            axs.set_xlabel("alpha*")
             tol_type = "rel" if use_relative else "abs"
             the_title = "A graph of the period of oscillation\nfor the cubic truncated reduced model,\n"
-            the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+            the_title += f"with x*0={x0}, y*0={y0}, t_max={interval[1]}, grains={granularity}," + "\n"
             the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
             fig.suptitle(the_title)
             fig.colorbar(im, ax=axs, label='period of oscillation (0 if converges)')
@@ -372,11 +372,11 @@ def perform_program(simulate, cartesian_product):
                             cmap="viridis", extent=shifted_extent, aspect='auto')
             axs.set_xticks(the_xticks)
             axs.set_yticks(the_yticks)
-            axs.set_ylabel("beta")
-            axs.set_xlabel("alpha")
+            axs.set_ylabel("beta*")
+            axs.set_xlabel("alpha*")
             tol_type = "rel" if use_relative else "abs"
             the_title = "A graph of the x wave amplitude\nfor the cubic truncated reduced model,\n"
-            the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+            the_title += f"with x*0={x0}, y*0={y0}, t_max={interval[1]}, grains={granularity}," + "\n"
             the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
             fig.suptitle(the_title)
             fig.colorbar(im, ax=axs, label='x amplitude (0 if converges)')
@@ -413,11 +413,11 @@ def perform_program(simulate, cartesian_product):
                             cmap="viridis", extent=shifted_extent, aspect='auto')
             axs.set_xticks(the_xticks)
             axs.set_yticks(the_yticks)
-            axs.set_ylabel("beta")
-            axs.set_xlabel("alpha")
+            axs.set_ylabel("beta*")
+            axs.set_xlabel("alpha*")
             tol_type = "rel" if use_relative else "abs"
             the_title = "A graph of the y wave amplitude\nfor the cubic truncated reduced model,\n"
-            the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+            the_title += f"with x*0={x0}, y*0={y0}, t_max={interval[1]}, grains={granularity}," + "\n"
             the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
             fig.suptitle(the_title)
             fig.colorbar(im, ax=axs, label='y amplitude (0 if converges)')
@@ -452,11 +452,11 @@ def perform_program(simulate, cartesian_product):
                             cmap="viridis", extent=shifted_extent, aspect='auto')
             axs.set_xticks(the_xticks)
             axs.set_yticks(the_yticks)
-            axs.set_ylabel("beta")
-            axs.set_xlabel("alpha")
+            axs.set_ylabel("beta*")
+            axs.set_xlabel("alpha*")
             tol_type = "rel" if use_relative else "abs"
-            the_title = "A graph of \"the moment\" x and y converge\nfor the cubic truncated reduced model,\n"
-            the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+            the_title = "A graph of \"the moment\" x* and y* converge\nfor the cubic truncated reduced model,\n"
+            the_title += f"with x*0={x0}, y*0={y0}, t_max={interval[1]}, grains={granularity}," + "\n"
             the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
             fig.suptitle(the_title)
             fig.colorbar(im, ax=axs, label='moment of convergence within tolerances')

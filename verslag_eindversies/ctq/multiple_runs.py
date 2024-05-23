@@ -107,9 +107,9 @@ def perform_program(simulate, cartesian_product):
                 # TODO: make the color of these lines appear in the legend too
                 # TODO: make these lines appear behind the other ones, but with these colors
         # TODO: make it so the labels are aligned with one another
-        axs[0].set(ylabel="reduced x", xlabel='reduced t')
+        axs[0].set(ylabel="reduced x*", xlabel='reduced t')
         axs[0].grid(True, linestyle='dashed')
-        axs[1].set(ylabel="reduced y", xlabel='reduced t')
+        axs[1].set(ylabel="reduced y*", xlabel='reduced t')
         axs[1].grid(True, linestyle='dashed')
         x_min, x_max = axs[0].get_ylim()
         y_min, y_max = axs[1].get_ylim()
@@ -138,15 +138,15 @@ def perform_program(simulate, cartesian_product):
             x - x * x * x * y
         ])
 
-    item_names = ["reduced x0", "reduced y0", "alpha/beta", "alpha*beta"]  # names of initials and coeffs.
+    item_names = ["reduced x*0", "reduced y*0", "alpha/beta", "alpha*beta"]  # names of initials and coeffs.
     base_initials = [0, 0]  # list of starting values of the variables.
     base_coefficients = [2/3, 0]  # list of coefficients for reaction speeds.
     interval = (0, 2000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
     granularity = 8000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
     plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
-    show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
-    paired_bounds = True  # whether to force the graphs for x and y to use the same graph extent
+    show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x* and y* or not.
+    paired_bounds = True  # whether to force the graphs for x* and y* to use the same graph extent
     show_legend = True  # whether to add a legend or not.
     broader_colors = False  # whether to use a larger-than-usual color spectrum.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.

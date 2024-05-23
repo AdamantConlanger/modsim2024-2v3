@@ -28,9 +28,9 @@ def perform_program(simulate, cartesian_product):
             # TODO: make the color of these lines appear in the legend too
             # TODO: make these lines appear behind the other ones, but with these colors
         # TODO: make it so the labels are aligned with one another
-        axs[0].set(ylabel="reduced x", xlabel='reduced t')
+        axs[0].set(ylabel="reduced x*", xlabel='reduced t')
         axs[0].grid(True, linestyle='dashed')
-        axs[1].set(ylabel="reduced y", xlabel='reduced t')
+        axs[1].set(ylabel="reduced y*", xlabel='reduced t')
         axs[1].grid(True, linestyle='dashed')
         x_min, x_max = axs[0].get_ylim()
         y_min, y_max = axs[1].get_ylim()
@@ -60,7 +60,7 @@ def perform_program(simulate, cartesian_product):
             x - x * x * x * y
         ])
 
-    item_names = ["reduced x0", "reduced y0", "alpha", "beta"]  # names of initials and coeffs.
+    item_names = ["reduced x*0", "reduced y*0", "alpha*", "beta*"]  # names of initials and coeffs.
     # initials = [4/5, 25/16]  # list of starting values of the variables.
     # coefficients = [2/5, 1/2]  # list of coefficients for reaction speeds.
     initials = [0, 0]  # list of starting values of the variables.
@@ -69,8 +69,8 @@ def perform_program(simulate, cartesian_product):
     granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
     plotted_interval = [1000, 5000]  # time span to actually plot, as closed interval. or None for full plot.
-    show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
-    paired_bounds = False  # whether to force the graphs for x and y to use the same graph extent
+    show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x* and y* or not.
+    paired_bounds = False  # whether to force the graphs for x* and y* to use the same graph extent
     show_legend = False  # whether to add a legend or not.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
     linewidth = 1.5  # width of plotted lines

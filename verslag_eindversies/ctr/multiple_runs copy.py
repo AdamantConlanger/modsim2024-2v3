@@ -67,7 +67,7 @@ def make_label(items, names, focus):
 def decide_color_by_index(index, number_of_indices, color_stops=[], invert_colors=False):
     number_of_stops_before = [index >= item for item in color_stops].count(True)
     number_of_stops_total = len(color_stops)
-    stop_size = 0.5  # size of a separating region relative to size of a color region
+    stop_size = 0.25  # size of a separating region relative to size of a color region
     total_surplus_value_from_stops = number_of_stops_total * stop_size / (number_of_stops_total + 1)
     value_from_stops = number_of_stops_before * stop_size / (number_of_stops_total + 1)
     uncorrected_colorizing_value = index / (number_of_indices - 1) if number_of_indices != 1 else 0
@@ -90,7 +90,7 @@ def decide_color_by_index(index, number_of_indices, color_stops=[], invert_color
 def decide_color_by_index_broader(index, number_of_indices, color_stops=[], invert_colors=False):
     number_of_stops_before = [index >= item for item in color_stops].count(True)
     number_of_stops_total = len(color_stops)
-    stop_size = 0.5 # size of a separating region relative to size of a color region
+    stop_size = 0.25 # size of a separating region relative to size of a color region
     total_surplus_value_from_stops = number_of_stops_total * stop_size / (number_of_stops_total + 1)
     value_from_stops = number_of_stops_before * stop_size / (number_of_stops_total + 1)
     uncorrected_colorizing_value = index / (number_of_indices - 1) if number_of_indices != 1 else 0
@@ -199,9 +199,9 @@ def visualize(item_names, initials_list, coefficients_list, solution_list, focus
             # TODO: make the color of these lines appear in the legend too
             # TODO: make these lines appear behind the other ones, but with these colors
     # TODO: make it so the labels are aligned with one another
-    axs[0].set(ylabel="reduced x", xlabel='reduced t')
+    axs[0].set(ylabel="reduced x*", xlabel='reduced t')
     axs[0].grid(True, linestyle='dashed')
-    axs[1].set(ylabel="reduced y", xlabel='reduced t')
+    axs[1].set(ylabel="reduced y*", xlabel='reduced t')
     axs[1].grid(True, linestyle='dashed')
     x_min, x_max = axs[0].get_ylim()
     y_min, y_max = axs[1].get_ylim()
@@ -216,7 +216,7 @@ def visualize(item_names, initials_list, coefficients_list, solution_list, focus
     if show_legend:
         fontsize = "xx-small" if mini_mini_text else "x-small" if mini_text else "small"
         fig.legend(handles, labels, mode='expand', loc='outside lower center', ncols=5, fontsize=fontsize)
-    the_title = "A graph of the simple truncated reduced model."
+    the_title = "A graph of the cubic truncated reduced model."
     fig.suptitle(the_title + "\n" + the_subtitle)
     plt.show()
 
@@ -227,35 +227,36 @@ def f(t, u, coeffs):
     x, y = u
     alpha, beta = coeffs
     return np.array([
-        x * x * y - x - beta * x + alpha,
-        x - x * x * y
+        x * x * x * y - x - beta * x + alpha,
+        x - x * x * x * y
     ])
 
 
-item_names = ["reduced x0", "reduced y0", "alpha", "beta"]  # names of initials and coeffs.
+item_names = ["reduced x*0", "reduced y*0", "alpha*", "beta*"]  # names of initials and coeffs.
 base_initials = [0, 0]  # list of starting values of the variables.
-base_coefficients = [0.2, 0]  # list of coefficients for reaction speeds.
+base_coefficients = [0, 0.2]  # list of coefficients for reaction speeds.
 interval = (0, 500)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
 granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
 plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
-show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
-paired_bounds = False  # whether to force the graphs for x and y to use the same graph extent
+show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x* and y* or not.
+paired_bounds = False  # whether to force the graphs for x* and y* to use the same graph extent
 show_legend = True  # whether to add a legend or not.
 broader_colors = False  # whether to use a larger-than-usual color spectrum.
 text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
 linewidth = 2  # width of plotted lines
 invert_colors = False  # whether to use invert the color scheme. "False" uses blue for low values.
-absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
-relative_tolerance = 10**-6  # relative tolerance of the simulation.
+absolute_tolerance = 10**-8  # absolute tolerance of the simulation.
+relative_tolerance = 10**-7  # relative tolerance of the simulation.
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
 multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False).
 variations_initials = [None, None]  # variations in the initials.
 # variations in the coeffs.
-my_tmp = np.concatenate((np.linspace(0, 20, 5)[1:], np.linspace(30, 90, 4), np.linspace(100, 150, 3))) / 100
-variations_coefficients = [None, my_tmp]
+# my_tmp = np.concatenate((np.linspace(20, 26, 7), np.array([40, 60]))) / 100
+my_tmp = np.array([23, 24, 25, 40, 60]) / 100
+variations_coefficients = [my_tmp, None]
 focus_initials = [False, False]  # which variations should determine plot colors?
-focus_coefficients = [False, True]  # which variations should determine plot colors?
+focus_coefficients = [True, False]  # which variations should determine plot colors?
 
 initials_length = len(base_initials)
 base_variables = base_initials + base_coefficients
@@ -293,7 +294,7 @@ else:
 # extrema_variables = [(0.0, 0.0), (0.0, 0.0), (0.19, 0.19), (1.07, 1.07),
 #                      (0.5, 2.5), (0.22, 0.22), (0.59, 0.59), (0.56, 0.56)]
 
-color_stops = []
+color_stops = [3]
 
 initials_list = [variables[:initials_length] for variables in variables_list]
 coefficients_list = [variables[initials_length:] for variables in variables_list]

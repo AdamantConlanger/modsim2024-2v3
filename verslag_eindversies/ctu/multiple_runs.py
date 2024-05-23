@@ -138,15 +138,15 @@ def perform_program(simulate, cartesian_product):
             k2 * q * x - k3 * x * x * x * y
         ])
 
-    item_names = ["x0", "y0", "k1", "k2", "k3", "k4", "p", "q"]  # names of initials and coeffs.
+    item_names = ["x*0", "y*0", "k1", "k2", "k3", "k4", "p", "q"]  # names of initials and coeffs.
     base_initials = [0.83, 1.25]  # list of starting values of the variables.
     base_coefficients = [0.19, 1.07, 0.85, 0.22, 0.59, 0.56]  # list of coefficients for reaction speeds.
     interval = (0, 1000)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
     granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
     plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
-    show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
-    paired_bounds = True  # whether to force the graphs for x and y to use the same graph extent
+    show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x* and y* or not.
+    paired_bounds = True  # whether to force the graphs for x* and y* to use the same graph extent
     show_legend = True  # whether to add a legend or not.
     broader_colors = False  # whether to use a larger-than-usual color spectrum.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.

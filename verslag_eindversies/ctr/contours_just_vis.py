@@ -79,11 +79,11 @@ def perform_program(simulate, cartesian_product):
                                        origin='lower', colors='k', extent=shifted_extent)
                 axs.set_xticks(the_xticks)
                 axs.set_yticks(the_yticks)
-                axs.set_ylabel("beta")
-                axs.set_xlabel("alpha")
+                axs.set_ylabel("beta*")
+                axs.set_xlabel("alpha*")
                 tol_type = "rel" if use_relative else "abs"
                 the_title = "A contour graph of the period of oscillation\nfor the cubic truncated reduced model,\n"
-                the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+                the_title += f"with x*0={x0}, y*0={y0}, t_max={interval[1]}, grains={granularity}," + "\n"
                 the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
                 fig.suptitle(the_title)
                 fig.colorbar(contour_fills, ax=axs, label='period of oscillation (0 if converges)')
@@ -136,11 +136,11 @@ def perform_program(simulate, cartesian_product):
                                        origin='lower', colors='k', extent=shifted_extent)
                 axs.set_xticks(the_xticks)
                 axs.set_yticks(the_yticks)
-                axs.set_ylabel("beta")
-                axs.set_xlabel("alpha")
+                axs.set_ylabel("beta*")
+                axs.set_xlabel("alpha*")
                 tol_type = "rel" if use_relative else "abs"
                 the_title = "A contour graph of the x wave amplitude\nfor the cubic truncated reduced model,\n"
-                the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+                the_title += f"with x*0={x0}, y*0={y0}, t_max={interval[1]}, grains={granularity}," + "\n"
                 the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
                 fig.suptitle(the_title)
                 fig.colorbar(contour_fills, ax=axs, label='x amplitude (0 if converges)')
@@ -193,11 +193,11 @@ def perform_program(simulate, cartesian_product):
                                        origin='lower', colors='k', extent=shifted_extent)
                 axs.set_xticks(the_xticks)
                 axs.set_yticks(the_yticks)
-                axs.set_ylabel("beta")
-                axs.set_xlabel("alpha")
+                axs.set_ylabel("beta*")
+                axs.set_xlabel("alpha*")
                 tol_type = "rel" if use_relative else "abs"
                 the_title = "A contour graph of the y wave amplitude\nfor the cubic truncated reduced model,\n"
-                the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+                the_title += f"with x*0={x0}, y*0={y0}, t_max={interval[1]}, grains={granularity}," + "\n"
                 the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
                 fig.suptitle(the_title)
                 fig.colorbar(contour_fills, ax=axs, label='y amplitude (0 if converges)')
@@ -250,12 +250,12 @@ def perform_program(simulate, cartesian_product):
                                        origin='lower', colors='k', extent=shifted_extent)
                 axs.set_xticks(the_xticks)
                 axs.set_yticks(the_yticks)
-                axs.set_ylabel("beta")
-                axs.set_xlabel("alpha")
+                axs.set_ylabel("beta*")
+                axs.set_xlabel("alpha*")
                 tol_type = "rel" if use_relative else "abs"
-                the_title = "A contour graph of \"the moment\" x and y converge\n"
+                the_title = "A contour graph of \"the moment\" x* and y* converge\n"
                 the_title += "for the cubic truncated reduced model,\n"
-                the_title += f"with {x0=}, {y0=}, t_max={interval[1]}, grains={granularity}," + "\n"
+                the_title += f"with x*0={x0}, y*0={y0}, t_max={interval[1]}, grains={granularity}," + "\n"
                 the_title += f"abs sim tol={atol}, rel sim tol={rtol}, {tol_type} analysis tol={tolerance}."
                 fig.suptitle(the_title)
                 fig.colorbar(contour_fills, ax=axs, label='moment of convergence within tolerances')

@@ -109,9 +109,9 @@ def perform_program(simulate, cartesian_product):
                 # TODO: make the color of these lines appear in the legend too
                 # TODO: make these lines appear behind the other ones, but with these colors
         # TODO: make it so the labels are aligned with one another
-        axs[0].set(ylabel="reduced x", xlabel='reduced t')
+        axs[0].set(ylabel="reduced x*", xlabel='reduced t')
         axs[0].grid(True, linestyle='dashed')
-        axs[1].set(ylabel="reduced y", xlabel='reduced t')
+        axs[1].set(ylabel="reduced y*", xlabel='reduced t')
         axs[1].grid(True, linestyle='dashed')
         x_min, x_max = axs[0].get_ylim()
         y_min, y_max = axs[1].get_ylim()
@@ -140,26 +140,26 @@ def perform_program(simulate, cartesian_product):
             x - x * x * x * y
         ])
 
-    item_names = ["reduced x0", "reduced y0", "alpha", "beta"]  # names of initials and coeffs.
+    item_names = ["reduced x*0", "reduced y*0", "alpha*", "beta*"]  # names of initials and coeffs.
     base_initials = [0, 0]  # list of starting values of the variables.
-    base_coefficients = [0, 0.06]  # list of coefficients for reaction speeds.
-    interval = (0, 100)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
-    granularity = 2000  # number of points in time to actually log the values at (not counting t=0),
+    base_coefficients = [0, 0.2]  # list of coefficients for reaction speeds.
+    interval = (0, 500)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+    granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
     # or None to let the solver itself decide for us.
     plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
-    show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x and y or not.
-    paired_bounds = False  # whether to force the graphs for x and y to use the same graph extent
+    show_ghosts = False  # whether to show faint ghosts of the plots of y and x in the graphs for x* and y* or not.
+    paired_bounds = False  # whether to force the graphs for x* and y* to use the same graph extent
     show_legend = True  # whether to add a legend or not.
     broader_colors = False  # whether to use a larger-than-usual color spectrum.
     text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
     linewidth = 2  # width of plotted lines
     invert_colors = False  # whether to use invert the color scheme. "False" uses blue for low values.
-    absolute_tolerance = 10**-7  # absolute tolerance of the simulation.
-    relative_tolerance = 10**-6  # relative tolerance of the simulation.
+    absolute_tolerance = 10**-8  # absolute tolerance of the simulation.
+    relative_tolerance = 10**-7  # relative tolerance of the simulation.
     vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
     multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False).
     variations_initials = [None, None]  # variations in the initials.
-    variations_coefficients = [np.linspace(0, 200, 21)[1:] / 100, None]  # variations in the coeffs.
+    variations_coefficients = [np.linspace(0, 60, 16)[1:] / 100, None]  # variations in the coeffs.
     focus_initials = [False, False]  # which variations should determine plot colors?
     focus_coefficients = [True, False]  # which variations should determine plot colors?
 
