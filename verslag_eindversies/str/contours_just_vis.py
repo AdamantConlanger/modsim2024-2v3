@@ -32,23 +32,30 @@ def perform_program(simulate, cartesian_product):
         sliver = 10**-6
         # or np.finfo(type(extent[0])).eps
 
+        # https://stackoverflow.com/a/7164681
         if plot_periods:
             have_period = ["estimated_period" in item for item in metrics_list]
             periods = [metrics_list[index]["estimated_period"]
                        if have_period[index] else np.nan for index in metrics_range]
             periods = [0 if are_collapsed[index] else periods[index] for index in metrics_range]
+            periods = [np.nan if periods[index] is None else periods[index] for index in metrics_range]
             periods_data = griddata(coefficients_list, periods, desired_range, method="nearest")
 
-            periods_maximum = max(periods)
-            nonzero_periods = np.array(periods)[np.array(periods) >= sliver]
+            nonzero_periods = np.ma.masked_invalid(np.array(periods))
+            nonzero_periods = np.ma.masked_less_equal(nonzero_periods, sliver)
+            periods_maximum = np.nanmax(nonzero_periods)
+            periods_minimum = np.nanmin(nonzero_periods)
+            # TODO: implement the above for other plots too.
+            # TODO: fix extent stuff: https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.contour.html.
+            # TODO: implement extend for maximum and minimum color values; same link.
+            # TODO: make better levels positions. exp works well, but gets squished near 0.
             if len(nonzero_periods) == 0:
                 print("couldn't create period contours; all periods are the same.")
             elif min(nonzero_periods) + sliver >= periods_maximum:
                 print("couldn't create period contours; all periods are the same.")
             else:
-                periods_minimum = min(nonzero_periods)
                 num_of_contours = 20
-                if autolevels:
+                if not autolevels:
                     levels = np.exp(np.linspace(math.log(periods_minimum), math.log(periods_maximum), num_of_contours))
                 else:
                     levels = num_of_contours
@@ -96,16 +103,19 @@ def perform_program(simulate, cartesian_product):
             x_amps = [0 if are_collapsed[index] else x_amps[index] for index in metrics_range]
             x_amps_data = griddata(coefficients_list, x_amps, desired_range, method="nearest")
 
-            x_amps_maximum = max(x_amps)
-            nonzero_x_amps = np.array(x_amps)[np.array(x_amps) >= sliver]
+            nonzero_x_amps = x_amps
+            nonzero_x_amps = np.array(nonzero_x_amps)[np.array(nonzero_x_amps) is not None]
+            nonzero_x_amps = np.array(nonzero_x_amps)[np.array(nonzero_x_amps) is not np.nan]
+            nonzero_x_amps = np.array(nonzero_x_amps)[np.array(nonzero_x_amps) >= sliver]
+            x_amps_maximum = max(nonzero_x_amps)
+            x_amps_minimum = min(nonzero_x_amps)
             if len(nonzero_x_amps) == 0:
                 print("couldn't create x amplitude contours; all x amplitudes are the same.")
             elif min(nonzero_x_amps) + sliver >= x_amps_maximum:
                 print("couldn't create x amplitude contours; all x amplitudes are the same.")
             else:
-                x_amps_minimum = min(nonzero_x_amps)
                 num_of_contours = 20
-                if autolevels:
+                if not autolevels:
                     levels = np.exp(np.linspace(math.log(x_amps_minimum), math.log(x_amps_maximum), num_of_contours))
                 else:
                     levels = num_of_contours
@@ -153,16 +163,18 @@ def perform_program(simulate, cartesian_product):
             y_amps = [0 if are_collapsed[index] else y_amps[index] for index in metrics_range]
             y_amps_data = griddata(coefficients_list, y_amps, desired_range, method="nearest")
 
-            y_amps_maximum = max(y_amps)
-            nonzero_y_amps = np.array(y_amps)[np.array(y_amps) >= sliver]
+            nonzero_y_amps = y_amps
+            nonzero_y_amps = np.array(nonzero_y_amps)[np.array(nonzero_y_amps) is not None]
+            nonzero_y_amps = np.array(nonzero_y_amps)[np.array(nonzero_y_amps) >= sliver]
+            y_amps_maximum = max(nonzero_y_amps)
+            y_amps_minimum = min(nonzero_y_amps)
             if len(nonzero_y_amps) == 0:
                 print("couldn't create y amplitude contours; all y amplitudes are the same.")
             elif min(nonzero_y_amps) + sliver >= y_amps_maximum:
                 print("couldn't create y amplitude contours; all y amplitudes are the same.")
             else:
-                y_amps_minimum = min(nonzero_y_amps)
                 num_of_contours = 20
-                if autolevels:
+                if not autolevels:
                     levels = np.exp(np.linspace(math.log(y_amps_minimum), math.log(y_amps_maximum), num_of_contours))
                 else:
                     levels = num_of_contours
@@ -208,16 +220,18 @@ def perform_program(simulate, cartesian_product):
                                 if "collapse_moment" in item else np.nan for item in metrics_list]
             collapse_moments_data = griddata(coefficients_list, collapse_moments, desired_range, method="nearest")
 
-            collapse_moments_maximum = max(collapse_moments)
-            nonzero_collapse_moments = np.array(collapse_moments)[np.array(collapse_moments) >= sliver]
+            nz_c_tmp = collapse_moments
+            nz_c_tmp = np.array(nz_c_tmp)[np.array(nz_c_tmp) is not None]
+            nonzero_collapse_moments = np.array(nz_c_tmp)[np.array(nz_c_tmp) >= sliver]
+            collapse_moments_maximum = max(nonzero_collapse_moments)
+            collapse_moments_minimum = min(nonzero_collapse_moments)
             if len(nonzero_collapse_moments) == 0:
                 print("couldn't create collapse moment contours; all collapse moments are the same.")
             elif min(nonzero_collapse_moments) + sliver >= collapse_moments_maximum:
                 print("couldn't create collapse moment contours; all collapse moments are the same.")
             else:
-                collapse_moments_minimum = min(nonzero_collapse_moments)
                 num_of_contours = 20
-                if autolevels:
+                if not autolevels:
                     the_log_max = math.log(collapse_moments_maximum)
                     the_log_min = math.log(collapse_moments_minimum)
                     levels = np.exp(np.linspace(the_log_min, the_log_max, num_of_contours))
@@ -281,7 +295,8 @@ def perform_program(simulate, cartesian_product):
     multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
     variations_initials = [None, None]
     # variations_coefficients = [np.linspace(0, 1, 51)[1:], np.linspace(0, 1, 51)[1:]]
-    variations_coefficients = [np.linspace(0, 800, 33)[1:] / 2000, np.linspace(0, 2000, 41)[1:] / 2000]
+    # variations_coefficients = [np.linspace(0, 800, 33)[1:] / 2000, np.linspace(0, 2000, 41)[1:] / 2000]
+    variations_coefficients = [np.linspace(0, 1600, 65)[1:] / 4000, np.linspace(0, 4000, 81)[1:] / 4000]
     # variations_coefficients = [np.linspace(0, 800, 9)[1:] / 2000, np.linspace(0, 2000, 11)[1:] / 2000]
 
     ############################################
@@ -313,6 +328,6 @@ def perform_program(simulate, cartesian_product):
 
     evaluations = None if granularity is None else np.linspace(interval[0], interval[1], granularity + 1)
 
-    plot_metrics("str_metrics.json", f, base_initials, coefficients_list, interval, granularity, atol=10**-7, rtol=10**-6, tolerance=10**-4, evaluations=evaluations, use_relative=False,
+    plot_metrics("str_metrics_5000_64_80_8_7.json", f, base_initials, coefficients_list, interval, granularity, atol=10**-8, rtol=10**-7, tolerance=10**-4, evaluations=evaluations, use_relative=False,
                  plot_periods=True, plot_x_amps=True, plot_y_amps=True, plot_collapse_moments=True, autolevels=False)
 

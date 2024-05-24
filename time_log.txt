@@ -101,3 +101,7 @@ start 18:30 or sth? to render graphs in Dutch.
 stop 19:20 or sth?
 start 19:27 or sth? to render contour graphs in Dutch.
 stop 19:48.
+
+2024-05-24:
+start ~08:00.
+stop 09:06.

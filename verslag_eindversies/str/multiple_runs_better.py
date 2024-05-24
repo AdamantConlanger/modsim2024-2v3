@@ -233,8 +233,8 @@ def f(t, u, coeffs):
 
 item_names = ["x0", "y0", "alpha", "beta"]  # names of initials and coeffs.
 base_initials = [0, 0]  # list of starting values of the variables.
-base_coefficients = [0.2, 0]  # list of coefficients for reaction speeds.
-interval = (0, 200)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
+base_coefficients = [0.2, 0.3]  # list of coefficients for reaction speeds.
+interval = (0, 100)  # cutoff point in time to stop the simulation at, or None for the default value of 50.
 granularity = 5000  # number of points in time to actually log the values at (not counting t=0),
 # or None to let the solver itself decide for us.
 plotted_interval = None  # time span to actually plot, as closed interval. or None for full plot.
@@ -245,19 +245,20 @@ broader_colors = False  # whether to use a larger-than-usual color spectrum.
 text_smallness = 0  # 0 for standard legend text size, 1 for smaller, 2 for tiny.
 linewidth = 2  # width of plotted lines
 invert_colors = False  # whether to use invert the color scheme. "False" uses blue for low values.
-color_stops = [4]  # indices of series after which a larger difference in hue should occur.
+color_stops = []  # indices of series after which a larger difference in hue should occur.
 stop_size = 0.5  # the amount of hue skipped at a color stop, relative to the difference in hue between series.
 absolute_tolerance = 10**-8  # absolute tolerance of the simulation.
 relative_tolerance = 10**-7  # relative tolerance of the simulation.
 vary_simultaneously = False  # whether to entrywise combine the variations (True) or Cartesian them (False).
 multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False).
+# my_tmp = np.array([0, 100, 200, 500]) / 100  # x0 or y0 with alpha=0.2, beta=0.3, stops=[], t=200.
 variations_initials = [None, None]  # variations in the initials.
 my_tmp = np.concatenate((np.linspace(0, 20, 5)[1:], np.linspace(30, 90, 4), np.linspace(100, 150, 3))) / 100
 # my_tmp = np.array([10, 20, 24, 30, 40]) / 100  # alpha with beta=0.3, stops=[3], size=0.25, t=200.
 # my_tmp = np.array([15, 20, 25, 50, 90, 100, 125]) / 100  # beta with alpha=0.2, stops=[4], size=0.5, t=200.
-variations_coefficients = [None, my_tmp]  # variations in the coeffs.
+variations_coefficients = [my_tmp, None]  # variations in the coeffs.
 focus_initials = [False, False]  # which variations should determine plot colors?
-focus_coefficients = [False, True]  # which variations should determine plot colors?
+focus_coefficients = [True, False]  # which variations should determine plot colors?
 
 initials_length = len(base_initials)
 base_variables = base_initials + base_coefficients

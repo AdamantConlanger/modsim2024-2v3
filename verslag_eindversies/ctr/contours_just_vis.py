@@ -47,7 +47,7 @@ def perform_program(simulate, cartesian_product):
             else:
                 periods_minimum = min(nonzero_periods)
                 num_of_contours = 20
-                if autolevels:
+                if not autolevels:
                     levels = np.exp(np.linspace(math.log(periods_minimum), math.log(periods_maximum), num_of_contours))
                 else:
                     levels = num_of_contours
@@ -104,7 +104,7 @@ def perform_program(simulate, cartesian_product):
             else:
                 x_amps_minimum = min(nonzero_x_amps)
                 num_of_contours = 20
-                if autolevels:
+                if not autolevels:
                     levels = np.exp(np.linspace(math.log(x_amps_minimum), math.log(x_amps_maximum), num_of_contours))
                 else:
                     levels = num_of_contours
@@ -161,7 +161,7 @@ def perform_program(simulate, cartesian_product):
             else:
                 y_amps_minimum = min(nonzero_y_amps)
                 num_of_contours = 20
-                if autolevels:
+                if not autolevels:
                     levels = np.exp(np.linspace(math.log(y_amps_minimum), math.log(y_amps_maximum), num_of_contours))
                 else:
                     levels = num_of_contours
@@ -216,7 +216,7 @@ def perform_program(simulate, cartesian_product):
             else:
                 collapse_moments_minimum = min(nonzero_collapse_moments)
                 num_of_contours = 20
-                if autolevels:
+                if not autolevels:
                     the_log_max = math.log(collapse_moments_maximum)
                     the_log_min = math.log(collapse_moments_minimum)
                     levels = np.exp(np.linspace(the_log_min, the_log_max, num_of_contours))
