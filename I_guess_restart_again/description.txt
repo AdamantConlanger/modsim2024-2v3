@@ -1,0 +1,25 @@
+I really can't keep track of these things.
+What was "visualize_simple_unreduced_1.py" for again? and this? and this? and this? etc.
+
+I think it'd be prudent to make a list with things I still need to get done,
+a list of notes for using this mess of a project,
+and/or a list with an overview of what everything does.
+And a list of results.
+
+
+Things I need to do:
+- ...
+
+Ugh.
+
+...
+
+
+I'm just going to run a bunch of simulations and list off the results.
+
+
+2024-05-10. 16:51 CEST.
+
+simple unreduced Model:
+dependent variables:
+p, q, x, y, r, s..............................

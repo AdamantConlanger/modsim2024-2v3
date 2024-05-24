@@ -6,6 +6,7 @@ start 09:01. (De helft van deze tijd is wachten tot Julia klaar is met dingen in
 (oh yeah. Stop 10:43).
 start 11:35.
 stop 13:00.
+
 2024-04-22:
 start 07:46.
 stop 12:56.
@@ -13,13 +14,94 @@ start ~17:30.
 stop coding 19:03.
 start model-reducing 19:03.
 stop 19:48.
+
 2024-04-28:
 start writing Jupyter code ~12:00.
 stop writing Jupyter code 13:48.
 start looking into scipy ~14:20.
 stop, with periodic solution, 16:54.
+
 2024-04-29:
 start adding some functionality and working on reduced model 16:32.
 stop 18:45.
+
 2024-05-06:
 start finally working on this again 13:17.
+on and off between 14:30 and 16:15 due to a stomach ache.
+stop 16:15.
+
+2024-05-07:
+start 01:29.
+stop 01:44. Too tired.
+oh yeah, start ~11:00.
+stop around 12:45.
+start around 13:30.
+stop around 15:15.
+
+2024-05-10:
+start 14:19.
+stop ~14:40.
+start 16:44.
+stop 18:58 in the middle of writing.
+
+2024-05-11:
+start ~09:00.
+taking a break 13:37. Putting on some more decent clothes.
+start 17:58.
+stop 20:33 for Eurovision.
+
+2024-05-12:
+start 13:15.
+stop 15:19 to take a break before coding the extremum calculations.
+start 16:40.
+stop ~19:00 to eat.
+start 20:37.
+stop 21:12; gotta implement Thorsten Kranz's answer after this.
+start 21:38. Losing focus a bit.
+stop 23:24. Finished the period sims.
+
+2024-05-13:
+start ~08:30 for optimizing.
+stop 12:46; need to get a vaccination. Fixed some issues, still need to apply them to stuff other than period.
+start 15:12. That took longer than expected.
+stop 17:03. Done with all simulations as far as I can tell.
+start 18:sth to do cubic model, with break around 19:00 until 19:20 to eat dinner.
+stop 20:07, though all I really did after dinner was wait until the sim was done and save 70 imgs or so.
+
+2024-05-17:
+start 18:20 to write final versions and render graphs for the report.
+stop 21:14 as a break; done standardizing and verslag-version-izing everything but the metrics investigations.
+start 21:52 to port those metrics things.
+stop 22:43; fixed a major bug in amplitude calcs, found another bug, way too tired to be effective.
+
+2024-05-18:
+start 07:23 to write the metric things.
+stop ~8:00? I don't remember.
+start 11:49 to make graphs; I'll be working on and off on this, because I'll be writing in between.
+stop 18:33; get DINNER.
+
+2024-05-19:
+start 09:37.
+stop 13:16 to go to Leiden for the Japan market.
+start 16:57.
+stop 18:54 to get dinner.
+
+2024-05-20:
+start ~13:00.
+stop 18:57 for dinner.
+start ~19:30.
+stop 22:37 to take a break.
+
+2024-05-23:
+start 12:29.
+stop 13:12 for lunch.
+start 13:19.
+stop 14:15 or sth? Not emotionally well enough to continue.
+start 18:30 or sth? to render graphs in Dutch.
+stop 19:20 or sth?
+start 19:27 or sth? to render contour graphs in Dutch.
+stop 19:48.
+
+2024-05-24:
+start ~08:00.
+stop 09:06.
