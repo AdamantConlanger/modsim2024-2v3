@@ -311,5 +311,5 @@ def perform_program(simulate, cartesian_product):
 
     evaluations = None if granularity is None else np.linspace(interval[0], interval[1], granularity + 1)
 
-    plot_metrics("ctr_metrics.json", f, base_initials, coefficients_list, interval, granularity, atol=10**-7, rtol=10**-6, tolerance=10**-3, evaluations=evaluations, use_relative=False,
+    plot_metrics("ctr_metrics_5000_50_40_7_6.json", f, base_initials, coefficients_list, interval, granularity, atol=10**-7, rtol=10**-6, tolerance=10**-3, evaluations=evaluations, use_relative=False,
                  plot_periods=True, plot_x_amps=True, plot_y_amps=True, plot_collapse_moments=True, autolevels=False)

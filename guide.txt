@@ -8,14 +8,30 @@ then install the packages with
 > py -m pip install -U pip
 > py -m pip install -r requirements.txt
 
-and then run
-> py unistationary_basis.py
+and then run any of the files with "choose" at the end.
+All of the files are in the "verslag_eindversies" folder.
+(The one you'll probably want is single_run_choose.py,
+because it makes graphs for single simulations.
+multiple_runs_choose.py does multiple simulations in a single graph.
+contours_just_vis_choose.py is the one you'll want for visualizing
+the contour graphs that are pre-simulated;
+simulating everything for those graphs takes hours.)
+You'll be asked what model you want to use.
+The names are explained in the "explanation_of_abbreviations.txt" file.
+The most important ones are:
+stu (unreduced basic model with only x and y),
+ctu (idem for extended model),
+str (reduced basic model),
+ctr (idem for extended model).
+If you want to edit the settings and configuration for a simulation,
+you'll have to go to the designated folder and file and edit it there.
 
-it's that simple.
+Alternatively, you can use the multiple_runs_better.py files
+in the individual folders. They have a different color choosing
+approach, though. To run these files,
+just go to the file itself and run it, instead of using a
+"choose" file.
 
-All custom stuff (e.g. initial values, specifying a time span, ...)
-is done near the end of that document.
-
-If your computer's able to run Jupyter Notebooks,
-you can also use sims_notebook.ipynb.
-Just be careful to not mix up cells for different models.
+Alternatively, you can use the "single_run.py" file
+in the "voorbeeldcode" folder, which does everything
+very simply. But it only works for one model.

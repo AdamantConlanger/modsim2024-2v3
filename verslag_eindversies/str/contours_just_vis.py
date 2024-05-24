@@ -295,8 +295,8 @@ def perform_program(simulate, cartesian_product):
     multiplicative = False  # whether to apply variations multiplicatively (True) or additively (False)
     variations_initials = [None, None]
     # variations_coefficients = [np.linspace(0, 1, 51)[1:], np.linspace(0, 1, 51)[1:]]
-    # variations_coefficients = [np.linspace(0, 800, 33)[1:] / 2000, np.linspace(0, 2000, 41)[1:] / 2000]
-    variations_coefficients = [np.linspace(0, 1600, 65)[1:] / 4000, np.linspace(0, 4000, 81)[1:] / 4000]
+    variations_coefficients = [np.linspace(0, 800, 33)[1:] / 2000, np.linspace(0, 2000, 41)[1:] / 2000]
+    # variations_coefficients = [np.linspace(0, 1600, 65)[1:] / 4000, np.linspace(0, 4000, 81)[1:] / 4000]
     # variations_coefficients = [np.linspace(0, 800, 9)[1:] / 2000, np.linspace(0, 2000, 11)[1:] / 2000]
 
     ############################################
@@ -328,6 +328,6 @@ def perform_program(simulate, cartesian_product):
 
     evaluations = None if granularity is None else np.linspace(interval[0], interval[1], granularity + 1)
 
-    plot_metrics("str_metrics_5000_64_80_8_7.json", f, base_initials, coefficients_list, interval, granularity, atol=10**-8, rtol=10**-7, tolerance=10**-4, evaluations=evaluations, use_relative=False,
+    plot_metrics("str_metrics_1000_32_40_7_6.json", f, base_initials, coefficients_list, interval, granularity, atol=10**-7, rtol=10**-6, tolerance=10**-4, evaluations=evaluations, use_relative=False,
                  plot_periods=True, plot_x_amps=True, plot_y_amps=True, plot_collapse_moments=True, autolevels=False)
 
